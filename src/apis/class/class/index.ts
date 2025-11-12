@@ -10,7 +10,7 @@ export const classApi = {
     const response = await req.post("/classes/create", body);
     return response.data;
   },
-  classListSearch: async (body: classSearchRequest): Promise<globalResponse<object>> => {
+  classListSearch: async (body: classSearchRequest): Promise<globalResponse<{classes:classResponse[]}>> => {
     const response = await req.post("/classes/search", body);
     const data = {
       classes: response.data.data.classes as classResponse[],
