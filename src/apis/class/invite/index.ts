@@ -9,7 +9,7 @@ export const inviteApi = {
       data: {},
     };
   },
-  classInviteCoddeGet: async (class_id: number): Promise<globalResponse<object>> => {
+  classInviteCoddeGet: async (class_id: number): Promise<globalResponse<{class_code : number}>> => {
     const response = await req.get(`/classes/${class_id}/invite`);
     return response.data;
   },

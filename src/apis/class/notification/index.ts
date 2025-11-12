@@ -2,7 +2,7 @@ import { req } from "../../axiosInstance";
 import type { classNotificationRequest, classNotificationResponse, globalResponse } from "../../../models/index";
 
 export const notificationApi = {
-  classNotificationSearch: async (class_id: number): Promise<globalResponse<object>> => {
+  classNotificationSearch: async (class_id: number): Promise<globalResponse<{notification : classNotificationResponse[]}>> => {
     const response = await req.get(`/classes/${class_id}/notification`);
     const data = {
       notifications: response.data.data.notifications as classNotificationResponse[],

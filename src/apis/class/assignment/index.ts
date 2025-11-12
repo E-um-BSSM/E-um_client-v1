@@ -6,7 +6,7 @@ export const assiginmentApi = {
     const response = await req.post(`/classes/${class_id}/assignments`, body);
     return response.data;
   },
-  assignmentSearch: async (class_id: number): Promise<globalResponse<object>> => {
+  assignmentSearch: async (class_id: number): Promise<globalResponse<{classes:assignmentResponse[]}>> => {
     const response = await req.get(`/classes/${class_id}/assignments`);
     const data = {
       classes: response.data.data.classes as assignmentResponse[],
