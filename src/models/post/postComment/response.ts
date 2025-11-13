@@ -1,4 +1,4 @@
-export interface commentCreateResponse {
+export interface postCommentCreateResponse {
   post_id: number;
   body: string;
   is_adopted: boolean;
@@ -6,24 +6,7 @@ export interface commentCreateResponse {
   updated_at: string;
 }
 
-export interface commentSearchResponse {
-  post_id: number;
-  user_id: string;
-  body: string;
-  is_adopted: boolean;
-  created_at: string;
-  updated_at: string; 
-}
-
-export interface commentUpdateResponse {
-  post_id: number;
-  body: string;
-  is_adopted: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface commentAdoptResponse {
+export interface postCommentResponse {
   post_id: number;
   user_id: string;
   body: string;
