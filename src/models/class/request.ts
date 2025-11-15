@@ -1,13 +1,13 @@
 export interface classRequest {
   title: string;
   description: string;
-  difficulty: string;
+  difficulty: number;
   tags: string[];
   status: string;
 }
 
 export interface classSearchRequest {
-  difficulty: string;
+  difficulty: number;
   tags: string[];
   status: string;
 }
@@ -21,7 +21,7 @@ export interface assignmentRequest {
   title: string;
   description: string;
   due_date: string;
-  difficulty: string;
+  difficulty: number;
 }
 
 export interface classNotificationRequest {

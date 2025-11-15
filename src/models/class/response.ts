@@ -4,7 +4,7 @@ export interface classResponse {
   class_code: number;
   description: string;
   tags: string[];
-  difficulty: string;
+  difficulty: number;
   created_by: string;
 }
 
@@ -34,7 +34,7 @@ export interface assignmentResponse {
   title: string;
   description: string;
   due_date: string;
-  difficulty: string;
+  difficulty: number;
   created_at: string;
 }
 
