@@ -8,10 +8,16 @@ export interface classResponse {
   created_by: string;
 }
 
-export interface assignmentSubmitResponse {
-  content: string;
-  file_url: string;
-  submitted_at: string;
+export interface submissionResponse{
+  content:string;
+  file_url:string;
+  submitted_at:string;
+  user_id:string;
+  graded_at:string;
+  score:number;
+  feedback:string;
+  status:string
+  submission_id:number;
 }
 
 export interface memberAcceptResponse {
@@ -38,12 +44,6 @@ export interface assignmentResponse {
   created_at: string;
 }
 
-export interface classNotificationResponse {
-  notification_id: number;
-  title: string;
-  content: string;
-  created_at: string;
-}
 
 export interface classScheduleResponse {
   schedule_id: number;
@@ -54,4 +54,10 @@ export interface classScheduleResponse {
   created_at: string;
   updated_at: string;
   is_active: boolean;
+}
+
+export interface waitingListResponse{
+  user_id:string;
+  joined_at:string;
+  status:string;
 }

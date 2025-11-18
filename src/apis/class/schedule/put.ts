@@ -1,5 +1,5 @@
-import { req } from "../../axiosInstance";
-import type { classScheduleRequset, classScheduleResponse, globalResponse } from "../../../models";
+import { req } from "@/apis/axiosInstance";
+import type { classScheduleRequset, classScheduleResponse, globalResponse } from "@/models";
 
 export const schedulePUT = {
   classScheduleUpdate: async (

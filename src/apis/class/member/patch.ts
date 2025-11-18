@@ -1,5 +1,5 @@
-import { req } from "../../axiosInstance";
-import type { globalResponse, memberAcceptResponse } from "../../../models";
+import { req } from "@/apis/axiosInstance";
+import type { globalResponse, memberAcceptResponse } from "@/models";
 
 export const memberPATCH = {
   memberAccept: async (

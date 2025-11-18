@@ -12,11 +12,6 @@ export interface classSearchRequest {
   status: string;
 }
 
-export interface assignmentSubmitRequest {
-  content: string;
-  file_url: string;
-}
-
 export interface assignmentRequest {
   title: string;
   description: string;
@@ -24,14 +19,21 @@ export interface assignmentRequest {
   difficulty: number;
 }
 
-export interface classNotificationRequest {
-  title: string;
-  content: string;
-}
-
 export interface classScheduleRequset {
   title: string;
   description: string;
   start_at: string;
   end_at: string;
+  location:string;
+  status:string;
+}
+
+export interface submissionRequest{
+  content:string;
+  file_url:string;
+}
+
+export interface submissionFeedbackRequest{
+  feedback: string;
+  score:number
 }

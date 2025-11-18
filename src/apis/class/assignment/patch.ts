@@ -1,5 +1,5 @@
-import { req } from "../../axiosInstance";
-import type { assignmentRequest, assignmentResponse, globalResponse } from "../../../models/index";
+import { req } from "@/apis/axiosInstance";
+import type { assignmentRequest, assignmentResponse, globalResponse } from "@/models";
 
 export const assignmentPATCH = {
   assignmentUpdate: async (
