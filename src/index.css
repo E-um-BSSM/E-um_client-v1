@@ -1,0 +1,49 @@
+:root {
+  /* colors */
+  --white: #ffffff;
+  --black: #0c141c;
+
+  --primary-100: #e9efff;
+  --primary-200: #bbcdff;
+  --primary-300: #9ab5ff;
+  --primary-400: #4f7fff;
+  --primary-500: #235fff;
+  --primary-600: #2056e8;
+  --primary-700: #1943b5;
+  --primary-800: #13348c;
+  --primary-900: #0f286b;
+
+  --natural-100: #f7f9fa;
+  --natural-200: #e7ebee;
+  --natural-300: #cfd9e0;
+  --natural-400: #aec1cc;
+  --natural-500: #67728a;
+  --natural-600: #5a657c;
+  --natural-700: #414d63;
+  --natural-800: #1b273a;
+  --natural-900: #111b2b;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+
+  --utility-error: #ff1c30;
+  --utility-warning: #ffd960;
+  --utility-success: #5db057;
+
+  --level-easy: #9ab5ff;
+  --level-normal: #9ed696;
+  --level-hard: #ffe993;
+  --level-extreme: #ffdadb;
+
+  /* spacing */
+  --spacing-2xs: 4;
+  --spacing-xs: 8;
+  --spacing-s: 12;
+  --spacing-m: 16;
+  --spacing-l: 24;
+  --spacing-xl: 32;
+  --spacing-2xl: 48;
+  --spacing-3xl: 64;
+  --spacing-4xl: 80;
+}
