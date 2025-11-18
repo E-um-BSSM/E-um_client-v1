@@ -1,13 +1,9 @@
 import { req } from "@/apis/axiosInstance";
-import type { globalResponse } from "@/models";
+import type { globalResponse, waitingListResponse } from "@/models";
 
 export const memberGET = {
-  waitingListSearch: async (class_id: number): Promise<globalResponse<object>> => {
-    const response = await req.delete(`/classes/${class_id}/waiting`);
-    return response.data;
-  },
-  memberKick: async (class_id: number): Promise<globalResponse<object>> => {
-    const response = await req.delete(`/classes/${class_id}/members`);
+  waitingListSearch: async (class_id: number): Promise<globalResponse<waitingListResponse>> => {
+    const response = await req.get(`/classes/${class_id}/waiting`);
     return response.data;
   },
 };

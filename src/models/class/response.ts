@@ -53,7 +53,9 @@ export interface classScheduleResponse {
   end_at: string;
   created_at: string;
   updated_at: string;
-  is_active: boolean;
+  class_id : number;
+  location:string;
+  status:string;
 }
 
 export interface waitingListResponse{
