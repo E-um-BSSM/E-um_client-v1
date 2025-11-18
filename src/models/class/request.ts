@@ -24,16 +24,16 @@ export interface classScheduleRequset {
   description: string;
   start_at: string;
   end_at: string;
-  location:string;
-  status:string;
+  location: string;
+  status: string;
 }
 
-export interface submissionRequest{
-  content:string;
-  file_url:string;
+export interface submissionRequest {
+  content: string;
+  file_url: string;
 }
 
-export interface submissionFeedbackRequest{
+export interface submissionFeedbackRequest {
   feedback: string;
-  score:number
+  score: number;
 }
