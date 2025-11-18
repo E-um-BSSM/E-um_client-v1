@@ -1,5 +1,5 @@
-import { req } from "../../axiosInstance";
-import type { globalResponse } from "../../../models/index";
+import { req } from "@/apis/axiosInstance";
+import type { globalResponse } from "@/models";
 
 export const assignmentDELETE = {
   assignmentDelete: async (class_id: number, assignment_id: number): Promise<globalResponse<object>> => {

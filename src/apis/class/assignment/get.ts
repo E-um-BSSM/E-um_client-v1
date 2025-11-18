@@ -1,5 +1,5 @@
-import { req } from "../../axiosInstance";
-import type { assignmentSearchResponse, globalResponse } from "../../../models/index";
+import { req } from "@/apis/axiosInstance";
+import type { assignmentSearchResponse, globalResponse } from "@/models";
 
 export const assignmentGET = {
   assignmentSearch: async (class_id: number): Promise<globalResponse<{ assignments: assignmentSearchResponse[] }>> => {

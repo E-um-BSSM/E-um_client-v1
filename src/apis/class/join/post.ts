@@ -1,5 +1,5 @@
-import { req } from "../../axiosInstance";
-import type { globalResponse } from "../../../models";
+import { req } from "@/apis/axiosInstance";
+import type { globalResponse } from "@/models";
 
 export const joinPOST = {
   classJoinApplication: async (class_id: number): Promise<globalResponse<{ message: string }>> => {

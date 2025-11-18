@@ -1,5 +1,5 @@
-import { req } from "../../axiosInstance";
-import type { classRequest, classResponse, classSearchRequest, globalResponse } from "../../../models";
+import { req } from "@/apis/axiosInstance";
+import type { classRequest, classResponse, classSearchRequest, globalResponse } from "@/models";
 
 export const classPOST = {
   classCreate: async (body: classRequest): Promise<globalResponse<classResponse>> => {

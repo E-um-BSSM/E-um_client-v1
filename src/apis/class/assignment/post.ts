@@ -1,11 +1,11 @@
-import { req } from "../../axiosInstance";
+import { req } from "@/apis/axiosInstance";
 import type {
   assignmentRequest,
   assignmentSubmitRequest,
   assignmentResponse,
   assignmentSubmitResponse,
   globalResponse,
-} from "../../../models/index";
+} from "@/models/index";
 
 export const assignmentPOST = {
   assignmentCreate: async (class_id: number, body: assignmentRequest): Promise<globalResponse<assignmentResponse>> => {
