@@ -1,7 +1,7 @@
 export interface classResponse {
   class_id: number;
   title: string;
-  class_code: number;
+  class_code: string;
   description: string;
   tags: string[];
   difficulty: number;
@@ -61,4 +61,20 @@ export interface waitingListResponse {
   user_id: string;
   joined_at: string;
   status: string;
+}
+
+export interface classScheduleIdResponse{
+  schedule_id: number;
+}
+
+export interface submissionIdResponse{
+  submission_id: number;
+}
+
+export interface classJoinResponse{
+  message: string;
+}
+
+export interface classCodeResponse{
+  class_code: string;
 }
