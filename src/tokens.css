@@ -37,13 +37,13 @@
   --level-extreme: #ffdadb;
 
   /* spacing */
-  --spacing-2xs: 4;
-  --spacing-xs: 8;
-  --spacing-s: 12;
-  --spacing-m: 16;
-  --spacing-l: 24;
-  --spacing-xl: 32;
-  --spacing-2xl: 48;
-  --spacing-3xl: 64;
-  --spacing-4xl: 80;
+  --spacing-2xs: 4px;
+  --spacing-xs: 8px;
+  --spacing-s: 12px;
+  --spacing-m: 16px;
+  --spacing-l: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+  --spacing-4xl: 80px;
 }
