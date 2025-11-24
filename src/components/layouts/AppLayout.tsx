@@ -1,0 +1,20 @@
+import { Footer } from "@/components/public";
+import { Outlet } from "react-router-dom";
+
+function AppLayout() {
+  return (
+    <div className="appLayout">
+      <header></header>
+
+      <main>
+        <Outlet />
+      </main>
+
+      <footer>
+        <Footer type="app" />
+      </footer>
+    </div>
+  );
+}
+
+export default AppLayout;
