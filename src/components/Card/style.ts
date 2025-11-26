@@ -9,7 +9,7 @@ export const Container = styled.div`
  width: 18rem;
  gap: 0.75rem;
  border-radius: var(--L, 1.5rem);
- border: 1px solid var(--Natural-natural-300, #CFD9E0);
+ border: 1px solid var(--natural-300, #CFD9E0);
 `;
 
 export const Info = styled.div`
@@ -36,7 +36,7 @@ export const Description = styled.p`
  -webkit-box-orient: vertical;
  -webkit-line-clamp: 2;
  overflow: hidden;
- color: var(--Text-text-primary, #0F172A);
+ color: var(--text-primary, #0F172A);
  text-overflow: ellipsis;
  font-family: Pretendard;
  font-size: 1.25rem;

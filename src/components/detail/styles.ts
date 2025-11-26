@@ -7,7 +7,7 @@ export const Base = styled.div`
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
-  color: var(--Text-text-muted, #64748B);
+  color: var(--text-muted, #64748B);
   font-family: Pretendard;
   font-size: 1.125rem;
   font-style: normal;
@@ -15,17 +15,18 @@ export const Base = styled.div`
   line-height: 1.375rem;
 
   border-radius: var(--XS, 0.5rem);
-  border: 1px solid var(--Natural-natural-200, #E7EBEE);
+  border: 1px solid var(--natural-200, #E7EBEE);
   background: var(--white, #FFF);
   transition: 0.3s;
 
   &:hover {
-    background: var(--Natural-natural-100, #F3F6F8);
+    background: var(--natural-200, #E7EBEE);
     cursor: pointer;
     transition: 0.3s;
   }
 
   &:active {
-    background: var(--Natural-natural-200, #E7EBEE);
+    background: var(--natural-300, #CFD9E0);
+    border: 1px solid var(--natural-300, #CFD9E0);
   }
 `;

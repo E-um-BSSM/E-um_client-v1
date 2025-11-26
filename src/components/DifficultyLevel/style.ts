@@ -12,7 +12,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: flex-start;
   gap: 0.625rem;
-  color: var(--Text-text-muted, #64748B);
+  color: var(--text-muted, #64748B);
   font-family: Pretendard;
   font-size: 1rem;
   font-style: normal;
