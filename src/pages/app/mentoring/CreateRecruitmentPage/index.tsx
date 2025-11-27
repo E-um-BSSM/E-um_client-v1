@@ -1,4 +1,15 @@
-import { BodyContainer,ContentContainer,WriteGenerateContainer,DialogContainer,Title,Description, FindContainer, FindDialogContainer,AllViwe,CardContainer } from "@/pages/app/mentoring/CreateRecruitmentPage/style";
+import {
+  BodyContainer,
+  ContentContainer,
+  WriteGenerateContainer,
+  DialogContainer,
+  Title,
+  Description,
+  FindContainer,
+  FindDialogContainer,
+  AllViwe,
+  CardContainer,
+} from "@/pages/app/mentoring/CreateRecruitmentPage/style";
 import WriteGenerateButton from "@/components/WriteGenerateButton";
 import RecruitmentCard from "@/components/RecruitmentCard";
 
@@ -36,32 +47,32 @@ export default function CreateRecruitmentPage() {
     },
   ];
   return (
-   <>
-    <BodyContainer>
-     <ContentContainer>
-      <WriteGenerateContainer>
-       <DialogContainer>
-        <Title>누구나 멘토가 될 수 있어요</Title>
-        <Description>함께 할 멘티를 모집하고, 클래스를 개설하세요</Description>
-       </DialogContainer>
-       <WriteGenerateButton />
-      </WriteGenerateContainer>
-      <FindContainer>
-       <FindDialogContainer>
-        <DialogContainer>
-         <Title>함께 하고 싶은 멘토를 찾아요</Title>
-         <Description>멘토들이 쓴 모집 글 목록을 확인할 수 있어요 </Description>
-        </DialogContainer>
-        <AllViwe>전체보기  &gt;</AllViwe>
-       </FindDialogContainer>
-       <CardContainer>
-        {cardList.map(({ name, description, level }, idx) => (
-          <RecruitmentCard key={idx} name={name} description={description} level={level} />
-        ))}
-       </CardContainer>
-      </FindContainer>
-     </ContentContainer>
-    </BodyContainer>
-   </>
+    <>
+      <BodyContainer>
+        <ContentContainer>
+          <WriteGenerateContainer>
+            <DialogContainer>
+              <Title>누구나 멘토가 될 수 있어요</Title>
+              <Description>함께 할 멘티를 모집하고, 클래스를 개설하세요</Description>
+            </DialogContainer>
+            <WriteGenerateButton />
+          </WriteGenerateContainer>
+          <FindContainer>
+            <FindDialogContainer>
+              <DialogContainer>
+                <Title>함께 하고 싶은 멘토를 찾아요</Title>
+                <Description>멘토들이 쓴 모집 글 목록을 확인할 수 있어요 </Description>
+              </DialogContainer>
+              <AllViwe>전체보기 &gt;</AllViwe>
+            </FindDialogContainer>
+            <CardContainer>
+              {cardList.map(({ name, description, level }, idx) => (
+                <RecruitmentCard key={idx} name={name} description={description} level={level} />
+              ))}
+            </CardContainer>
+          </FindContainer>
+        </ContentContainer>
+      </BodyContainer>
+    </>
   );
 }
