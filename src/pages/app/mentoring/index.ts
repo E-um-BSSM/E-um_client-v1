@@ -1,4 +1,4 @@
-import CreateRecruitmentPage from "./CreateRecruitmentPage";
+import CreateRecruitmentPage from "./CreateRecruitmentPage/";
 import ModifyRecruitmentPage from "./ModifyRecruitmentPage";
 import RecruitmentDetailPage from "./RecruitmentDetailPage";
 import RecruitmentListPage from "./RecruitmentListPage";
