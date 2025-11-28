@@ -1,8 +1,8 @@
 import Docs from "@/assets/docs_natural-500.svg"
 
-import { Base } from "@/components/WriteGenerate/style";
+import { Base } from "@/components/WriteGenerateButton/style";
 
-export default function WriteGenerate() {
+export default function WriteGenerateButton() {
   return (
     <Base>
       <img src={Docs} alt="Docs"/>

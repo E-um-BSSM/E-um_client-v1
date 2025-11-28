@@ -1,6 +1,6 @@
 import { BodyContainer,ContentContainer,WriteGenerateContainer,DialogContainer,Title,Description, FindContainer, FindDialogContainer,AllViwe,CardContainer } from "@/pages/app/mentoring/CreateRecruitmentPage/style";
-import WriteGenerate from "@/components/WriteGenerate";
-import MentoringFindCard from "@/components/RecruitmentCard";
+import WriteGenerateButton from "@/components/WriteGenerateButton";
+import RecruitmentCard from "@/components/RecruitmentCard";
 
 export default function CreateRecruitmentPage() {
   const cardList = [
@@ -44,7 +44,7 @@ export default function CreateRecruitmentPage() {
         <Title>누구나 멘토가 될 수 있어요</Title>
         <Description>함께 할 멘티를 모집하고, 클래스를 개설하세요</Description>
        </DialogContainer>
-       <WriteGenerate />
+       <WriteGenerateButton />
       </WriteGenerateContainer>
       <FindContainer>
        <FindDialogContainer>
@@ -56,7 +56,7 @@ export default function CreateRecruitmentPage() {
        </FindDialogContainer>
        <CardContainer>
         {cardList.map(({ name, description, level }, idx) => (
-          <MentoringFindCard key={idx} name={name} description={description} level={level} />
+          <RecruitmentCard key={idx} name={name} description={description} level={level} />
         ))}
        </CardContainer>
       </FindContainer>
