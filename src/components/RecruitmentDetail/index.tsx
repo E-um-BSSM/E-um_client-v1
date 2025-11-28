@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import Rarrow from "@/assets/Rarrow_natural-500.svg";
 
-import { Base } from "@/components/Detail/styles";
+import { Base } from "@/components/RecruitmentDetail/styles";
 
 export default function Detail() {
   return (
