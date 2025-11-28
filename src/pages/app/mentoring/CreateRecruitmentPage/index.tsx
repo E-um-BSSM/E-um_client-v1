@@ -1,6 +1,6 @@
 import { BodyContainer,ContentContainer,WriteGenerateContainer,DialogContainer,Title,Description, FindContainer, FindDialogContainer,AllViwe,CardContainer } from "@/pages/app/mentoring/CreateRecruitmentPage/style";
 import WriteGenerate from "@/components/WriteGenerate";
-import Card from "@/components/Card";
+import MentoringFindCard from "@/components/MentoringFindCard";
 
 export default function CreateRecruitmentPage() {
   const cardList = [
@@ -56,7 +56,7 @@ export default function CreateRecruitmentPage() {
        </FindDialogContainer>
        <CardContainer>
         {cardList.map(({ name, description, level }, idx) => (
-          <Card key={idx} name={name} description={description} level={level} />
+          <MentoringFindCard key={idx} name={name} description={description} level={level} />
         ))}
        </CardContainer>
       </FindContainer>
