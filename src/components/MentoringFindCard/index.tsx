@@ -1,4 +1,4 @@
-import { Container, Description, Info, Profile } from "@/components/Card/style";
+import { Container, Description, Info, Profile } from "@/components/MentoringFindCard/style";
 import Detail from "@/components/Detail";
 import DifficultyLevel from "@/components/DifficultyLevel";
 
