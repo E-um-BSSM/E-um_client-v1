@@ -7,20 +7,20 @@ interface props {
 
 const Input = styled.input<props>`
   display: flex;
-  padding: 16px 24px;
+  padding: 1rem 1.5rem;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   width: 100%;
-  height: 56px;
+  height: 3.5rem;
   box-sizing: border-box;
 
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 1.5rem;
 
-  border-radius: 12px;
+  border-radius: 0.75rem;
   border: 1px solid var(--natural-300);
   background: var(--white);
   color: var(--text-primary);

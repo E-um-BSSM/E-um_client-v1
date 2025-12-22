@@ -2,6 +2,8 @@ export interface signUpRequest {
   username: string;
   email: string;
   password: string;
+  phone: string;
+  auth_provider: string;
 }
 
 export interface signInRequest {
