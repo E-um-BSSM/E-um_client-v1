@@ -11,17 +11,17 @@ const Button = styled.button<props>`
   padding: var(--spacing-m) var(--spacing-l);
   justify-content: center;
   align-items: center;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   width: 100%;
-  height: 56px;
+  height: 3.5rem;
   box-sizing: border-box;
 
   text-align: center;
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 1.5rem;
   ${({ activate }) =>
     activate
       ? `

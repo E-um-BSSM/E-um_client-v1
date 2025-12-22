@@ -17,9 +17,9 @@ const HiddenCheckbox = styled.input`
 `;
 
 const StyledCheckbox = styled.div<{ checked: boolean; size: number }>`
-  width: ${({ size }) => size}px;
-  height: ${({ size }) => size}px;
-  border-radius: 4px;
+  width: ${({ size }) => size}rem;
+  height: ${({ size }) => size}rem;
+  border-radius: 0.25rem;
   border: 1px solid ${({ checked }) => (checked ? "var(--primary-500)" : "var(--natural-500)")};
   background-color: var(${({ checked }) => (checked ? "--primary-500" : "--white")});
   display: flex;
@@ -27,6 +27,7 @@ const StyledCheckbox = styled.div<{ checked: boolean; size: number }>`
   align-items: center;
   cursor: pointer;
   transition: 0.15s;
+  box-sizing: border-box;
 
   &:hover {
     ${({ checked }) =>
@@ -42,7 +43,7 @@ const StyledCheckbox = styled.div<{ checked: boolean; size: number }>`
     width: 25%;
     height: 50%;
     border: solid var(--white);
-    border-width: 0 3px 3px 0;
+    border-width: 0 0.1875rem 0.1875rem 0;
     transform: rotate(45deg) translateX(-10%) translateY(-5%);
   }
 `;

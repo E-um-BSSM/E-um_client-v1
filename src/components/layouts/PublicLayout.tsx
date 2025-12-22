@@ -1,22 +1,24 @@
-import { PublicHeader, Footer } from "@/components/public";
+import { Header, Footer } from "@/components/public";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
-import type { FooterType } from "@/types/Page";
+import type { PageType } from "@/types/Page";
 
 function PublicLayout() {
-  const [footerType, setFooterType] = useState("public" as FooterType);
+  const defaultPageType: PageType = "public";
+  const [pageType, setPageType] = useState(defaultPageType);
+
   return (
     <div className="publicLayout">
       <header>
-        <PublicHeader />
+        <Header type={pageType} />
       </header>
 
       <main>
-        <Outlet context={setFooterType} />
+        <Outlet context={setPageType} />
       </main>
 
       <footer>
-        <Footer type={footerType} />
+        <Footer type={pageType} />
       </footer>
     </div>
   );

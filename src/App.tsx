@@ -58,6 +58,7 @@ function App() {
             <Route path="profile" element={<pages.EditProfilePage />} />
             <Route path="posts" element={<pages.PostListPage />} />
           </Route>
+          <Route path="*" element={<pages.MainPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

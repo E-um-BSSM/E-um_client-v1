@@ -1,10 +1,12 @@
-import { Footer } from "@/components/public";
+import { Footer, Header } from "@/components/public";
 import { Outlet } from "react-router-dom";
 
 function AppLayout() {
   return (
     <div className="appLayout">
-      <header></header>
+      <header>
+        <Header type="app" />
+      </header>
 
       <main>
         <Outlet />
