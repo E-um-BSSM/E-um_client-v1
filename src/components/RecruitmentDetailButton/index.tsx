@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import Rarrow from "@/assets/Rarrow_natural-500.svg";
+import Rarrow from "@/assets/CRarrow_natural-500.svg";
 
 import { Base } from "@/components/RecruitmentDetailButton/styles";
 
