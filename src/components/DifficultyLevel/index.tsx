@@ -3,7 +3,7 @@ import DLcircleEmpty from "@/assets/DLcircle_natural-300.svg";
 
 import { Difficulty, Container } from "./style";
 
-export default function DifficultyLevel({ level }: { level: number }) {
+export function DifficultyLevel({ level }: { level: number }) {
   const arr = new Array(5).fill(1).fill(0, level, 5);
 
   return (
