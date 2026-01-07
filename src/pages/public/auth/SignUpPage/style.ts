@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 export const Main = styled.div`
   display: flex;
@@ -112,4 +113,33 @@ export const SubmitContainer = styled.div`
   align-items: center;
   gap: var(--spacing-m);
   align-self: stretch;
+  font-family: Pretendard;
+  text-align: center;
+  font-style: normal;
+`;
+
+export const RegisterBtn = styled.button`
+  display: flex;
+  padding: 1rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 0.75rem;
+  background-color: var(--primary-500);
+
+  color: var(--white, #fff);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.75rem;
+`;
+
+export const MoveLogin = styled(Link)`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  color: var(--primary-500);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: normal;
 `;

@@ -12,6 +12,8 @@ import {
   InputContainer,
   Label,
   Main,
+  MoveLogin,
+  RegisterBtn,
   SubmitContainer,
   TitleSection,
 } from "./style";
@@ -19,7 +21,7 @@ import { CustomCheckbox } from "@/components/atom";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
-function RegisterPage() {
+function SignUpPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
   const [emailTyped, setEmailTyped] = useState(false);
 
@@ -120,10 +122,13 @@ function RegisterPage() {
             개인정보 수집에 동의합니다.
           </AgreeBox>
         </InfoContainer>
-        <SubmitContainer></SubmitContainer>
+        <SubmitContainer>
+          <RegisterBtn>회원가입하기</RegisterBtn>
+          <MoveLogin to="/auth/login">BSM으로 로그인하기</MoveLogin>
+        </SubmitContainer>
       </FormSection>
     </Main>
   );
 }
 
-export default RegisterPage;
+export default SignUpPage;
