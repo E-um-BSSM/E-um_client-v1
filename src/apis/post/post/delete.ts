@@ -6,8 +6,4 @@ export const postDELETE = {
     const response = await req.delete(`/posts/${post_id}`);
     return response.data;
   },
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 2892ef1 (feat: post api 함수 추가)
