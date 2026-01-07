@@ -10,8 +10,7 @@ import {
   AllViwe,
   CardContainer,
 } from "@/pages/app/mentoring/CreateRecruitmentPage/style";
-import WriteGenerateButton from "@/components/WriteGenerateButton";
-import RecruitmentCard from "@/components/RecruitmentCard";
+import {WriteGenerateButton,RecruitmentCard} from "@/components";
 
 export default function CreateRecruitmentPage() {
   const cardList = [
