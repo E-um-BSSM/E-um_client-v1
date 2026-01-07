@@ -1,7 +1,7 @@
 import { Container, Description, Info, Profile } from "@/components/RecruitmentCard/style";
 import {RecruitmentDetailButton, DifficultyLevel} from "@/components";
 
-export default function RecruitmentCard({ name, description, level }: { name: string; description: string; level: number }) {
+export function RecruitmentCard({ name, description, level }: { name: string; description: string; level: number }) {
   return (
     <Container>
       <Info>
