@@ -2,7 +2,7 @@
 
 import { Base } from "@/components/MoreClassButton/styles";
 
-export default function MoreClassButton() {
+export function MoreClassButton() {
   return (
     <Base>
       더 많은 인기 클래스 보러가기
