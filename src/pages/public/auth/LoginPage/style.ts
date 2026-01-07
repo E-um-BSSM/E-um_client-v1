@@ -91,13 +91,12 @@ export const RememberText = styled.p`
   margin: 0;
 `;
 
-export const ForgotPassword = styled.p`
+export const ForgotPassword = styled.button`
   font-family: Pretendard;
   font-size: 1.125rem;
   font-weight: 400;
   color: var(--primary-500);
   margin: 0;
-  cursor: pointer;
 `;
 
 export const ButtonContainer = styled.div`

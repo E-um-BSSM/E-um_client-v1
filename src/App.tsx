@@ -12,7 +12,7 @@ function App() {
           {/* auth */}
           <Route path="auth">
             <Route path="login" element={<pages.LoginPage />} />
-            <Route path="register" element={<pages.RegisterPage />} />
+            <Route path="signup" element={<pages.SignUpPage />} />
           </Route>
         </Route>
         {/* app */}

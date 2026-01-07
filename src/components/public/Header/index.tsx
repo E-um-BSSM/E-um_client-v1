@@ -64,7 +64,7 @@ function Header({ type }: props) {
           {type !== "app" ? (
             <Actions>
               <AuthButton
-                to="/auth/register"
+                to="/auth/signup"
                 customStyle={css`
                   background-color: var(--white);
                   color: var(--text-primary);

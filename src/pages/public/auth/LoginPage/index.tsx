@@ -70,7 +70,7 @@ function LoginPage() {
           <Button activate={false}>BSM으로 로그인하기</Button>
           <SignupContainer>
             <SignupText>계정이 없으신가요?</SignupText>
-            <Link to="/signup" style={{ textDecoration: "none" }}>
+            <Link to="/auth/signup">
               <SignupLink>회원가입하기</SignupLink>
             </Link>
           </SignupContainer>
