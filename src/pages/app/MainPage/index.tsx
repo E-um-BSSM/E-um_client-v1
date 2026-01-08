@@ -32,17 +32,23 @@ import {
 import { SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules";
 import Rarrow from "@/assets/AllViewRarrow_primary-500.svg";
-import Rarrow_natural from "@/assets/Rarrow_natural-500.svg";
+import Rarrow_natural from "@/assets/Rarrow_natural-400.svg";
 import Post_tag from "@/assets/Post_tag.svg";
 import { MentoringCard, MoreClassButton, FindClassButton } from "@/components";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { useGlobalStyle } from "@/stores/useStyle";
 
 export default function MainPage() {
+  const setFooterColor = useGlobalStyle(state => state.setFooterColor);
+  useEffect(() => {
+    setFooterColor("white");
+  }, [setFooterColor]);
+
   const DUMMY_NOTICES = [
     { id: 1, title: "서비스 점검 안내", date: "2024.03.20" },
     { id: 2, title: "새로운 기능 출시", date: "2024.03.18" },
