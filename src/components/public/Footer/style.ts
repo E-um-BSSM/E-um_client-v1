@@ -11,6 +11,7 @@ export const Frame = styled.div<BgProps>`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  border-top : 0.1rem solid var(--natural-300);
 
   background-color: ${({ color }) =>
     color === "lightGray" ? "var(--natural-100)" : color === "white" ? "var(--white)" : "var(--black)"};
