@@ -1,5 +1,7 @@
+import { Outlet } from "react-router-dom";
+
 function AppLayout() {
-  return <></>;
+  return <><Outlet/></>;
 }
 
 export default AppLayout;
