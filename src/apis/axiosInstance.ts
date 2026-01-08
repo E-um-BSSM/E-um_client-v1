@@ -5,7 +5,7 @@ export const req = axios.create({
   withCredentials: true,
 });
 
-req.interceptors.request.use((config) => {
+req.interceptors.request.use(config => {
   if (config.data && !(config.data instanceof FormData)) {
     config.headers["Content-Type"] = "application/json";
   }

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as pages from "./pages";
-import * as layouts from "./layouts";
+import * as layouts from "./components/layouts";
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
           {/* auth */}
           <Route path="auth">
             <Route path="login" element={<pages.LoginPage />} />
-            <Route path="register" element={<pages.RegisterPage />} />
+            <Route path="signup" element={<pages.SignUpPage />} />
           </Route>
         </Route>
         {/* app */}
@@ -58,6 +58,7 @@ function App() {
             <Route path="profile" element={<pages.EditProfilePage />} />
             <Route path="posts" element={<pages.PostListPage />} />
           </Route>
+          <Route path="*" element={<pages.MainPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

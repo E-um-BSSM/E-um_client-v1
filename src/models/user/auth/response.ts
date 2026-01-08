@@ -1,7 +1,9 @@
 export interface signUpResponse {
   username: string;
   email: string;
+  phone: string;
   system_role: string;
+  auth_provider: string;
   strength: number;
   created_at: string;
   currency: number;
@@ -18,6 +20,8 @@ export interface signInResponse {
   currency: number;
   daily_compensation_at: string;
   equipped_badge: string;
+  auth_provider: string;
+  phone: string;
 }
 
 export interface refreshResponse {
