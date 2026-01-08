@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { Base } from "@/components/MoreClassButton/styles";
+import { Base } from "@/components/MoreClassButton/style";
 
 export function MoreClassButton() {
   return (
