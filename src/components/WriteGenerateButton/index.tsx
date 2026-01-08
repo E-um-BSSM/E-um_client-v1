@@ -2,7 +2,7 @@ import Docs from "@/assets/docs_natural-500.svg"
 
 import { Base } from "@/components/WriteGenerateButton/style";
 
-export default function WriteGenerateButton() {
+export function WriteGenerateButton() {
   return (
     <Base>
       <img src={Docs} alt="Docs"/>
