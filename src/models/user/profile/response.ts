@@ -1,7 +1,5 @@
 export interface profileResponse {
-  color: string;
-  border: string;
-  background: string;
+  img_url: string;
   created_at: string;
   updated_at: string;
   username: string;
