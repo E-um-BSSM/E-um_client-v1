@@ -1,5 +1,5 @@
 export interface reviewSearchResponse {
-  tags: string[];
+  tag: string;
   created_at: string;
   updated_at: string;
   reviewer_name: string;
@@ -9,7 +9,7 @@ export interface reviewSearchResponse {
 }
 
 export interface reviewResponse {
-  tags: string[];
+  tag: string;
   created_at: string;
   updated_at: string;
 }
