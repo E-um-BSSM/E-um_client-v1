@@ -34,7 +34,7 @@ import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules";
 import Rarrow from "@/assets/AllViewRarrow_primary-500.svg";
 import Rarrow_natural from "@/assets/Rarrow_natural-400.svg";
 import Post_tag from "@/assets/Post_tag.svg";
-import { MentoringCard, MoreClassButton, FindClassButton } from "@/components";
+import { MentoringCard, FindClassButton } from "@/components";
 import { useState,useEffect } from "react";
 
 import "swiper/css";
@@ -239,7 +239,6 @@ export default function MainPage() {
               )}
             </PopularMentoringContent>
           </Popular>
-          <MoreClassButton />
         </MoreMentoringContainer>
         <Popular style={{ width: "69.5rem" }}>
           <PopularCommunityContent>
