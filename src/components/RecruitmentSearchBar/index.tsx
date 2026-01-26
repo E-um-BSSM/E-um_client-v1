@@ -5,8 +5,8 @@ export function RecruitmentSearchBar() {
  return(
   <SearchBarContainer>
    <Content>
-    <Text>멘토 이름, 카테고리, 난이도 별로 검색해요</Text>
-    <img src={SearchSvg} alt="search-icon" />
+    <Text placeholder="멘토 이름, 카테고리, 난이도 별로 검색해요"/>
+    <img src={SearchSvg} alt="search-icon"/>
    </Content>
   </SearchBarContainer>
  );
