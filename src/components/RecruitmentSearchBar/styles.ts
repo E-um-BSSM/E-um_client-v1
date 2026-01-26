@@ -19,7 +19,7 @@ export const Content = styled.div`
  align-self: stretch;
 `;
 
-export const Text = styled.p`
+export const Text = styled.input`
  flex: 1 0 0;
  color: var(--text-muted, #64748B);
  font-family: Pretendard;
@@ -27,4 +27,7 @@ export const Text = styled.p`
  font-style: normal;
  font-weight: 500;
  line-height: 1.25rem;
+ border: none;
+ background: transparent;
+ outline: none;
 `;
