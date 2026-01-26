@@ -5,4 +5,5 @@ export * from "./MoreClassButton";
 export * from "./RecruitmentCard"
 export * from "./RecruitmentDetailButton";
 export * from "./WriteGenerateButton";
-export * from "./FindClassButton"
+export * from "./FindClassButton";
+export * from "./RecruitmentSearchBar";
