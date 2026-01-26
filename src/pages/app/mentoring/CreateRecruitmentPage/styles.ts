@@ -11,7 +11,6 @@ export const BodyContainer = styled.div`
 
 export const ContentContainer = styled.div`
  display: flex;
- width: 100%;
  flex-direction: column;
  align-items: flex-start;
  gap: 2.25rem;
@@ -80,5 +79,4 @@ export const CardContainer = styled.div`
  grid-template-rows: repeat(2, auto);   /* 2 rows */
  column-gap: 2.25rem;
  row-gap: 1.75rem;
- max-width: 900px;
 `;
