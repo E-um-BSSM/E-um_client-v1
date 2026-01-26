@@ -21,7 +21,7 @@ export const Content = styled.div`
 
 export const Text = styled.p`
  flex: 1 0 0;
- color: var(--Text-text-muted, #64748B);
+ color: var(--text-muted, #64748B);
  font-family: Pretendard;
  font-size: 1rem;
  font-style: normal;
