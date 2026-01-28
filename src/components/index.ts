@@ -7,3 +7,4 @@ export * from "./RecruitmentDetailButton";
 export * from "./WriteGenerateButton";
 export * from "./FindClassButton";
 export * from "./RecruitmentSearchBar";
+export * from "./MiniMentoringCard";
