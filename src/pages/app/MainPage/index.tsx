@@ -28,7 +28,7 @@ import {
   NotificationContentContainer,
   NotificationContent,
   RecentMentoringEmpty,
-} from "./style";
+} from "./styles";
 import { SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules";
 import Rarrow from "@/assets/AllViewRarrow_primary-500.svg";
