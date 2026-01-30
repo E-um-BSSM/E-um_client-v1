@@ -31,3 +31,11 @@ export const Text = styled.input`
  background: transparent;
  outline: none;
 `;
+
+//15px로 고정된 필터 버튼 스타일
+export const FilterButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 15px; 
+`;

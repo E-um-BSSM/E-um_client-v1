@@ -31,3 +31,10 @@ export const Text = styled.input`
  background: transparent;
  outline: none;
 `;
+
+export const FilterButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 15px; 
+`;
