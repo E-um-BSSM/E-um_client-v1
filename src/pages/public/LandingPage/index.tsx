@@ -10,6 +10,8 @@ import {
   HeaderImg,
   FeatureContainer,
   FeatureCard,
+  MentoContainer,
+  MentoCard,
 } from "./style";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
@@ -84,10 +86,58 @@ function LandingPage() {
     );
   }
 
+  function Mento() {
+    interface CardProps {
+      role: string,
+      name: string,
+      comment: string,
+    }
+    
+    function Card({ role, name, comment }: CardProps) {
+      return (
+        <MentoCard>
+          <Row gap='8px' align='center'>
+            <Text color='highlight' size='caption' weight='regular'> {role} </Text>
+            <Text color='primary' size='caption' weight='regular'> {name} </Text>
+          </Row>
+          <Text color='primary' size='caption' weight='regular'> {comment} </Text>
+        </MentoCard>
+      );
+    }
+
+    return (
+      <MentoContainer>
+        <Stack gap='4px' align='center'>          
+          <Text color='primary' size='subtitle' weight='semibold'> 어떻게 시작해야 할지 막막한 전공 공부, </Text>
+          <Row gap='4px' align='center'>
+            <Text color='primary' size='subtitle' weight='semibold'> 이제 </Text>
+            <Text color='highlight' size='subtitle' weight='semibold'> 멘토와 함께 </Text>
+            <Text color='primary' size='subtitle' weight='semibold'> 하세요 </Text>
+          </Row>
+        </Stack>
+        <Stack gap='20px' align='center'>
+          <Row gap='20px' align='center'>
+            <Card role='멘토' name='윤미수' comment='디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!' />
+            <Card role='멘토' name='권길현' comment='많은 후배들과 친해지고 싶어요! 열심히 하고자 하는 친구들을 원해요' />
+            <Card role='멘토' name='김태훈' comment='풀스택 개발자가 되고 싶은 1학년 친구들을 위한 멘토링 클래스' />
+            {/* <Card role='멘토' name='윤미수' comment='디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!' /> */}
+          </Row>
+          <Row gap='20px' align='center'>
+            <Card role='멘티' name='윤미수' comment='디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!' />
+            <Card role='멘티' name='진수화' comment='나태한 후배에게 다정하고 친절하고 착하고 자세하고 쉽게 알려줄 멘토 선배님이 필요해요' />
+            <Card role='멘티' name='이소리' comment='노베이스로 입학해서 프로그래밍 공부를 어떻게 해야 할지 갈피를 못잡겠어요' />
+            <Card role='멘티' name='김아리' comment='강제성이 있어야 하는 편이라서 이끌어줄 선배님이 필요해요' />
+          </Row>
+        </Stack>
+      </MentoContainer>
+    );
+  }
+
   return (
     <>
       <Header />
       <Feature />
+      <Mento />
     </>
   );
 }
