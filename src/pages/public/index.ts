@@ -1,4 +1,4 @@
-import LandingPage from "./auth/LandingPage";
+import LandingPage from "./LandingPage";
 
 export * from "./auth";
 export { LandingPage };
