@@ -2,7 +2,7 @@ import{ HiddenRadio, SlidingBackground, StyledLabel, SwitchContainer } from "./s
 import { useState } from "react";
 
 export const RadioSwitch = () => {
-  const [selectedValue, setSelectedValue] = useState("A");
+  const [selectedValue, setSelectedValue] = useState("Mento");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(e.target.value);
@@ -10,17 +10,17 @@ export const RadioSwitch = () => {
 
   return (
     <SwitchContainer>
-      <SlidingBackground activeIndex={selectedValue === "A" ? 0 : 1} />
+      <SlidingBackground activeIndex={selectedValue === "Menti" ? 0 : 1} />
 
       <HiddenRadio
         type="radio"
         id="opt1"
         name="toggle"
-        value="A"
-        checked={selectedValue === "A"}
+        value="Menti"
+        checked={selectedValue === "Menti"}
         onChange={handleChange}
       />
-      <StyledLabel htmlFor="opt1" isSelected={selectedValue === "A"}>
+      <StyledLabel htmlFor="opt1" isSelected={selectedValue === "Menti"}>
         멘티
       </StyledLabel>
 
@@ -28,11 +28,11 @@ export const RadioSwitch = () => {
         type="radio"
         id="opt2"
         name="toggle"
-        value="B"
-        checked={selectedValue === "B"}
+        value="Mento"
+        checked={selectedValue === "Mento"}
         onChange={handleChange}
       />
-      <StyledLabel htmlFor="opt2" isSelected={selectedValue === "B"}>
+      <StyledLabel htmlFor="opt2" isSelected={selectedValue === "Mento"}>
         멘토
       </StyledLabel>
     </SwitchContainer>
