@@ -8,9 +8,11 @@ import {
   Text,
   Button,
   HeaderContainer,
+  HeaderImg,
 } from "./style";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
+
 function LandingPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
 
@@ -21,7 +23,7 @@ function LandingPage() {
   function Header() {
     return (
       <HeaderContainer>
-        <Stack gap='20px' align="flex-start">
+        <Stack gap='28px' align="flex-start">
           <Stack gap='8px' align="flex-start">
             <Title> 작은 만남이 큰 경험으로 </Title>
             <Row gap='4px' align='center'>
@@ -31,6 +33,9 @@ function LandingPage() {
           </Stack>
           <Button> 시작하기 </Button>
         </Stack>
+        <HeaderImg>
+          <img src="/LandingBackground.png" width={"540px"} />
+        </HeaderImg>
       </HeaderContainer>
     );
   }
