@@ -1,10 +1,18 @@
 import styled from "@emotion/styled";
 
+const FontSizeValues = {
+  title: '3rem',
+  subtitle: '2.4rem',
+  text: '1.6rem',
+  caption: '1.3rem',
+} as const;
+
 const TextColorValues = {
   highlight: '#235FFF',
   primary: '#0F172A',
   secondary: '#334155',
-  muted: '#64748B',
+  disabled: '#64748B',
+  muted: '#FFFFFF',
 } as const;
 
 const TextWeightValues = {
@@ -12,6 +20,7 @@ const TextWeightValues = {
   semibold: '600',
 } as const;
 
+type FontSize = keyof typeof FontSizeValues;
 type TextColor = keyof typeof TextColorValues;
 type TextWeight = keyof typeof TextWeightValues;
 type Gap = '4px' | '8px' | '12px' | '16px' | '20px' | '28px';
@@ -37,17 +46,13 @@ export const Stack = styled.div<{
   gap: ${({gap}) => gap};
 `;
 
-export const Title = styled.h1`
-  font-size: 3rem;
-  font-weight: 600;
-`;
-
 export const Text = styled.p<{
   color: TextColor;
+  size: FontSize;
   weight: TextWeight;
 }>`
   color: ${({color}) => TextColorValues[color]};
-  font-size: 1.6rem;
+  font-size: ${({size}) => FontSizeValues[size]};
   font-weight: ${({weight}) => TextWeightValues[weight]};
 `;
 
@@ -74,3 +79,29 @@ export const HeaderImg = styled.div`
   top: 0;
   right: 0;
 `;
+
+export const FeatureContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  background-color: #4F7FFF;
+`;
+
+export const FeatureCard = styled.div`
+  padding: 24px;
+  width: 280px;
+  height: 140px;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 1.5rem;
+  font-wieght: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+  border-radius: 24px;
+  background-color: #9AB5FF;
+`
