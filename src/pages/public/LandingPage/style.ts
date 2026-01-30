@@ -14,7 +14,7 @@ const TextWeightValues = {
 
 type TextColor = keyof typeof TextColorValues;
 type TextWeight = keyof typeof TextWeightValues;
-type Gap = '4px' | '8px' | '12px' | '16px' | '20px';
+type Gap = '4px' | '8px' | '12px' | '16px' | '20px' | '28px';
 type Align = 'flex-start' | 'center';
 
 export const Row = styled.div<{
@@ -38,7 +38,7 @@ export const Stack = styled.div<{
 `;
 
 export const Title = styled.h1`
-  font-size: 30px;
+  font-size: 3rem;
   font-weight: 600;
 `;
 
@@ -47,22 +47,30 @@ export const Text = styled.p<{
   weight: TextWeight;
 }>`
   color: ${({color}) => TextColorValues[color]};
-  font-size: 18px;
+  font-size: 1.6rem;
   font-weight: ${({weight}) => TextWeightValues[weight]};
 `;
 
 export const Button = styled.button`
-  padding: 12px 20px;
+  padding: 16px 24px;
   color: #FFFFFF;
-  font-size: 16px;
+  font-size: 1.3rem;
   font-wieght: 400;
   border-radius: 9999px;
   background-color: #235FFF;
 `;
 
 export const HeaderContainer = styled.div`
-  height: 100vh;
+  padding-left: 80px;
+  height: calc(100vh - 88px);
   display: flex;
   align-items: center;
-  padding-left: 60px;
+  justify-content: space-between;
+  position: relative;
+`;
+
+export const HeaderImg = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
