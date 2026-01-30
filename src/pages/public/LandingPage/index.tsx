@@ -23,7 +23,6 @@ import type { PageType } from "@/types/Page";
 import { useOutletContext, useLocation, useNavigate } from 'react-router-dom';
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
-
 function LandingPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
   const location = useLocation();
