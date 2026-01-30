@@ -87,3 +87,11 @@ export const TopContainer = styled.div`
   align-items: center;
   align-self: stretch;
 `;
+
+export const MyRecruitmentCardContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+  align-self: stretch;
+  flex-wrap: wrap;
+`;
