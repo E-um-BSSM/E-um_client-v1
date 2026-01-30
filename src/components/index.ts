@@ -8,3 +8,5 @@ export * from "./WriteGenerateButton";
 export * from "./FindClassButton";
 export * from "./RecruitmentSearchBar";
 export * from "./MiniMentoringCard";
+export * from "./ClassSearchBar"
+export * from "./MentoMentiSwitchButton"
