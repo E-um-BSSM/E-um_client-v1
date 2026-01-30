@@ -1,5 +1,10 @@
 import { CardContainer } from "@/pages/app/mentoring/CreateRecruitmentPage/styles";
-import { BodyContainer,ContentContainer, TextContainer, Title } from "@/pages/app/mentoring/RecruitmentListPage/styles";
+import {
+  BodyContainer,
+  ContentContainer,
+  TextContainer,
+  Title,
+} from "@/pages/app/mentoring/RecruitmentListPage/styles";
 import { RecruitmentCard, RecruitmentSearchBar } from "@/components";
 
 export default function RecruitmentListPage() {
@@ -52,19 +57,19 @@ export default function RecruitmentListPage() {
   ];
   return (
     <>
-     <BodyContainer>
-      <ContentContainer>
-        <TextContainer>
-          <Title>전체 모집글 보기</Title>
-          <RecruitmentSearchBar />
-        </TextContainer>
-        <CardContainer>
-          {cardList.map(({ name, description, level }, idx) => (
-            <RecruitmentCard key={idx} name={name} description={description} level={level} />
-          ))}
-        </CardContainer>
-      </ContentContainer>
-     </BodyContainer>
+      <BodyContainer>
+        <ContentContainer>
+          <TextContainer>
+            <Title>전체 모집글 보기</Title>
+            <RecruitmentSearchBar />
+          </TextContainer>
+          <CardContainer>
+            {cardList.map(({ name, description, level }, idx) => (
+              <RecruitmentCard key={idx} name={name} description={description} level={level} />
+            ))}
+          </CardContainer>
+        </ContentContainer>
+      </BodyContainer>
     </>
   );
 }
