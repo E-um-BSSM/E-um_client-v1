@@ -52,6 +52,7 @@ export const Text = styled.p<{
   weight: TextWeight;
 }>`
   color: ${({color}) => TextColorValues[color]};
+  text-align: center;
   font-size: ${({size}) => FontSizeValues[size]};
   font-weight: ${({weight}) => TextWeightValues[weight]};
 `;
@@ -104,4 +105,26 @@ export const FeatureCard = styled.div`
   border: 2px solid #FFFFFF;
   border-radius: 24px;
   background-color: #9AB5FF;
-`
+`;
+
+export const MentoContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  background: linear-gradient(to bottom, #FFFFFF, #E9EFFF);
+`;
+
+export const MentoCard = styled.div`
+  padding: 28px;
+  min-width: 440px;
+  width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #E7EBEE;
+  border-radius: 24px;
+  background-color: #FFFFFF;
+`;
