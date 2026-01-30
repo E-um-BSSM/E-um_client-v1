@@ -52,7 +52,6 @@ export const Text = styled.p<{
   weight: TextWeight;
 }>`
   color: ${({color}) => TextColorValues[color]};
-  text-align: center;
   font-size: ${({size}) => FontSizeValues[size]};
   font-weight: ${({weight}) => TextWeightValues[weight]};
 `;
@@ -127,4 +126,21 @@ export const MentoCard = styled.div`
   border: 1px solid #E7EBEE;
   border-radius: 24px;
   background-color: #FFFFFF;
+`;
+
+export const FooterContainer = styled.div`
+  height: calc(100vh - 400px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #00000090;
+`;
+
+export const FooterImg = styled.img`
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
 `;
