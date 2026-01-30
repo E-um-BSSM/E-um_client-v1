@@ -53,6 +53,7 @@ export const Text = styled.p<{
   weight: TextWeight;
 }>`
   color: ${({color}) => TextColorValues[color]};
+  text-align: center;
   font-size: ${({size}) => FontSizeValues[size]};
   font-weight: ${({weight}) => TextWeightValues[weight]};
 `;
