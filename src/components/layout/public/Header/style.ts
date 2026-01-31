@@ -11,6 +11,7 @@ export const Frame = styled.div`
   flex-direction: column;
   z-index: 10;
   position: fixed;
+  top: 0;
   background-color: #FFFFFF;
 `;
 
