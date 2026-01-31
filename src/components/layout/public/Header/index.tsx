@@ -101,10 +101,35 @@ function Header({ type }: props) {
                 width: indicatorStyle.width,
               }}
             />
-          </NavBar>
+            <UserInfo>
+              <span className="name">김하늘</span>
+              <span className="role">Starter</span>
+            </UserInfo>
+          </User>
         )}
-      </Frame>
-    </>
+      </Layout>
+      {type !== "public" && (
+        <NavBar type={type}>
+          {Object.entries(navInfos[type]).map(([path, name], i) => (
+            <Nav
+              to={path}
+              key={i}
+              ref={el => {
+                navRefs.current[i] = el;
+              }}
+            >
+              {name}
+            </Nav>
+          ))}
+          <Indicator
+            style={{
+              left: indicatorStyle.left,
+              width: indicatorStyle.width,
+            }}
+          />
+        </NavBar>
+      )}
+    </Frame>
   );
 }
 
