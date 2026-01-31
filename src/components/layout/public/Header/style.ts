@@ -16,6 +16,7 @@ export const Frame = styled.div<FrameProps>`
   ${({ $type }) => $type === "app" && "border-bottom: 1px solid var(--natural-300);"}
   z-index: 10;
   position: fixed;
+  top: 0;
   background-color: #ffffff;
 `;
 
