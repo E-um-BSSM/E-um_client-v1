@@ -67,7 +67,7 @@ export const Button = styled.button`
 
 export const HeaderContainer = styled.div`
   padding-left: 80px;
-  height: calc(100vh - 88px);
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
