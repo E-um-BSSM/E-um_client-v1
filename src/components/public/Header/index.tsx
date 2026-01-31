@@ -55,70 +55,68 @@ function Header({ type }: props) {
   }, [hash, pathname, type]);
 
   return (
-    <>
-      <Frame>
-        <Layout>
-          <Link to={type === "app" ? "/app" : "/#MAIN"}>
-            <img src={Logo} alt="이음 로고" loading="lazy" />
-          </Link>
-          {type !== "app" ? (
-            <Actions>
-              <AuthButton
-                to="/auth/signup"
-                customStyle={css`
-                  background-color: var(--white);
-                  color: var(--text-primary);
-                `}
-              >
-                회원가입
-              </AuthButton>
-              <AuthButton
-                to="/auth/login"
-                customStyle={css`
-                  background-color: var(--primary-500);
-                  color: var(--white);
-                `}
-              >
-                로그인
-              </AuthButton>
-            </Actions>
-          ) : (
-            <User>
-              <UserImg
-                src="/Users/ketarubot/Desktop/김태훈/프사/7988b903-e71f-49e3-be98-e23c950211c3.jpeg"
-                alt="유저 프로필 사진"
-                loading="lazy"
-              />
-              <UserInfo>
-                <span className="name">김하늘</span>
-                <span className="role">Starter</span>
-              </UserInfo>
-            </User>
-          )}
-        </Layout>
-        {type !== "public" && (
-          <NavBar type={type}>
-            {Object.entries(navInfos[type]).map(([path, name], i) => (
-              <Nav
-                to={path}
-                key={i}
-                ref={el => {
-                  navRefs.current[i] = el;
-                }}
-              >
-                {name}
-              </Nav>
-            ))}
-            <Indicator
-              style={{
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
-              }}
+    <Frame>
+      <Layout>
+        <Link to={type === "app" ? "/app" : "/#MAIN"}>
+          <img src={Logo} alt="이음 로고" loading="lazy" />
+        </Link>
+        {type !== "app" ? (
+          <Actions>
+            <AuthButton
+              to="/auth/signup"
+              customStyle={css`
+                background-color: var(--white);
+                color: var(--text-primary);
+              `}
+            >
+              회원가입
+            </AuthButton>
+            <AuthButton
+              to="/auth/login"
+              customStyle={css`
+                background-color: var(--primary-500);
+                color: var(--white);
+              `}
+            >
+              로그인
+            </AuthButton>
+          </Actions>
+        ) : (
+          <User>
+            <UserImg
+              src="/Users/ketarubot/Desktop/김태훈/프사/7988b903-e71f-49e3-be98-e23c950211c3.jpeg"
+              alt="유저 프로필 사진"
+              loading="lazy"
             />
-          </NavBar>
+            <UserInfo>
+              <span className="name">김하늘</span>
+              <span className="role">Starter</span>
+            </UserInfo>
+          </User>
         )}
-      </Frame>
-    </>
+      </Layout>
+      {type !== "public" && (
+        <NavBar type={type}>
+          {Object.entries(navInfos[type]).map(([path, name], i) => (
+            <Nav
+              to={path}
+              key={i}
+              ref={el => {
+                navRefs.current[i] = el;
+              }}
+            >
+              {name}
+            </Nav>
+          ))}
+          <Indicator
+            style={{
+              left: indicatorStyle.left,
+              width: indicatorStyle.width,
+            }}
+          />
+        </NavBar>
+      )}
+    </Frame>
   );
 }
 
