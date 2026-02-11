@@ -121,8 +121,6 @@ export default function MainPage() {
             disableOnInteraction: false,
           }}
           loop={bannerData.length > 1}
-          onSwiper={swiper => console.log(swiper)}
-          onSlideChange={() => console.log("slide change")}
         >
           {bannerData.map(banner => (
             <SwiperSlide key={banner.id}>

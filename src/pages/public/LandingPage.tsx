@@ -9,7 +9,7 @@ function LandingPage() {
 
   useEffect(() => {
     setPageType("landing");
-  }, []);
+  }, [setPageType]);
 
   return <></>;
 }
