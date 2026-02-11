@@ -6,8 +6,8 @@ export const profileGET = {
     const response = await req.get(`/profiles/${username}`);
     return response.data;
   },
-  profileListSearch: async (username: string): Promise<globalResponse<{ content: profileResponse[] }>> => {
-    const response = await req.get(`/profiles/${username}/list`);
+  profileListSearch: async (): Promise<globalResponse<{ content: profileResponse[] }>> => {
+    const response = await req.get(`/profiles/list`);
     return response.data;
   },
 };
