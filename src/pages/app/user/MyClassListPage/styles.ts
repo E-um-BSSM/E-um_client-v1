@@ -46,12 +46,20 @@ export const MyContainer = styled.div`
   align-self: stretch;
 `;
 
-export const MyMentoringCardContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 17.5rem);
-  gap: 2.25rem;
-  justify-content: space-between;
+export const MyMentoringCardContainer = styled.div<{ isEmpty: boolean }>`
   align-self: stretch;
+
+  ${({ isEmpty }) =>
+    isEmpty
+      ? `
+    display: flex;
+  `
+      : `
+    display: grid;
+    grid-template-columns: repeat(4, 17.5rem);
+    gap: 2.25rem;
+    justify-content: space-between;
+  `}
 `;
 export const Text = styled.p`
   color: var(--Text-text-primary, #0f172a);

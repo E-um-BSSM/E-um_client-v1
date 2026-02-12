@@ -295,7 +295,7 @@ export default function MyPage() {
                 멘토링 중인 강좌 <Cnt>{currentData.mentoringClasses.length}</Cnt>
               </Text>
             </TextContainer>
-            <MyMentoringCardContainer>
+            <MyMentoringCardContainer isEmpty={!isLoading && currentData.mentoringClasses.length === 0}>
               {!isLoading && currentData.mentoringClasses.length === 0
                 ? renderEmpty("현재 진행 중인 멘토링이 없어요")
                 : currentData.mentoringClasses.map(item => (
