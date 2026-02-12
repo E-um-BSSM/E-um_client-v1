@@ -11,6 +11,7 @@ function MentoringCardBase({ title, lecturer, size, onClick }: MentoringCardBase
   return (
     <Container
       size={size}
+      hasClickable={Boolean(onClick)}
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -27,21 +28,19 @@ function MentoringCardBase({ title, lecturer, size, onClick }: MentoringCardBase
   );
 }
 
-const Container = styled.div<{ size: "default" | "mini" }>`
+const Container = styled.div<{ size: "default" | "mini"; hasClickable: boolean }>`
   display: flex;
-  width: ${({ size }) => (size === "default" ? "16.25rem" : "fit-content")};
+  width: ${({ size }) => (size === "default" ? "16.25rem" : "17.5rem")};
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-
-  &:hover {
-    cursor: pointer;
-  }
+  flex-shrink: 0;
+  cursor: ${({ hasClickable }) => (hasClickable ? "pointer" : "default")};
 `;
 
 const CardBanner = styled.div<{ size: "default" | "mini" }>`
-  width: ${({ size }) => (size === "default" ? "16.25rem" : "15rem")};
-  height: ${({ size }) => (size === "default" ? "8.75rem" : "7.5rem")};
+  width: ${({ size }) => (size === "default" ? "16.25rem" : "17.5rem")};
+  height: ${({ size }) => (size === "default" ? "8.75rem" : "8.75rem")};
   align-self: stretch;
   border-radius: var(--S, 0.75rem);
   background: var(--natural-100, #f7f9fa);
@@ -69,10 +68,18 @@ const Profile = styled.div<{ size: "default" | "mini" }>`
 `;
 
 const Title = styled.p`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--text-primary, #0f172a);
 `;
 
 const Lecturer = styled.p`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--text-muted, #64748b);
 `;
 
