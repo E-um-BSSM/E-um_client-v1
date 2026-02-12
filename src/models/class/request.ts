@@ -3,13 +3,14 @@ export interface classRequest {
   description: string;
   difficulty: number;
   tags: string[];
+  accessScope: string;
   status: string;
 }
 
 export interface classSearchRequest {
-  difficulty: number;
-  tags: string[];
-  status: string;
+  difficulty?: number;
+  tags?: string[];
+  status?: string;
 }
 
 export interface assignmentRequest {
