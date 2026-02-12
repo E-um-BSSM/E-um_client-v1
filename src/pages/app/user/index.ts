@@ -1,5 +1,6 @@
 import EditProfilePage from "./EditProfilePage";
-import MyPage from "./MyPage/";
+import MyClassListPage from "./MyClassListPage/";
 import PostListPage from "./PostListPage";
+import MyClassDetailPage from "./MyClassDetailPage";
 
-export { EditProfilePage, MyPage, PostListPage };
+export { EditProfilePage, MyClassListPage, PostListPage, MyClassDetailPage };

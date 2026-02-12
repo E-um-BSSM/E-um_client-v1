@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as pages from "./pages";
 import * as layouts from "./components/layout";
 
@@ -21,8 +21,7 @@ function App() {
           {/* class */}
           <Route path="class">
             <Route path="create" element={<pages.CreateClassPage />} />
-            <Route path="detail" element={<pages.SubmitAssignmentPage />} />
-            <Route path="list" element={<pages.MyPage />} />
+            <Route path="detail" element={<pages.MyClassDetailPage />} />
             <Route path="manage" element={<pages.ManageClassPage />} />
             <Route path="rate" element={<pages.RatePage />} />
             <Route path="schedule" element={<pages.SchedulePage />} />
@@ -54,7 +53,10 @@ function App() {
           </Route>
           {/* user */}
           <Route path="user">
-            <Route path="my" element={<Navigate to="/app/class/list" replace />} />
+            <Route path="class">
+              <Route path="list" element={<pages.MyClassListPage />} />
+              <Route path="detail" element={<pages.MyClassDetailPage />} />
+            </Route>
             <Route path="profile" element={<pages.EditProfilePage />} />
             <Route path="posts" element={<pages.PostListPage />} />
           </Route>

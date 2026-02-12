@@ -47,12 +47,11 @@ export const MyContainer = styled.div`
 `;
 
 export const MyMentoringCardContainer = styled.div`
-  display: flex;
-  align-items: flex-start;
-  align-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(4, 17.5rem);
+  gap: 2.25rem;
   justify-content: space-between;
   align-self: stretch;
-  flex-wrap: wrap;
 `;
 export const Text = styled.p`
   color: var(--Text-text-primary, #0f172a);
