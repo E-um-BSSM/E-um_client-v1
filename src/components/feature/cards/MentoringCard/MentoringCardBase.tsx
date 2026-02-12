@@ -4,11 +4,18 @@ interface MentoringCardBaseProps {
   title: string;
   lecturer: string;
   size: "default" | "mini";
+  onClick?: () => void;
 }
 
-function MentoringCardBase({ title, lecturer, size }: MentoringCardBaseProps) {
+function MentoringCardBase({ title, lecturer, size, onClick }: MentoringCardBaseProps) {
   return (
-    <Container size={size}>
+    <Container
+      size={size}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={e => e.key === "Enter" && onClick?.()}
+    >
       <CardBanner size={size} />
       <TextContainer>
         <Profile size={size}>
@@ -70,4 +77,3 @@ const Lecturer = styled.p`
 `;
 
 export default MentoringCardBase;
-
