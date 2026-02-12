@@ -7,8 +7,10 @@ export const classPOST = {
     return response.data;
   },
 
-  classListSearch: async (body: classSearchRequest): Promise<globalResponse<{ classes: classResponse[] }>> => {
-    const response = await req.get("/classes", { params: body });
+  classListSearch: async (
+    params?: classSearchRequest,
+  ): Promise<globalResponse<{ content?: classResponse[]; classes?: classResponse[] }>> => {
+    const response = await req.get("/classes", { params });
     return response.data;
   },
 };
