@@ -1,11 +1,22 @@
-import{ HiddenRadio, SlidingBackground, StyledLabel, SwitchContainer } from "./styles";
+import { HiddenRadio, SlidingBackground, StyledLabel, SwitchContainer } from "./styles";
 import { useState } from "react";
 
-export const RadioSwitch = () => {
-  const [selectedValue, setSelectedValue] = useState("Mento");
+type SwitchValue = "Mento" | "Menti";
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(e.target.value);
+interface RadioSwitchProps {
+  value?: SwitchValue;
+  onChange?: (value: SwitchValue) => void;
+}
+
+export const RadioSwitch = ({ value, onChange }: RadioSwitchProps) => {
+  const [innerValue, setInnerValue] = useState<SwitchValue>("Mento");
+  const selectedValue = value ?? innerValue;
+
+  const handleChange = (nextValue: SwitchValue) => {
+    if (value === undefined) {
+      setInnerValue(nextValue);
+    }
+    onChange?.(nextValue);
   };
 
   return (
@@ -18,7 +29,7 @@ export const RadioSwitch = () => {
         name="toggle"
         value="Menti"
         checked={selectedValue === "Menti"}
-        onChange={handleChange}
+        onChange={() => handleChange("Menti")}
       />
       <StyledLabel htmlFor="opt1" isSelected={selectedValue === "Menti"}>
         멘티
@@ -30,7 +41,7 @@ export const RadioSwitch = () => {
         name="toggle"
         value="Mento"
         checked={selectedValue === "Mento"}
-        onChange={handleChange}
+        onChange={() => handleChange("Mento")}
       />
       <StyledLabel htmlFor="opt2" isSelected={selectedValue === "Mento"}>
         멘토

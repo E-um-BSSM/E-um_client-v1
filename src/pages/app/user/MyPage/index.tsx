@@ -11,145 +11,164 @@ import {
   TopContainer,
   MyRecruitmentCardContainer,
 } from "./styles";
-import { MiniMentoringCard, FindClassButton, ClassSearchBar, RadioSwitch, RecruitmentCard } from "@/components";
+import { MiniMentoringCard, FindClassButton, ClassSearchBar, RadioSwitch } from "@/components";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { classPOST } from "@/apis/class/class";
+import type { classResponse } from "@/models";
+
+type LoadState = "idle" | "loading" | "success" | "error";
+type RoleFilter = "Mento" | "Menti";
 
 export default function MyPage() {
-  const MentoringData = [
-    { id: 1, title: "React 기초 마스터", lecturer: "김철수" },
-    { id: 2, title: "UI/UX 디자인 입문", lecturer: "이영희" },
-    { id: 3, title: "Node.js 백엔드 구축", lecturer: "박지성" },
-    { id: 4, title: "프론트엔드 포트폴리오", lecturer: "최유리" },
-    { id: 5, title: "데이터 구조와 알고리즘", lecturer: "홍길동" },
-    { id: 6, title: "데이터 구조와 알고리즘", lecturer: "홍길동" }, // 5번째 데이터
-  ];
-  const RecruitmentData = [
-    {
-      name: "홍길동",
-      description: "안녕하세요! 저는 프론트엔드 개발자 홍길동입니다. 함께 성장해요!",
-      level: 3,
-    },
-    {
-      name: "김철수",
-      description: "백엔드 개발에 관심 있는 분들을 위한 멘토링을 진행합니다. 많은 참여 부탁드려요!",
-      level: 2,
-    },
-    {
-      name: "이영희",
-      description: "데이터 사이언스 분야에서 함께 공부할 멘티를 모집합니다. 열정 가득한 분들 환영해요!",
-      level: 4,
-    },
-    {
-      name: "박민수",
-      description: "풀스택 개발자로서의 경험을 나누고 싶습니다. 함께 성장해요!",
-      level: 5,
-    },
-    {
-      name: "최수진",
-      description: "UI/UX 디자인에 관심 있는 분들을 위한 멘토링을 진행합니다. 많은 참여 부탁드려요!",
-      level: 1,
-    },
-    {
-      name: "정다은",
-      description: "모바일 앱 개발에 열정을 가진 멘티를 모집합니다. 함께 도전해봐요!",
-      level: 3,
-    },
-  ];
-  const MentoringDataCnt = MentoringData.length ? MentoringData.length : 0;
-  const RecruitmentDataCnt = RecruitmentData.length ? RecruitmentData.length : 0;
+  const navigate = useNavigate();
+
+  const [goingClasses, setGoingClasses] = useState<classResponse[]>([]);
+  const [recruitingClasses, setRecruitingClasses] = useState<classResponse[]>([]);
+  const [state, setState] = useState<LoadState>("idle");
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("Mento");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchClassList = async () => {
+      setState("loading");
+      try {
+        const [goingResponse, recruitingResponse] = await Promise.all([
+          classPOST.classListSearch({ status: "GOING" }),
+          classPOST.classListSearch({ status: "RECRUITING" }),
+        ]);
+
+        const goingContent = goingResponse.data.content ?? goingResponse.data.classes ?? [];
+        const recruitingContent = recruitingResponse.data.content ?? recruitingResponse.data.classes ?? [];
+
+        if (!isMounted) {
+          return;
+        }
+
+        if (goingContent.length === 0 && recruitingContent.length === 0) {
+          const fallback = await classPOST.classListSearch();
+          const allClasses = fallback.data.content ?? fallback.data.classes ?? [];
+          setGoingClasses(allClasses);
+          setRecruitingClasses([]);
+        } else {
+          setGoingClasses(goingContent);
+          setRecruitingClasses(recruitingContent);
+        }
+
+        setState("success");
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+
+        setGoingClasses([]);
+        setRecruitingClasses([]);
+        setState("error");
+      }
+    };
+
+    fetchClassList();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const goingCount = goingClasses.length;
+  const recruitingCount = recruitingClasses.length;
+
+  const emptyMessage = useMemo(() => {
+    if (state === "loading") {
+      return "강좌 정보를 불러오는 중이에요";
+    }
+
+    if (state === "error") {
+      return "강좌 정보를 불러오지 못했어요";
+    }
+
+    return "현재 진행 중인 멘토링이 없어요";
+  }, [state]);
+
+  const renderEmpty = (message: string) => (
+    <RecentMentoringEmpty>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "0.5rem",
+        }}
+      >
+        <p>👀</p>
+        <p
+          style={{
+            color: "var(--text-muted, #64748B)",
+            fontFamily: "Pretendard",
+            fontSize: "1.25rem",
+            fontStyle: "normal",
+            fontWeight: 400,
+            lineHeight: "normal",
+            letterSpacing: "-0.0275rem",
+          }}
+        >
+          {message}
+        </p>
+      </div>
+      <FindClassButton />
+    </RecentMentoringEmpty>
+  );
 
   return (
     <>
       <Container>
         <ContentContainer>
           <TopContainer>
-            <RadioSwitch />
+            <RadioSwitch value={roleFilter} onChange={setRoleFilter} />
             <ClassSearchBar />
           </TopContainer>
           <MyContainer>
             <MyWrapper>
               <TextContainer>
                 <Text>
-                  멘토링 중인 강좌 <Cnt>{MentoringDataCnt}</Cnt>
+                  멘토링 중인 강좌 <Cnt>{goingCount}</Cnt>
                 </Text>
               </TextContainer>
               <MyMentoringCardContainer>
-                {MentoringData.length > 0 ? (
-                  MentoringData.map(item => (
-                    <MiniMentoringCard key={item.id} title={item.title} lecturer={item.lecturer} />
-                  ))
-                ) : (
-                  <RecentMentoringEmpty>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
-                    >
-                      <p>👀</p>
-                      <p
-                        style={{
-                          color: "var(--text-muted, #64748B)",
-                          fontFamily: "Pretendard",
-                          fontSize: "1.25rem",
-                          fontStyle: "normal",
-                          fontWeight: 400,
-                          lineHeight: "normal",
-                          letterSpacing: "-0.0275rem",
-                        }}
-                      >
-                        현재 진행 중인 멘토링이 없어요
-                      </p>
-                    </div>
-                    <FindClassButton />
-                  </RecentMentoringEmpty>
-                )}
+                {goingClasses.length > 0
+                  ? goingClasses.map(item => (
+                      <MiniMentoringCard
+                        key={item.class_id}
+                        title={item.title}
+                        lecturer={item.created_by}
+                        onClick={() => navigate(`/app/class/detail?classId=${item.class_id}`)}
+                      />
+                    ))
+                  : renderEmpty(emptyMessage)}
               </MyMentoringCardContainer>
             </MyWrapper>
-            <MyWrapper>
-              <TextContainer>
-                <Text>
-                  모집 중인 강좌 <Cnt>{RecruitmentDataCnt}</Cnt>
-                </Text>
-              </TextContainer>
-              <MyRecruitmentCardContainer>
-                {RecruitmentData.length > 0 ? (
-                  RecruitmentData.map(({ name, description, level }, idx) => (
-                    <RecruitmentCard key={idx} name={name} description={description} level={level} />
-                  ))
-                ) : (
-                  <RecentMentoringEmpty>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
-                    >
-                      <p>👀</p>
-                      <p
-                        style={{
-                          color: "var(--text-muted, #64748B)",
-                          fontFamily: "Pretendard",
-                          fontSize: "1.25rem",
-                          fontStyle: "normal",
-                          fontWeight: 400,
-                          lineHeight: "normal",
-                          letterSpacing: "-0.0275rem",
-                        }}
-                      >
-                        현재 모집 중인 강좌가 없어요
-                      </p>
-                    </div>
-                    <FindClassButton />
-                  </RecentMentoringEmpty>
-                )}
-              </MyRecruitmentCardContainer>
-            </MyWrapper>
+            {roleFilter === "Mento" && (
+              <MyWrapper>
+                <TextContainer>
+                  <Text>
+                    모집 중인 강좌 <Cnt>{recruitingCount}</Cnt>
+                  </Text>
+                </TextContainer>
+                <MyRecruitmentCardContainer>
+                  {recruitingClasses.length > 0
+                    ? recruitingClasses.map(item => (
+                        <MiniMentoringCard
+                          key={item.class_id}
+                          title={item.title}
+                          lecturer={item.created_by}
+                          onClick={() => navigate(`/app/class/detail?classId=${item.class_id}`)}
+                        />
+                      ))
+                    : renderEmpty("현재 모집 중인 강좌가 없어요")}
+                </MyRecruitmentCardContainer>
+              </MyWrapper>
+            )}
           </MyContainer>
         </ContentContainer>
       </Container>
