@@ -71,7 +71,7 @@ export const Container = styled.div`
   scroll-snap-type: y mandatory;
 `;
 
-export const HeaderContainer = styled.div`
+export const MainContainer = styled.div`
   padding-left: 80px;
   height: 100vh;
   display: flex;
@@ -81,7 +81,7 @@ export const HeaderContainer = styled.div`
   scroll-snap-align: start;
 `;
 
-export const HeaderImg = styled.div`
+export const MainImg = styled.div`
   position: absolute;
   top: 0;
   right: 0;
@@ -114,7 +114,7 @@ export const FeatureCard = styled.div`
   background-color: #9AB5FF;
 `;
 
-export const MentoContainer = styled.div`
+export const TogetherContainer = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -125,7 +125,7 @@ export const MentoContainer = styled.div`
   scroll-snap-align: start;
 `;
 
-export const MentoCard = styled.div`
+export const TogetherCard = styled.div`
   padding: 28px;
   min-width: 440px;
   width: 440px;
@@ -137,12 +137,12 @@ export const MentoCard = styled.div`
   background-color: #FFFFFF;
 `;
 
-export const BottomContainer = styled.div`
+export const ConnectContainer = styled.div`
   height: 100vh;
   scroll-snap-align: start;
 `;
 
-export const BottomWrapper = styled.div`
+export const ConnectWrapper = styled.div`
   height: calc(100vh - 401px);
   display: flex;
   align-items: center;
@@ -151,7 +151,7 @@ export const BottomWrapper = styled.div`
   background-color: #00000090;
 `;
 
-export const BottomImg = styled.img`
+export const ConnectImg = styled.img`
   width: 100vw;
   z-index: -1;
   position: absolute;
