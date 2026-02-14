@@ -78,7 +78,6 @@ export const MainContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  scroll-snap-align: start;
 `;
 
 export const MainImg = styled.div`
