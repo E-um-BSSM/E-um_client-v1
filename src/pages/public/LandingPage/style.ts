@@ -61,7 +61,7 @@ export const Button = styled.button`
   padding: 16px 24px;
   color: #FFFFFF;
   font-size: 1.3rem;
-  font-wieght: 400;
+  font-weight: 400;
   border-radius: 9999px;
   background-color: #235FFF;
 `;
@@ -69,7 +69,6 @@ export const Button = styled.button`
 export const Container = styled.div`
   height: 100vh;
   overflow-y: scroll;
-  // scroll-snap-type: y mandatory;
 `;
 
 export const MainContainer = styled.div`
@@ -79,7 +78,6 @@ export const MainContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  scroll-snap-align: start;
 `;
 
 export const MainImg = styled.div`
@@ -96,7 +94,6 @@ export const FeatureContainer = styled.div`
   justify-content: center;
   gap: 80px;
   background-color: #4F7FFF;
-  scroll-snap-align: start;
 `;
 
 export const FeatureCard = styled.div`
@@ -106,7 +103,7 @@ export const FeatureCard = styled.div`
   color: #FFFFFF;
   text-align: center;
   font-size: 1.5rem;
-  font-wieght: 300;
+  font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,7 +120,6 @@ export const TogetherContainer = styled.div`
   justify-content: center;
   gap: 80px;
   background: linear-gradient(to bottom, #FFFFFF, #E9EFFF);
-  scroll-snap-align: start;
 `;
 
 const slideLeft = keyframes`
@@ -189,7 +185,6 @@ export const TogetherCard = styled.div`
 
 export const ConnectContainer = styled.div`
   height: 100vh;
-  scroll-snap-align: start;
 `;
 
 export const ConnectWrapper = styled.div`
