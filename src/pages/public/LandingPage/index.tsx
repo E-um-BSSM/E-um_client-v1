@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   Row,
   Stack,
@@ -16,18 +16,40 @@ import {
   Container,
   ConnectWrapper,
 } from "./style";
-import { Footer } from "@/components/public";
+import { Footer } from "@/components/layout/public";
 import type { PageType } from "@/types/Page";
 import { Link } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
 function LandingPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
+  const location = useLocation();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setPageType("landing");
-  }, [setPageType]);
+  }, []);  
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    switch (location.hash) {
+      case '#MAIN':
+        containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        break;
+      case '#FEATURE':
+        containerRef.current.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+        break;
+      case '#TOGETHER':
+        containerRef.current.scrollTo({ top: window.innerHeight * 2, behavior: 'smooth' });
+        break;
+      case '#CONNECT':
+        containerRef.current.scrollTo({ top: window.innerHeight * 3, behavior: 'smooth' });
+        break;
+    }
+  }, [location.hash]);
 
   function MAIN() {
     return (
@@ -160,7 +182,7 @@ function LandingPage() {
   }
 
   return (
-    <Container>
+    <Container ref={containerRef}>
       <MAIN />
       <FEATURE />
       <TOGETHER />
