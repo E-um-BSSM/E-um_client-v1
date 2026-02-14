@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { PageType } from "@/types/Page";
-import { Button, Input } from "@/components/atom";
+import { Button, Input } from "@/components/ui/atom";
 import { css } from "@emotion/react";
 import {
   AgreeBox,
@@ -17,7 +17,7 @@ import {
   SubmitContainer,
   TitleSection,
 } from "./style";
-import { CustomCheckbox } from "@/components/atom";
+import { CustomCheckbox } from "@/components/ui/atom";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 

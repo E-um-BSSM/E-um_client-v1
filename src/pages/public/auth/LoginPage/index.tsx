@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Input from "@/components/atom/Input";
-import Button from "@/components/atom/Button";
-import CustomCheckbox from "@/components/atom/CustomCheckbox";
+import Input from "@/components/ui/atom/Input";
+import Button from "@/components/ui/atom/Button";
+import CustomCheckbox from "@/components/ui/atom/CustomCheckbox";
 import {
   Main,
   TitleSection,

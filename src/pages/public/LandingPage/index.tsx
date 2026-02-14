@@ -19,7 +19,7 @@ import {
   TogetherCardWrapper,
   TogetherCardRight,
 } from "./style";
-import { Footer } from "@/components/public";
+import { Footer } from "@/components/layout/public";
 import type { PageType } from "@/types/Page";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from 'react-router-dom';

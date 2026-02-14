@@ -3,13 +3,14 @@ export interface classRequest {
   description: string;
   difficulty: number;
   tags: string[];
+  accessScope: string;
   status: string;
 }
 
 export interface classSearchRequest {
-  difficulty: number;
-  tags: string[];
-  status: string;
+  difficulty?: number;
+  tags?: string[];
+  status?: string;
 }
 
 export interface assignmentRequest {
@@ -19,7 +20,7 @@ export interface assignmentRequest {
   difficulty: number;
 }
 
-export interface classScheduleRequset {
+export interface classScheduleRequest {
   title: string;
   description: string;
   start_at: string;
@@ -27,6 +28,9 @@ export interface classScheduleRequset {
   location: string;
   status: string;
 }
+
+// Backward compatibility for existing imports
+export type classScheduleRequset = classScheduleRequest;
 
 export interface submissionRequest {
   content: string;

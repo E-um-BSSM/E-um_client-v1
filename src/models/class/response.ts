@@ -32,7 +32,8 @@ export interface assignmentSearchResponse {
   due_date: string;
   created_at: string;
   status: string;
-  graded: boolean;
+  difficulty: number;
+  graded?: boolean;
 }
 
 export interface assignmentResponse {

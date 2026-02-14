@@ -9,7 +9,7 @@ import {
   FindDialogContainer,
   AllViwe,
   CardContainer,
-} from "@/pages/app/mentoring/CreateRecruitmentPage/style";
+} from "@/pages/app/mentoring/CreateRecruitmentPage/styles";
 import { WriteGenerateButton, RecruitmentCard } from "@/components";
 
 export default function CreateRecruitmentPage() {
