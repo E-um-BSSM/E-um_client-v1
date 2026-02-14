@@ -78,7 +78,6 @@ export const MainContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  scroll-snap-align: start;
 `;
 
 export const MainImg = styled.div`
@@ -95,7 +94,6 @@ export const FeatureContainer = styled.div`
   justify-content: center;
   gap: 80px;
   background-color: #4F7FFF;
-  scroll-snap-align: start;
 `;
 
 export const FeatureCard = styled.div`
@@ -122,7 +120,6 @@ export const TogetherContainer = styled.div`
   justify-content: center;
   gap: 80px;
   background: linear-gradient(to bottom, #FFFFFF, #E9EFFF);
-  scroll-snap-align: start;
 `;
 
 const slideLeft = keyframes`
