@@ -1,5 +1,4 @@
 import { useOutletContext } from "react-router-dom";
-import type { PageType } from "@/types/Page";
 import { useEffect } from "react";
 import {
   Row,
@@ -12,9 +11,13 @@ import {
   FeatureCard,
   MentoContainer,
   MentoCard,
-  FooterContainer,
-  FooterImg,
+  BottomContainer,
+  BottomImg,
+  Container,
+  BottomWrapper,
 } from "./style";
+import { Footer } from "@/components/public";
+import type { PageType } from "@/types/Page";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -135,25 +138,31 @@ function LandingPage() {
     );
   }
 
-  function Footer() {
+  function Bottom() {
+    const defaultPageType: PageType = "public";
+    const pageType = defaultPageType;
+
     return (
-      <FooterContainer>
-        <Stack gap='12px' align='center'>
-          <Text color='muted' size='subtitle' weight='semibold'> 멘티들에게 나만의 지식을 공유하며 </Text>
-          <Text color='muted' size='subtitle' weight='semibold'> 새로운 인연을 이어가세요 </Text>
-        </Stack>
-        <FooterImg src='/Landing/footer.png'/>
-      </FooterContainer>
+      <BottomContainer>
+        <BottomWrapper>          
+          <Stack gap='12px' align='center'>
+            <Text color='muted' size='subtitle' weight='semibold'> 멘티들에게 나만의 지식을 공유하며 </Text>
+            <Text color='muted' size='subtitle' weight='semibold'> 새로운 인연을 이어가세요 </Text>
+          </Stack>
+          <BottomImg src='/Landing/bottom.png'/>
+        </BottomWrapper>
+        <Footer type={pageType}/>
+      </BottomContainer>
     )
   }
 
   return (
-    <>
+    <Container>
       <Header />
       <Feature />
       <Mento />
-      <Footer />
-    </>
+      <Bottom />
+    </Container>
   );
 }
 

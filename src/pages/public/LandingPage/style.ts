@@ -65,6 +65,12 @@ export const Button = styled.button`
   background-color: #235FFF;
 `;
 
+export const Container = styled.div`
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+`;
+
 export const HeaderContainer = styled.div`
   padding-left: 80px;
   height: 100vh;
@@ -72,6 +78,7 @@ export const HeaderContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
+  scroll-snap-align: start;
 `;
 
 export const HeaderImg = styled.div`
@@ -88,6 +95,7 @@ export const FeatureContainer = styled.div`
   justify-content: center;
   gap: 80px;
   background-color: #4F7FFF;
+  scroll-snap-align: start;
 `;
 
 export const FeatureCard = styled.div`
@@ -114,6 +122,7 @@ export const MentoContainer = styled.div`
   justify-content: center;
   gap: 80px;
   background: linear-gradient(to bottom, #FFFFFF, #E9EFFF);
+  scroll-snap-align: start;
 `;
 
 export const MentoCard = styled.div`
@@ -128,8 +137,13 @@ export const MentoCard = styled.div`
   background-color: #FFFFFF;
 `;
 
-export const FooterContainer = styled.div`
-  height: calc(100vh - 400px);
+export const BottomContainer = styled.div`
+  height: 100vh;
+  scroll-snap-align: start;
+`;
+
+export const BottomWrapper = styled.div`
+  height: calc(100vh - 401px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,8 +151,8 @@ export const FooterContainer = styled.div`
   background-color: #00000090;
 `;
 
-export const FooterImg = styled.img`
-  width: 100%;
+export const BottomImg = styled.img`
+  width: 100vw;
   z-index: -1;
   position: absolute;
   top: 0;
