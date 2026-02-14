@@ -21,8 +21,7 @@ import {
 } from "./style";
 import { Footer } from "@/components/layout/public";
 import type { PageType } from "@/types/Page";
-import { Link } from "react-router-dom";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -36,7 +35,7 @@ function LandingPage() {
 
   useEffect(() => {
     setPageType("landing");
-  }, []);
+  }, [setPageType]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -111,7 +110,7 @@ function LandingPage() {
           </Link>
         </Stack>
         <MainImg>
-          <img src="/Landing/background.png" width={"540px"} />
+          <img src="/Landing/background.png" width={"540px"} alt="이음 랜딩 페이지 메인 배경 이미지"/>
         </MainImg>
       </MainContainer>
     );
@@ -119,8 +118,8 @@ function LandingPage() {
 
   function FEATURE() {
     interface CardProps {
-      title: String;
-      description: String;
+      title: string;
+      description: string;
     }
 
     function Card({ title, description }: CardProps) {
@@ -250,7 +249,7 @@ function LandingPage() {
   }
 
   function CONNECT() {
-    const defaultPageType: PageType = "public";
+    const defaultPageType: PageType = "landing";
     const pageType = defaultPageType;
 
     return (
@@ -260,7 +259,7 @@ function LandingPage() {
             <Text color='muted' size='subtitle' weight='semibold'> 멘티들에게 나만의 지식을 공유하며 </Text>
             <Text color='muted' size='subtitle' weight='semibold'> 새로운 인연을 이어가세요 </Text>
           </Stack>
-          <ConnectImg src='/Landing/connect.png'/>
+          <ConnectImg src='/Landing/connect.png' alt="멘토와 멘티가 연결되는 모습을 나타내는 이미지" />
         </ConnectWrapper>
         <Footer type={pageType}/>
       </ConnectContainer>
