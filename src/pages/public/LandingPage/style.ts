@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { keyframes } from '@emotion/react';
 
 const FontSizeValues = {
   title: '3rem',
@@ -125,6 +126,49 @@ export const TogetherContainer = styled.div`
   scroll-snap-align: start;
 `;
 
+const slideLeft = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+`;
+
+const slideRight = keyframes`
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+`;
+
+export const TogetherCardWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const TogetherCardLeft = styled.div`
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  animation: ${slideLeft} 40s linear infinite;
+`;
+
+export const TogetherCardRight = styled.div`
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  animation: ${slideRight} 40s linear infinite;
+`;
+
 export const TogetherCard = styled.div`
   padding: 28px;
   min-width: 440px;
@@ -135,6 +179,12 @@ export const TogetherCard = styled.div`
   border: 1px solid #E7EBEE;
   border-radius: 24px;
   background-color: #FFFFFF;
+  transition: 0.2s;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 12px #2b2f4810;
+  }
 `;
 
 export const ConnectContainer = styled.div`

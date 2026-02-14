@@ -15,6 +15,9 @@ import {
   ConnectImg,
   Container,
   ConnectWrapper,
+  TogetherCardLeft,
+  TogetherCardWrapper,
+  TogetherCardRight,
 } from "./style";
 import { Footer } from "@/components/layout/public";
 import type { PageType } from "@/types/Page";
@@ -27,6 +30,7 @@ function LandingPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
   const location = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     setPageType("landing");
@@ -53,7 +57,7 @@ function LandingPage() {
 
   function MAIN() {
     return (
-      <MainContainer>
+      <MainContainer ref={(el) => { sectionRefs.current[0] = el; }}>
         <Stack gap='28px' align="flex-start">
           <Stack gap='8px' align="flex-start">
             <Text color="primary" size='title' weight='semibold'> 작은 만남이 큰 경험으로 </Text>
@@ -89,7 +93,7 @@ function LandingPage() {
     }
 
     return (
-      <FeatureContainer>
+      <FeatureContainer ref={(el) => { sectionRefs.current[1] = el; }}>
         <Stack gap='12px' align='center'>
           <Text color='muted' size='subtitle' weight='semibold'> 함께 성장하는 이음의 기능 </Text>
           <Text color='muted' size='text' weight='regular'> 멘토와 멘티가 자연스럽게 연결되고, 지식이 공유되는 공간을 만들어갑니다 </Text>
@@ -122,6 +126,52 @@ function LandingPage() {
       name: string,
       comment: string,
     }
+
+    const mentoCardList = [
+      {
+        role: '멘토',
+        name: '윤미수',
+        comment: '디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!',
+      },
+      {
+        role: '멘토',
+        name: '권길현',
+        comment: '많은 후배들과 친해지고 싶어요! 열심히 하고자 하는 친구들을 원해요',
+      },
+      {
+        role: '멘토',
+        name: '김태훈',
+        comment: '풀스택 개발자가 되고 싶은 1학년 친구들을 위한 멘토링 클래스',
+      },
+      {
+        role: '멘토',
+        name: '김태훈',
+        comment: '풀스택 개발자가 되고 싶은 1학년 친구들을 위한 멘토링 클래스',
+      },
+    ];
+
+    const menteeCardList = [
+      {
+        role: '멘티',
+        name: '윤미수',
+        comment: '디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!'
+      },
+      {
+        role: '멘티',
+        name: '홍길동',
+        comment: '나태한 후배에게 다정하고 친절하고 착하고 자세하고 쉽게 알려줄 멘토 선배님이 필요해요'
+      },
+      {
+        role: '멘티',
+        name: '이소리',
+        comment: '노베이스로 입학해서 프로그래밍 공부를 어떻게 해야 할지 갈피를 못잡겠어요'
+      },
+      {
+        role: '멘티',
+        name: '김아리',
+        comment: '강제성이 있어야 하는 편이라서 이끌어줄 선배님이 필요해요'
+      },
+    ]
     
     function Card({ role, name, comment }: CardProps) {
       return (
@@ -136,7 +186,7 @@ function LandingPage() {
     }
 
     return (
-      <TogetherContainer>
+      <TogetherContainer ref={(el) => { sectionRefs.current[2] = el; }}>
         <Stack gap='4px' align='center'>          
           <Text color='primary' size='subtitle' weight='semibold'> 어떻게 시작해야 할지 막막한 전공 공부, </Text>
           <Row gap='4px' align='center'>
@@ -145,20 +195,16 @@ function LandingPage() {
             <Text color='primary' size='subtitle' weight='semibold'> 하세요 </Text>
           </Row>
         </Stack>
-        <Stack gap='20px' align='center'>
-          <Row gap='20px' align='center'>
-            <Card role='멘토' name='윤미수' comment='디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!' />
-            <Card role='멘토' name='권길현' comment='많은 후배들과 친해지고 싶어요! 열심히 하고자 하는 친구들을 원해요' />
-            <Card role='멘토' name='김태훈' comment='풀스택 개발자가 되고 싶은 1학년 친구들을 위한 멘토링 클래스' />
-            {/* <Card role='멘토' name='윤미수' comment='디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!' /> */}
-          </Row>
-          <Row gap='20px' align='center'>
-            <Card role='멘티' name='윤미수' comment='디자인 잘 하고 싶은 친구들에게, 디자인부터 프론트까지 알려줄게요!' />
-            <Card role='멘티' name='진수화' comment='나태한 후배에게 다정하고 친절하고 착하고 자세하고 쉽게 알려줄 멘토 선배님이 필요해요' />
-            <Card role='멘티' name='이소리' comment='노베이스로 입학해서 프로그래밍 공부를 어떻게 해야 할지 갈피를 못잡겠어요' />
-            <Card role='멘티' name='김아리' comment='강제성이 있어야 하는 편이라서 이끌어줄 선배님이 필요해요' />
-          </Row>
-        </Stack>
+        <TogetherCardWrapper>
+          <TogetherCardRight>
+            {mentoCardList.map((item, index) => ( <Card key={`set1-1${index}`} role={item.role} name={item.name} comment={item.comment} /> ))}
+            {mentoCardList.map((item, index) => ( <Card key={`set1-2${index}`} role={item.role} name={item.name} comment={item.comment} /> ))}
+          </TogetherCardRight>
+          <TogetherCardLeft>
+            {menteeCardList.map((item, index) => ( <Card key={`set2-1${index}`} role={item.role} name={item.name} comment={item.comment} /> ))}
+            {menteeCardList.map((item, index) => ( <Card key={`set2-2${index}`} role={item.role} name={item.name} comment={item.comment} /> ))}
+          </TogetherCardLeft>
+        </TogetherCardWrapper>
       </TogetherContainer>
     );
   }
@@ -168,7 +214,7 @@ function LandingPage() {
     const pageType = defaultPageType;
 
     return (
-      <ConnectContainer>
+      <ConnectContainer ref={(el) => { sectionRefs.current[3] = el; }}>
         <ConnectWrapper>          
           <Stack gap='12px' align='center'>
             <Text color='muted' size='subtitle' weight='semibold'> 멘티들에게 나만의 지식을 공유하며 </Text>
