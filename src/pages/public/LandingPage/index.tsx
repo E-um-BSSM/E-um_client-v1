@@ -95,7 +95,7 @@ function LandingPage() {
 
   function MAIN() {
     return (
-      <MainContainer ref={(el) => { sectionRefs.current[0] = el; }}>
+      <MainContainer>
         <Stack gap='28px' align="flex-start">
           <Stack gap='8px' align="flex-start">
             <Text color="primary" size='title' weight='semibold'> 작은 만남이 큰 경험으로 </Text>
@@ -129,7 +129,7 @@ function LandingPage() {
     }
 
     return (
-      <FeatureContainer ref={(el) => { sectionRefs.current[1] = el; }}>
+      <FeatureContainer>
         <Stack gap='12px' align='center'>
           <Text color='muted' size='subtitle' weight='semibold'> 함께 성장하는 이음의 기능 </Text>
           <Text color='muted' size='text' weight='regular'> 멘토와 멘티가 자연스럽게 연결되고, 지식이 공유되는 공간을 만들어갑니다 </Text>
@@ -222,7 +222,7 @@ function LandingPage() {
     }
 
     return (
-      <TogetherContainer ref={(el) => { sectionRefs.current[2] = el; }}>
+      <TogetherContainer>
         <Stack gap='4px' align='center'>          
           <Text color='primary' size='subtitle' weight='semibold'> 어떻게 시작해야 할지 막막한 전공 공부, </Text>
           <Row gap='4px' align='center'>
@@ -250,7 +250,7 @@ function LandingPage() {
     const pageType = defaultPageType;
 
     return (
-      <ConnectContainer ref={(el) => { sectionRefs.current[3] = el; }}>
+      <ConnectContainer>
         <ConnectWrapper>          
           <Stack gap='12px' align='center'>
             <Text color='muted' size='subtitle' weight='semibold'> 멘티들에게 나만의 지식을 공유하며 </Text>
