@@ -5,19 +5,20 @@ import {
   Stack,
   Text,
   Button,
-  HeaderContainer,
-  HeaderImg,
+  MainContainer,
+  MainImg,
   FeatureContainer,
   FeatureCard,
-  MentoContainer,
-  MentoCard,
-  BottomContainer,
-  BottomImg,
+  TogetherContainer,
+  TogetherCard,
+  ConnectContainer,
+  ConnectImg,
   Container,
-  BottomWrapper,
+  ConnectWrapper,
 } from "./style";
 import { Footer } from "@/components/public";
 import type { PageType } from "@/types/Page";
+import { Link } from "react-router-dom";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -28,9 +29,9 @@ function LandingPage() {
     setPageType("landing");
   }, [setPageType]);
 
-  function Header() {
+  function MAIN() {
     return (
-      <HeaderContainer>
+      <MainContainer>
         <Stack gap='28px' align="flex-start">
           <Stack gap='8px' align="flex-start">
             <Text color="primary" size='title' weight='semibold'> 작은 만남이 큰 경험으로 </Text>
@@ -39,16 +40,18 @@ function LandingPage() {
               <Text color="highlight" size='text' weight='semibold'> 이음 </Text>
             </Row>
           </Stack>
-          <Button> 시작하기 </Button>
+          <Link to='/auth/login'>        
+            <Button> 시작하기 </Button>
+          </Link>
         </Stack>
-        <HeaderImg>
+        <MainImg>
           <img src="/Landing/background.png" width={"540px"} />
-        </HeaderImg>
-      </HeaderContainer>
+        </MainImg>
+      </MainContainer>
     );
   }
 
-  function Feature() {
+  function FEATURE() {
     interface CardProps {
       title: String;
       description: String;
@@ -91,7 +94,7 @@ function LandingPage() {
     );
   }
 
-  function Mento() {
+  function TOGETHER() {
     interface CardProps {
       role: string,
       name: string,
@@ -100,18 +103,18 @@ function LandingPage() {
     
     function Card({ role, name, comment }: CardProps) {
       return (
-        <MentoCard>
+        <TogetherCard>
           <Row gap='8px' align='center'>
             <Text color='highlight' size='caption' weight='regular'> {role} </Text>
             <Text color='primary' size='caption' weight='regular'> {name} </Text>
           </Row>
           <Text color='primary' size='caption' weight='regular'> {comment} </Text>
-        </MentoCard>
+        </TogetherCard>
       );
     }
 
     return (
-      <MentoContainer>
+      <TogetherContainer>
         <Stack gap='4px' align='center'>          
           <Text color='primary' size='subtitle' weight='semibold'> 어떻게 시작해야 할지 막막한 전공 공부, </Text>
           <Row gap='4px' align='center'>
@@ -134,34 +137,34 @@ function LandingPage() {
             <Card role='멘티' name='김아리' comment='강제성이 있어야 하는 편이라서 이끌어줄 선배님이 필요해요' />
           </Row>
         </Stack>
-      </MentoContainer>
+      </TogetherContainer>
     );
   }
 
-  function Bottom() {
+  function CONNECT() {
     const defaultPageType: PageType = "public";
     const pageType = defaultPageType;
 
     return (
-      <BottomContainer>
-        <BottomWrapper>          
+      <ConnectContainer>
+        <ConnectWrapper>          
           <Stack gap='12px' align='center'>
             <Text color='muted' size='subtitle' weight='semibold'> 멘티들에게 나만의 지식을 공유하며 </Text>
             <Text color='muted' size='subtitle' weight='semibold'> 새로운 인연을 이어가세요 </Text>
           </Stack>
-          <BottomImg src='/Landing/bottom.png'/>
-        </BottomWrapper>
+          <ConnectImg src='/Landing/connect.png'/>
+        </ConnectWrapper>
         <Footer type={pageType}/>
-      </BottomContainer>
+      </ConnectContainer>
     )
   }
 
   return (
     <Container>
-      <Header />
-      <Feature />
-      <Mento />
-      <Bottom />
+      <MAIN />
+      <FEATURE />
+      <TOGETHER />
+      <CONNECT />
     </Container>
   );
 }
