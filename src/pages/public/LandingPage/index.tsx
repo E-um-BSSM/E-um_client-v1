@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Row,
   Stack,
@@ -22,7 +22,7 @@ import {
 import { Footer } from "@/components/layout/public";
 import type { PageType } from "@/types/Page";
 import { Link } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -30,34 +30,74 @@ function LandingPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
   const location = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [currentSection, setCurrentSection] = useState(0);
+  const navigate = useNavigate();
+  const isScrolling = useRef(false);
 
   useEffect(() => {
     setPageType("landing");
-  }, []);  
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+
+      if (isScrolling.current) return;
+      if (Math.abs(e.deltaY) < 10) return;
+      isScrolling.current = true;
+
+      if (e.deltaY > 0) {
+        setCurrentSection(prev => (prev >= 3 ? 3 : prev + 1));
+      } else {
+        setCurrentSection(prev => (prev <= 0 ? 0 : prev - 1));
+      }
+
+      setTimeout(() => {
+        isScrolling.current = false;
+      }, 1000);
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    switch (location.hash) {
-      case '#MAIN':
-        containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-        break;
-      case '#FEATURE':
-        containerRef.current.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-        break;
-      case '#TOGETHER':
-        containerRef.current.scrollTo({ top: window.innerHeight * 2, behavior: 'smooth' });
-        break;
-      case '#CONNECT':
-        containerRef.current.scrollTo({ top: window.innerHeight * 3, behavior: 'smooth' });
-        break;
+    const hashMap = ['#MAIN', '#FEATURE', '#TOGETHER', '#CONNECT'];
+    
+    containerRef.current.scrollTo({
+      top: window.innerHeight * currentSection,
+      behavior: 'smooth'
+    });
+    
+    navigate(hashMap[currentSection], { replace: true });
+  }, [currentSection, navigate]);
+
+  useEffect(() => {
+    const hashMap: { [key: string]: number } = {
+      '#MAIN': 0,
+      '#FEATURE': 1,
+      '#TOGETHER': 2,
+      '#CONNECT': 3,
+    };
+
+    const sectionIndex = hashMap[location.hash];
+    
+    if (sectionIndex !== undefined && sectionIndex !== currentSection) {
+      setCurrentSection(sectionIndex);
     }
   }, [location.hash]);
 
   function MAIN() {
     return (
-      <MainContainer ref={(el) => { sectionRefs.current[0] = el; }}>
+      <MainContainer>
         <Stack gap='28px' align="flex-start">
           <Stack gap='8px' align="flex-start">
             <Text color="primary" size='title' weight='semibold'> 작은 만남이 큰 경험으로 </Text>
@@ -93,7 +133,7 @@ function LandingPage() {
     }
 
     return (
-      <FeatureContainer ref={(el) => { sectionRefs.current[1] = el; }}>
+      <FeatureContainer>
         <Stack gap='12px' align='center'>
           <Text color='muted' size='subtitle' weight='semibold'> 함께 성장하는 이음의 기능 </Text>
           <Text color='muted' size='text' weight='regular'> 멘토와 멘티가 자연스럽게 연결되고, 지식이 공유되는 공간을 만들어갑니다 </Text>
@@ -186,7 +226,7 @@ function LandingPage() {
     }
 
     return (
-      <TogetherContainer ref={(el) => { sectionRefs.current[2] = el; }}>
+      <TogetherContainer>
         <Stack gap='4px' align='center'>          
           <Text color='primary' size='subtitle' weight='semibold'> 어떻게 시작해야 할지 막막한 전공 공부, </Text>
           <Row gap='4px' align='center'>
@@ -214,7 +254,7 @@ function LandingPage() {
     const pageType = defaultPageType;
 
     return (
-      <ConnectContainer ref={(el) => { sectionRefs.current[3] = el; }}>
+      <ConnectContainer>
         <ConnectWrapper>          
           <Stack gap='12px' align='center'>
             <Text color='muted' size='subtitle' weight='semibold'> 멘티들에게 나만의 지식을 공유하며 </Text>

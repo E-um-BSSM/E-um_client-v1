@@ -69,7 +69,7 @@ export const Button = styled.button`
 export const Container = styled.div`
   height: 100vh;
   overflow-y: scroll;
-  scroll-snap-type: y mandatory;
+  // scroll-snap-type: y mandatory;
 `;
 
 export const MainContainer = styled.div`
