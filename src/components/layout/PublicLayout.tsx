@@ -17,9 +17,9 @@ function PublicLayout() {
         <Outlet context={setPageType} />
       </main>
 
-      <footer>
+      {/* <footer>
         <Footer type={pageType} />
-      </footer>
+      </footer> */}
     </div>
   );
 }
