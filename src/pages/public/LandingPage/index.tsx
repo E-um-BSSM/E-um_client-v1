@@ -1,4 +1,3 @@
-import { useOutletContext } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import {
   Row,
@@ -21,7 +20,7 @@ import {
 } from "./style";
 import { Footer } from "@/components/layout/public";
 import type { PageType } from "@/types/Page";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useOutletContext, useLocation, useNavigate } from 'react-router-dom';
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -105,12 +104,10 @@ function LandingPage() {
               <Text color="highlight" size='text' weight='semibold'> 이음 </Text>
             </Row>
           </Stack>
-          <Link to='/auth/login'>        
-            <Button> 시작하기 </Button>
-          </Link>
+          <Button onClick={() => navigate('/auth/login')}> 시작하기 </Button>
         </Stack>
         <MainImg>
-          <img src="/Landing/background.png" width={"540px"} alt="이음 랜딩 페이지 메인 배경 이미지"/>
+          <img src="/Landing/background.png" width={540} alt="이음 랜딩 페이지 메인 배경 이미지"/>
         </MainImg>
       </MainContainer>
     );
