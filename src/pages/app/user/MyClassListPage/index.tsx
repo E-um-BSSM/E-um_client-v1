@@ -225,7 +225,10 @@ export default function MyPage() {
     };
   }, []);
 
-  const currentData = useMemo(() => (roleFilter === "Mento" ? mentorData : menteeData), [roleFilter, mentorData, menteeData]);
+  const currentData = useMemo(
+    () => (roleFilter === "Mento" ? mentorData : menteeData),
+    [roleFilter, mentorData, menteeData],
+  );
   const recruitmentTitle = roleFilter === "Mento" ? "모집 중인 클래스" : "신청한 모집글";
   const recruitmentEmptyMessage = roleFilter === "Mento" ? "현재 모집 중인 클래스가 없어요" : "신청한 모집글이 없어요";
   const recruitmentCardVariant = roleFilter === "Menti" ? "menti" : "mento";
@@ -303,7 +306,11 @@ export default function MyPage() {
                       key={item.class_id}
                       title={item.title}
                       lecturer={item.created_by}
-                      onClick={() => navigate(`/app/class/detail?classId=${item.class_id}`)}
+                      onClick={() =>
+                        navigate(
+                          `/app/class/detail?classId=${item.class_id}&role=${roleFilter === "Mento" ? "mento" : "menti"}`,
+                        )
+                      }
                     />
                   ))}
             </MyMentoringCardContainer>
