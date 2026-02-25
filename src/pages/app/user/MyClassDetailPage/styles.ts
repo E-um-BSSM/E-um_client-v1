@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
 
+// ── Page shell ──────────────────────────────────────────────────────────────
+
 export const PageContainer = styled.div`
   width: 100%;
   max-width: 80rem;
@@ -20,6 +22,22 @@ export const PageContainer = styled.div`
   }
 `;
 
+// ── Class header ─────────────────────────────────────────────────────────────
+
+/** Wraps thumbnail+meta on the left with action controls on the right (mento only) */
+export const ClassHeaderRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+
+  @media (max-width: 64rem) {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+`;
+
 export const ClassSummary = styled.section`
   display: flex;
   align-items: center;
@@ -33,8 +51,8 @@ export const ClassSummary = styled.section`
 `;
 
 export const ClassThumbnail = styled.div`
-  width: 16.25rem;
-  height: 8.75rem;
+  width: 15rem;
+  height: 8.0625rem;
   border-radius: 0.75rem;
   background: var(--natural-100);
   flex-shrink: 0;
@@ -60,6 +78,95 @@ export const ClassTitle = styled.h1`
   line-height: 1.3;
 `;
 
+// ── Mento-only action controls ────────────────────────────────────────────────
+
+export const ClassActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.75rem;
+  flex-shrink: 0;
+
+  @media (max-width: 64rem) {
+    align-items: flex-start;
+  }
+`;
+
+export const ActionButtonRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+`;
+
+export const OutlinedButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--primary-200);
+  border-radius: 0.5rem;
+  background: var(--white);
+  color: var(--primary-500);
+  font-family: Pretendard;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--primary-100, #eef2ff);
+  }
+`;
+
+export const DangerButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--level-extreme, #ffdadb);
+  color: var(--utility-error, #ff1c30);
+  font-family: Pretendard;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+`;
+
+export const InviteCodeRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+`;
+
+export const InviteCodeLabel = styled.p`
+  color: var(--text-secondary);
+  font-family: Pretendard;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3;
+`;
+
+export const InviteCodeValue = styled.p`
+  color: var(--primary-500);
+  font-family: Pretendard;
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`;
+
+// ── Two-column content grid ───────────────────────────────────────────────────
+
 export const ContentGrid = styled.section`
   display: grid;
   grid-template-columns: minmax(0, 47.5rem) minmax(0, 28.75rem);
@@ -83,10 +190,19 @@ export const RightColumn = styled.div`
   gap: 3.75rem;
 `;
 
+// ── Section ───────────────────────────────────────────────────────────────────
+
 export const Section = styled.section`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+`;
+
+/** Section title row that supports an optional right-side action (e.g. 생성하기) */
+export const SectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const SectionTitle = styled.h2`
@@ -98,11 +214,15 @@ export const SectionTitle = styled.h2`
   line-height: 1.3;
 `;
 
-export const Card = styled.div`
+// ── Shared card base ──────────────────────────────────────────────────────────
+
+const Card = styled.div`
   border: 1px solid var(--natural-300);
   border-radius: 0.5rem;
   background: var(--white);
 `;
+
+// ── Class intro ───────────────────────────────────────────────────────────────
 
 export const IntroCard = styled(Card)`
   min-height: 20.625rem;
@@ -120,44 +240,7 @@ export const IntroText = styled.p`
   white-space: pre-wrap;
 `;
 
-export const MentorCard = styled(Card)`
-  padding: 1.5rem 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-`;
-
-export const MentorHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-`;
-
-export const Avatar = styled.img`
-  width: 2.8125rem;
-  height: 2.8125rem;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-export const MentorName = styled.p`
-  color: var(--text-primary);
-  font-family: Pretendard;
-  font-size: 1.375rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.3;
-`;
-
-export const MentorDesc = styled.p`
-  color: var(--text-primary);
-  font-family: Pretendard;
-  font-size: 1.125rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.3;
-  white-space: pre-wrap;
-`;
+// ── Empty state ───────────────────────────────────────────────────────────────
 
 export const EmptyBlock = styled.div`
   min-height: 12.5rem;
@@ -183,6 +266,8 @@ export const EmptyText = styled.p`
   font-weight: 400;
   line-height: 1.3;
 `;
+
+// ── Assignment list ───────────────────────────────────────────────────────────
 
 export const AssignmentList = styled.div`
   display: flex;
@@ -299,6 +384,142 @@ export const AssignmentButton = styled.button<AssignmentButtonProps>`
   }
 `;
 
+// ── Mentor card ───────────────────────────────────────────────────────────────
+
+export const MentorCard = styled(Card)`
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+`;
+
+export const MentorHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+export const Avatar = styled.img`
+  width: 2.8125rem;
+  height: 2.8125rem;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+export const MentorName = styled.p`
+  color: var(--text-primary);
+  font-family: Pretendard;
+  font-size: 1.375rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3;
+`;
+
+export const MentorDesc = styled.p`
+  color: var(--text-primary);
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: pre-wrap;
+`;
+
+// ── Mentee management (mento view) ────────────────────────────────────────────
+
+export const MenteeCard = styled(Card)`
+  padding: 1.5rem 1.75rem;
+  box-sizing: border-box;
+`;
+
+export const MenteeListView = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+`;
+
+export const MenteeItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+export const MiniAvatar = styled.img`
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+`;
+
+export const MenteeName = styled.p`
+  color: var(--text-primary);
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3;
+`;
+
+// ── Waitlist management (mento view) ──────────────────────────────────────────
+
+export const WaitlistSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+`;
+
+export const WaitlistCard = styled(Card)`
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+export const WaitlistItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  @media (max-width: 48rem) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+export const WaitlistInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+export const WaitlistActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+export const WaitlistButton = styled.button<{ variant: "accept" | "reject" }>`
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-family: Pretendard;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.3;
+  cursor: pointer;
+  background: ${({ variant }) => (variant === "accept" ? "var(--white)" : "var(--level-extreme, #ffdadb)")};
+  border: ${({ variant }) => (variant === "accept" ? "1px solid var(--primary-200)" : "none")};
+  color: ${({ variant }) => (variant === "accept" ? "var(--primary-500)" : "var(--utility-error, #ff1c30)")};
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+`;
+
+// ── Notice section ────────────────────────────────────────────────────────────
+
 export const NoticeCard = styled(Card)`
   padding: 1rem 1.25rem;
 `;
@@ -331,6 +552,8 @@ export const NoticeArrow = styled.img`
   width: 0.5625rem;
   height: 1.25rem;
 `;
+
+// ── Modals & overlay ──────────────────────────────────────────────────────────
 
 export const Overlay = styled.div`
   position: fixed;
@@ -496,13 +719,6 @@ export const FeedbackLine = styled.div`
   gap: 0.75rem;
 `;
 
-export const MiniAvatar = styled.img`
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
 export const FeedbackName = styled.p`
   color: var(--text-primary);
   font-family: Pretendard;
@@ -551,7 +767,6 @@ export const FeedbackInput = styled.div`
   border-radius: 0.75rem;
   border: 1px solid var(--natural-300);
   background: var(--white);
-  color: var(--text-primary);
   font-family: Pretendard;
   font-size: 1.125rem;
   font-style: normal;
@@ -573,4 +788,130 @@ export const NoticeBody = styled.p`
   font-weight: 500;
   line-height: 1.3;
   white-space: pre-wrap;
+`;
+
+// ── Mento Modals ──────────────────────────────────────────────────────────────
+
+export const MentoModal = styled(Modal)`
+  padding: 4.875rem 6.625rem 3.5rem;
+`;
+
+export const ModalForm = styled.form`
+  margin-top: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+export const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+export const FormLabel = styled.label`
+  color: var(--text-primary);
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  font-weight: 500;
+`;
+
+export const FormInput = styled.input`
+  width: 100%;
+  height: 3.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--natural-300);
+  background: var(--white);
+  padding: 0 1.5rem;
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+`;
+
+export const FormTextarea = styled.textarea`
+  width: 100%;
+  min-height: 8rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--natural-300);
+  background: var(--white);
+  padding: 1.25rem 1.5rem;
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  box-sizing: border-box;
+  resize: none;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+`;
+
+export const SubmissionListModal = styled(Modal)`
+  padding: 4.875rem 6.625rem 4.125rem;
+`;
+
+export const SubmissionList = styled.div`
+  margin-top: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+export const SubmissionItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+`;
+
+export const SubmissionInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+`;
+
+export const ExternalLink = styled.a`
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--natural-300);
+  background: var(--white);
+  color: var(--text-secondary);
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  text-decoration: underline;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+export const MiniButton = styled.button<{ variant: "primary" | "muted" }>`
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  background: ${({ variant }) => (variant === "primary" ? "var(--primary-500)" : "var(--natural-300)")};
+  color: ${({ variant }) => (variant === "primary" ? "var(--white)" : "var(--text-muted)")};
+  cursor: ${({ variant }) => (variant === "primary" ? "pointer" : "default")};
+
+  &:hover {
+    background: ${({ variant }) => (variant === "primary" ? "var(--primary-900)" : "var(--natural-300)")};
+  }
+`;
+
+export const DotSelector = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+`;
+
+export const InteractiveDot = styled(Dot)`
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
