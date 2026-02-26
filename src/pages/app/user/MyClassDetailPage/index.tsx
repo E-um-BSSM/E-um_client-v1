@@ -160,6 +160,45 @@ const pickLatestSubmission = (list: submissionResponse[]) => {
   return [...list].sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime())[0];
 };
 
+const normalizeClassInfo = (item: classResponse): classResponse => {
+  const raw = item as unknown as Record<string, unknown>;
+
+  const pickString = (...keys: string[]) => {
+    for (const key of keys) {
+      const value = raw[key];
+      if (typeof value === "string" && value.trim().length > 0) {
+        return value;
+      }
+    }
+    return "";
+  };
+
+  const pickNumber = (...keys: string[]) => {
+    for (const key of keys) {
+      const value = raw[key];
+      if (typeof value === "number" && Number.isFinite(value)) {
+        return value;
+      }
+    }
+    return 0;
+  };
+
+  const tagsValue = raw.tags;
+  const normalizedTags = Array.isArray(tagsValue) ? tagsValue.filter((tag): tag is string => typeof tag === "string") : [];
+
+  return {
+    title: pickString("title", "class_title"),
+    description: pickString("description", "content", "class_description"),
+    tags: normalizedTags,
+    difficulty: pickNumber("difficulty", "level"),
+    classroom_id: pickNumber("classroom_id", "class_id"),
+    classroom_code: pickString("classroom_code", "class_code") || null,
+    created_by: pickString("created_by", "creator", "mentor_name", "username"),
+    class_id: pickNumber("class_id", "classroom_id"),
+    class_code: pickString("class_code", "classroom_code") || null,
+  };
+};
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function MyClassDetailPage() {
@@ -239,7 +278,7 @@ export default function MyClassDetailPage() {
       scheduleGET.classScheduleListSearch(classId),
     ]);
 
-    setClassInfo(classRes.data);
+    setClassInfo(normalizeClassInfo(classRes.data));
 
     const assignmentList: assignmentSearchResponse[] =
       assignmentRes.data.content ?? assignmentRes.data.assignments ?? [];
@@ -327,8 +366,8 @@ export default function MyClassDetailPage() {
 
         if (!classId) {
           const listResponse = await classPOST.classListSearch();
-          const list = listResponse.data.content ?? listResponse.data.classes ?? [];
-          classId = list[0]?.class_id ?? null;
+          const list = listResponse.data.classrooms ?? [];
+          classId = list[0]?.classroom_id ?? list[0]?.class_id ?? null;
         }
 
         if (!classId) {
@@ -538,7 +577,7 @@ export default function MyClassDetailPage() {
               </ActionButtonRow>
               <InviteCodeRow>
                 <InviteCodeLabel>초대 코드</InviteCodeLabel>
-                <InviteCodeValue>{inviteCode || classInfo?.class_code || "—"}</InviteCodeValue>
+                <InviteCodeValue>{inviteCode || classInfo?.class_code || classInfo?.classroom_code || "—"}</InviteCodeValue>
               </InviteCodeRow>
             </ClassActions>
           )}

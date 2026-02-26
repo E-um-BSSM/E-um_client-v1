@@ -1,4 +1,5 @@
+import BSMCallbackPage from "./BSMCallbackPage";
 import LoginPage from "./LoginPage";
 import SignUpPage from "./SignUpPage";
 
-export { LoginPage, SignUpPage };
+export { LoginPage, SignUpPage, BSMCallbackPage };
