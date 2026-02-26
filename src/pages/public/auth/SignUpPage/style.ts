@@ -143,3 +143,12 @@ export const MoveLogin = styled(Link)`
   font-weight: 400;
   line-height: normal;
 `;
+
+export const StatusText = styled.p<{ error?: boolean }>`
+  margin: 0;
+  font-family: Pretendard;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  color: ${({ error }) => (error ? "var(--utility-error)" : "var(--primary-500)")};
+`;
