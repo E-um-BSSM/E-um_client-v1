@@ -18,10 +18,10 @@ export interface signInResponse {
   refresh_token: string;
   expires_in: string;
   currency: number;
-  daily_compensation_at: string;
-  equipped_badge: string;
+  daily_compensation_at: string | null;
+  equipped_badge: string | null;
   auth_provider: string;
-  phone: string;
+  phone: string | null;
 }
 
 export interface refreshResponse {

@@ -1,8 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import * as pages from "./pages";
 import * as layouts from "./components/layout";
+import { useAuthStore } from "@/stores";
 
 function App() {
+  const hydrateAuth = useAuthStore(state => state.hydrateAuth);
+
+  useEffect(() => {
+    hydrateAuth();
+  }, [hydrateAuth]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -13,6 +21,7 @@ function App() {
           <Route path="auth">
             <Route path="login" element={<pages.LoginPage />} />
             <Route path="signup" element={<pages.SignUpPage />} />
+            <Route path="bsm/callback" element={<pages.BSMCallbackPage />} />
           </Route>
         </Route>
         {/* app */}

@@ -36,7 +36,7 @@ export const Subtitle = styled.p`
   margin: 0;
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   background: var(--white);
   display: flex;
   flex-direction: column;
@@ -127,4 +127,14 @@ export const SignupLink = styled.p`
   color: var(--primary-500);
   margin: 0;
   cursor: pointer;
+`;
+
+export const ErrorText = styled.p`
+  width: 100%;
+  margin: 0;
+  color: var(--utility-error);
+  font-family: Pretendard;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.25rem;
 `;
