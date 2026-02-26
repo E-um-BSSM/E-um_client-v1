@@ -42,7 +42,7 @@ function Header({ type }: props) {
 
   return (
     <>
-      <Frame>
+      <Frame $type={type}>
         <Layout>
           <Link to={type === "app" ? "/app" : "/#MAIN"}>
             <img src={Logo} alt="이음 로고" loading="lazy" />
@@ -70,11 +70,7 @@ function Header({ type }: props) {
             </Actions>
           ) : (
             <User>
-              <UserImg
-                src="/eum.png"
-                alt="유저 프로필 사진"
-                loading="lazy"
-              />
+              <UserImg src="/eum.png" alt="유저 프로필 사진" loading="lazy" />
               <UserInfo>
                 <span className="name">김하늘</span>
                 <span className="role">Starter</span>
