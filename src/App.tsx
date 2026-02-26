@@ -37,6 +37,7 @@ function App() {
           </Route>
           {/* mentoring */}
           <Route path="mento">
+            <Route index element={<pages.MentoringMainPage />} />
             <Route path="create" element={<pages.CreateRecruitmentPage />} />
             <Route path="modify" element={<pages.ModifyRecruitmentPage />} />
             <Route path="detail" element={<pages.RecruitmentDetailPage />} />
