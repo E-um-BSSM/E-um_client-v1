@@ -10,6 +10,7 @@ export interface classRequest {
 export interface classSearchRequest {
   difficulty?: number;
   tags?: string[];
+  classroomStatus?: string;
   status?: string;
 }
 

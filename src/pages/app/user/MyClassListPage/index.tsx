@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { classPOST } from "@/apis/class/class";
 import { memberGET } from "@/apis/class/member";
 import { MiniMentoringCard, MiniRecruitmentCard, FindClassButton, ClassSearchBar, RadioSwitch } from "@/components";
-import type { classResponse } from "@/models";
+import type { ClassroomListPayload, classResponse } from "@/models";
 import {
   MyMentoringCardContainer,
   MyWrapper,
@@ -106,15 +106,32 @@ const getCurrentUsername = () => {
   return null;
 };
 
-const extractClassList = (data: { content?: classResponse[]; classes?: classResponse[] }) => {
-  return data.content ?? data.classes ?? [];
+const normalizeClassResponse = (item: classResponse): classResponse => {
+  return {
+    ...item,
+    class_id: item.class_id ?? item.classroom_id,
+    class_code: item.class_code ?? item.classroom_code,
+  };
+};
+
+const extractClassList = (data: ClassroomListPayload): classResponse[] => {
+  return data.classrooms.map(normalizeClassResponse);
+};
+
+const getClassId = (item: classResponse): number | null => {
+  return item.class_id ?? item.classroom_id ?? null;
 };
 
 const enrichWithApplicantCount = async (classes: classResponse[]): Promise<RecruitmentClass[]> => {
   const enriched = await Promise.all(
     classes.map(async item => {
+      const classId = getClassId(item);
+      if (!classId) {
+        return { ...item, applicantCount: 0 };
+      }
+
       try {
-        const waitingResponse = await memberGET.waitingListSearch(item.class_id);
+        const waitingResponse = await memberGET.waitingListSearch(classId);
         const waitingList = waitingResponse.data.content ?? waitingResponse.data.waiting ?? [];
         return { ...item, applicantCount: waitingList.length };
       } catch {
@@ -140,14 +157,13 @@ export default function MyPage() {
       setIsLoading(true);
       try {
         const [goingResponse, recruitingResponse] = await Promise.all([
-          classPOST.classListSearch({ status: "GOING" }),
-          classPOST.classListSearch({ status: "RECRUITING" }),
+          classPOST.classListSearch(),
+          classPOST.classListSearch(),
         ]);
 
         const goingClasses = extractClassList(goingResponse.data);
         const recruitingClasses = extractClassList(recruitingResponse.data);
         const username = getCurrentUsername();
-
         if (!isMounted) {
           return;
         }
@@ -178,8 +194,13 @@ export default function MyPage() {
         const mentorRecruitmentClasses = await enrichWithApplicantCount(mentorRecruitingBase);
         const menteeRecruitmentCandidates = await Promise.all(
           menteeRecruitingBase.map(async item => {
+            const classId = getClassId(item);
+            if (!classId) {
+              return null;
+            }
+
             try {
-              const waitingResponse = await memberGET.waitingListSearch(item.class_id);
+              const waitingResponse = await memberGET.waitingListSearch(classId);
               const waitingList = waitingResponse.data.content ?? waitingResponse.data.waiting ?? [];
               const hasApplied = waitingList.some(waiting => waiting.user_id === username);
               if (!hasApplied) {
