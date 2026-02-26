@@ -1,11 +1,18 @@
 export interface classResponse {
-  class_id: number;
   title: string;
-  class_code: string;
   description: string;
   tags: string[];
   difficulty: number;
+  classroom_id: number;
+  classroom_code: string | null;
   created_by: string;
+  // backward compatibility for existing UI usages
+  class_id?: number;
+  class_code?: string | null;
+}
+
+export interface ClassroomListPayload {
+  classrooms: classResponse[];
 }
 
 export interface submissionResponse {
