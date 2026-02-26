@@ -42,7 +42,7 @@ function Header({ type }: props) {
 
   return (
     <>
-      <Frame>
+      <Frame $type={type}>
         <Layout>
           <Link to={type === "app" ? "/app" : "/#MAIN"}>
             <img src={Logo} alt="이음 로고" loading="lazy" />
