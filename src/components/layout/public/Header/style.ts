@@ -6,14 +6,18 @@ import type { PageType } from "@/types/Page";
 export const Frame = styled.div`
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   flex-direction: column;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  background-color: #FFFFFF;
 `;
 
 export const Layout = styled.div`
   display: flex;
-  padding: 0.75rem 5rem;
+  padding: 0.3rem 5rem;
   justify-content: space-between;
   align-items: center;
   flex: 1 0 0;
@@ -98,6 +102,7 @@ interface NavBarProps {
 export const NavBar = styled.div<NavBarProps>`
   display: flex;
   align-items: center;
+  height: 100%;
 
   ${({ type }) =>
     type !== "app"

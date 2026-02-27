@@ -1,4 +1,4 @@
-import { Header, Footer } from "@/components/layout/public";
+import { Header } from "@/components/layout/public";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import type { PageType } from "@/types/Page";
@@ -16,10 +16,6 @@ function PublicLayout() {
       <main>
         <Outlet context={setPageType} />
       </main>
-
-      <footer>
-        <Footer type={pageType} />
-      </footer>
     </div>
   );
 }
