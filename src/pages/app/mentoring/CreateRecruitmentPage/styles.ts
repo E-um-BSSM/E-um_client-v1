@@ -65,7 +65,7 @@ export const FindDialogContainer = styled.div`
  width: 100%;
 `;
 
-export const AllViwe = styled.p`
+export const AllViwe = styled.button`
  color: var(--Natural-natural-500, #67728A);
  font-family: Pretendard;
  font-size: 1.25rem;

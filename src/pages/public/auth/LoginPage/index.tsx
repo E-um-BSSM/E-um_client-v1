@@ -27,7 +27,6 @@ import type { PageType } from "@/types/Page";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import useLogin from "@/hooks/useLogin";
 import { useAuthStore } from "@/stores";
-import { authGET } from "@/apis/user/auth";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -67,34 +66,9 @@ function LoginPage() {
   const handleBSMLogin = async () => {
     if (isBSMPending) return;
 
-    try {
-      setIsBSMPending(true);
-      setErrorMessage("");
-      const response = await authGET.bsmLogin();
-      const redirectUrl = response.data.redirect_url;
-
-      if (!redirectUrl) {
-        setErrorMessage("BSM 로그인 리다이렉트 URL이 없습니다.");
-        setIsBSMPending(false);
-        return;
-      }
-
-      try {
-        const parsed = new URL(redirectUrl);
-        const state = parsed.searchParams.get("state");
-        if (state) {
-          sessionStorage.setItem("bsm_oauth_state", state);
-        }
-      } catch {
-        // ignore URL parse errors and continue redirect flow
-      }
-
-      window.location.href = redirectUrl;
-    } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string; data?: string }>;
-      setErrorMessage(axiosError.response?.data?.message ?? axiosError.response?.data?.data ?? "BSM 로그인 시작에 실패했습니다.");
-      setIsBSMPending(false);
-    }
+    setIsBSMPending(true);
+    setErrorMessage("");
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/bsm/login`;
   };
 
   return (
