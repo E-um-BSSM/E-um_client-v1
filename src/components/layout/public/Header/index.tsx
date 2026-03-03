@@ -22,10 +22,7 @@ function Header({ type }: props) {
     if (type === "public") return;
 
     const entries = Object.keys(NAV_ITEMS[type]);
-
-    // ✔ landing 모드(hash 기반)
-    const activeKey = type === "landing" ? hash || "#MAIN" : pathname; // ← app은 pathname 사용
-
+    const activeKey = type === "landing" ? hash || "#MAIN" : pathname;
     const activeIndex = entries.indexOf(activeKey);
 
     const el = navRefs.current[activeIndex];
@@ -97,35 +94,10 @@ function Header({ type }: props) {
                 width: indicatorStyle.width,
               }}
             />
-            <UserInfo>
-              <span className="name">김하늘</span>
-              <span className="role">Starter</span>
-            </UserInfo>
-          </User>
+          </NavBar>
         )}
-      </Layout>
-      {type !== "public" && (
-        <NavBar type={type}>
-          {Object.entries(navInfos[type]).map(([path, name], i) => (
-            <Nav
-              to={path}
-              key={i}
-              ref={el => {
-                navRefs.current[i] = el;
-              }}
-            >
-              {name}
-            </Nav>
-          ))}
-          <Indicator
-            style={{
-              left: indicatorStyle.left,
-              width: indicatorStyle.width,
-            }}
-          />
-        </NavBar>
-      )}
-    </Frame>
+      </Frame>
+    </>
   );
 }
 
