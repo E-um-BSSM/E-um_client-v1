@@ -7,6 +7,8 @@ import type {
   signOutResponse,
   signUpRequest,
   signUpResponse,
+  sendVerificationCodeRequest,
+  verifyEmailCodeRequest,
   refreshRequest,
   refreshResponse,
 } from "@/models";
@@ -27,5 +29,11 @@ export const authPOST = {
   refresh: async (body: refreshRequest): Promise<globalResponse<refreshResponse>> => {
     const response = await req.post(`/auth/refresh`, body);
     return response.data;
+  },
+  sendVerificationCode: async (body: sendVerificationCodeRequest): Promise<void> => {
+    await req.post(`/auth/email/send`, body);
+  },
+  verifyEmailCode: async (body: verifyEmailCodeRequest): Promise<void> => {
+    await req.post(`/auth/email/verify`, body);
   },
 };

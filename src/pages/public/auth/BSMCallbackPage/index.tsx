@@ -39,11 +39,13 @@ function BSMCallbackPage() {
         return;
       }
 
-      if (!query.state) {
-        const savedState = sessionStorage.getItem("bsm_oauth_state");
-        if (savedState) {
-          query.state = savedState;
-        }
+      const savedState = sessionStorage.getItem("bsm_oauth_state");
+      const returnedState = query.state;
+
+      if (!savedState || !returnedState || returnedState !== savedState) {
+        sessionStorage.removeItem("bsm_oauth_state");
+        setErrorMessage("유효하지 않은 BSM 인증입니다. 다시 로그인해주세요.");
+        return;
       }
 
       try {

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { classPOST } from "@/apis/class/class";
-import { memberGET } from "@/apis/class/member";
 import { MiniMentoringCard, MiniRecruitmentCard, FindClassButton, ClassSearchBar, RadioSwitch } from "@/components";
 import type { ClassroomListPayload, classResponse } from "@/models";
 import {
@@ -29,8 +28,6 @@ type RoleSectionData = {
   recruitmentClasses: RecruitmentClass[];
 };
 
-const isRecruitmentClass = (item: RecruitmentClass | null): item is RecruitmentClass => item !== null;
-
 const getJwtPayload = (token: string) => {
   try {
     const payload = token.split(".")[1];
@@ -55,7 +52,7 @@ const getCurrentUsername = () => {
     }
   }
 
-  const objectKeys = ["user", "auth", "account"];
+  const objectKeys = ["user", "auth", "account", "auth_user"];
   for (const key of objectKeys) {
     const raw = localStorage.getItem(key) ?? sessionStorage.getItem(key);
     if (!raw) {
@@ -118,31 +115,6 @@ const extractClassList = (data: ClassroomListPayload): classResponse[] => {
   return data.classrooms.map(normalizeClassResponse);
 };
 
-const getClassId = (item: classResponse): number | null => {
-  return item.class_id ?? item.classroom_id ?? null;
-};
-
-const enrichWithApplicantCount = async (classes: classResponse[]): Promise<RecruitmentClass[]> => {
-  const enriched = await Promise.all(
-    classes.map(async item => {
-      const classId = getClassId(item);
-      if (!classId) {
-        return { ...item, applicantCount: 0 };
-      }
-
-      try {
-        const waitingResponse = await memberGET.waitingListSearch(classId);
-        const waitingList = waitingResponse.data.content ?? waitingResponse.data.waiting ?? [];
-        return { ...item, applicantCount: waitingList.length };
-      } catch {
-        return { ...item, applicantCount: 0 };
-      }
-    }),
-  );
-
-  return enriched;
-};
-
 export default function MyPage() {
   const navigate = useNavigate();
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("Mento");
@@ -156,27 +128,17 @@ export default function MyPage() {
     const fetchClassList = async () => {
       setIsLoading(true);
       try {
-        const [goingResponse, recruitingResponse] = await Promise.all([
-          classPOST.classListSearch(),
-          classPOST.classListSearch(),
-        ]);
-
-        const goingClasses = extractClassList(goingResponse.data);
-        const recruitingClasses = extractClassList(recruitingResponse.data);
+        const activeResponse = await classPOST.classListSearch({ classroomStatus: "ACTIVE" });
+        const activeClasses = extractClassList(activeResponse.data);
         const username = getCurrentUsername();
         if (!isMounted) {
           return;
         }
 
         if (!username) {
-          const mentorRecruitmentClasses = await enrichWithApplicantCount(recruitingClasses);
-          if (!isMounted) {
-            return;
-          }
-
           setMentorData({
-            mentoringClasses: goingClasses,
-            recruitmentClasses: mentorRecruitmentClasses,
+            mentoringClasses: activeClasses,
+            recruitmentClasses: [],
           });
           setMenteeData({
             mentoringClasses: [],
@@ -185,34 +147,8 @@ export default function MyPage() {
           return;
         }
 
-        const mentorGoingClasses = goingClasses.filter(item => item.created_by === username);
-        const menteeGoingClasses = goingClasses.filter(item => item.created_by !== username);
-
-        const mentorRecruitingBase = recruitingClasses.filter(item => item.created_by === username);
-        const menteeRecruitingBase = recruitingClasses.filter(item => item.created_by !== username);
-
-        const mentorRecruitmentClasses = await enrichWithApplicantCount(mentorRecruitingBase);
-        const menteeRecruitmentCandidates = await Promise.all(
-          menteeRecruitingBase.map(async item => {
-            const classId = getClassId(item);
-            if (!classId) {
-              return null;
-            }
-
-            try {
-              const waitingResponse = await memberGET.waitingListSearch(classId);
-              const waitingList = waitingResponse.data.content ?? waitingResponse.data.waiting ?? [];
-              const hasApplied = waitingList.some(waiting => waiting.user_id === username);
-              if (!hasApplied) {
-                return null;
-              }
-
-              return { ...item, applicantCount: waitingList.length };
-            } catch {
-              return null;
-            }
-          }),
-        );
+        const mentorGoingClasses = activeClasses.filter(item => item.created_by === username);
+        const menteeGoingClasses = activeClasses.filter(item => item.created_by !== username);
 
         if (!isMounted) {
           return;
@@ -220,11 +156,11 @@ export default function MyPage() {
 
         setMentorData({
           mentoringClasses: mentorGoingClasses,
-          recruitmentClasses: mentorRecruitmentClasses,
+          recruitmentClasses: [],
         });
         setMenteeData({
           mentoringClasses: menteeGoingClasses,
-          recruitmentClasses: menteeRecruitmentCandidates.filter(isRecruitmentClass),
+          recruitmentClasses: [],
         });
       } catch {
         if (!isMounted) {

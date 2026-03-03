@@ -18,3 +18,12 @@ export interface refreshRequest {
 export interface signOutRequest {
   refresh_token: string;
 }
+
+export interface sendVerificationCodeRequest {
+  email: string;
+}
+
+export interface verifyEmailCodeRequest {
+  email: string;
+  code: string;
+}

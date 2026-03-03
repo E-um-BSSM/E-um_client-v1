@@ -11,8 +11,11 @@ import {
   CardContainer,
 } from "@/pages/app/mentoring/CreateRecruitmentPage/styles";
 import { WriteGenerateButton, RecruitmentCard } from "@/components";
+import { useNavigate } from "react-router-dom";
+
 
 export default function CreateRecruitmentPage() {
+  const navigate = useNavigate();
   const cardList = [
     {
       name: "홍길동",
@@ -62,7 +65,7 @@ export default function CreateRecruitmentPage() {
                 <Title>함께 하고 싶은 멘토를 찾아요</Title>
                 <Description>멘토들이 쓴 모집 글 목록을 확인할 수 있어요 </Description>
               </DialogContainer>
-              <AllViwe>전체보기 &gt;</AllViwe>
+              <AllViwe onClick={() => navigate("/app/mento/list")}>전체보기 &gt;</AllViwe>
             </FindDialogContainer>
             <CardContainer>
               {cardList.map(({ name, description, level }, idx) => (
