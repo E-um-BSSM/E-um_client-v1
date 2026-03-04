@@ -1,22 +1,13 @@
 import styled from "@emotion/styled";
-import type { SerializedStyles } from "@emotion/react";
 import { Link } from "react-router-dom";
-import type { PageType } from "@/types/Page";
 
-interface FrameProps {
-  $type: PageType;
-}
-
-export const Frame = styled.div<FrameProps>`
+export const Frame = styled.header`
   display: flex;
   width: 100%;
   justify-content: flex-end;
   align-items: center;
   flex-direction: column;
-  ${({ $type }) => $type === "app" && "border-bottom: 1px solid var(--natural-300);"}
   z-index: 10;
-  position: fixed;
-  top: 0;
   background-color: #ffffff;
 `;
 
@@ -28,38 +19,6 @@ export const Layout = styled.div`
   flex: 1 0 0;
   width: 100%;
   box-sizing: border-box;
-`;
-
-export const Actions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.75rem;
-`;
-
-interface AuthBtnProps {
-  customStyle?: SerializedStyles;
-}
-
-export const AuthButton = styled(Link, {
-  shouldForwardProp: prop => prop !== "customStyle",
-})<AuthBtnProps>`
-  display: flex;
-  padding: 0.75rem 1.25rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.625rem;
-  border-radius: 0.5rem;
-
-  text-align: center;
-
-  font-family: Pretendard;
-  font-size: 1.125rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.375rem;
-
-  ${({ customStyle }) => customStyle}
 `;
 
 export const User = styled.div`
@@ -100,23 +59,17 @@ export const UserInfo = styled.div`
   }
 `;
 
-interface NavBarProps {
-  type: PageType;
-}
-
-export const NavBar = styled.div<NavBarProps>`
+export const NavBar = styled.nav`
   display: flex;
   align-items: center;
-  height: 100%;
-
-  ${({ type }) =>
-    type !== "app"
-      ? `position: absolute;
-        margin: 0 auto;`
-      : `
-      position: relative;
-      margin-left: 5rem;
-      align-self: flex-start;`}
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 11;
+  padding-left: 5rem;
+  align-self: flex-start;
+  border-bottom: 1px solid var(--natural-300);
+  background-color: var(--white);
 `;
 
 export const Nav = styled(Link)`

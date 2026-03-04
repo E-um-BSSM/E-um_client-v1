@@ -1,0 +1,73 @@
+import { Frame, Layout, NavBar, Nav, Indicator, User, UserImg, UserInfo } from "./style";
+import Logo from "@/assets/eum_header_logo.svg";
+import { Link, useLocation } from "react-router-dom";
+import { useRef, useState, useEffect } from "react";
+import { NAV_ITEMS } from "@/constants/navigation";
+
+function AppHeader() {
+  const type = "app";
+  const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const [indicatorStyle, setIndicatorStyle] = useState({
+    left: 0,
+    width: 0,
+  });
+  const { hash, pathname } = useLocation();
+
+  useEffect(() => {
+    const entries = Object.keys(NAV_ITEMS[type]);
+    const activeKey = pathname;
+    const activeIndex = entries.indexOf(activeKey);
+
+    const el = navRefs.current[activeIndex];
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const parentRect = el.parentElement!.getBoundingClientRect();
+
+    setIndicatorStyle({
+      left: rect.left - parentRect.left,
+      width: rect.width,
+    });
+  }, [hash, pathname, type]);
+
+  return (
+    <>
+      <Frame>
+        <Layout>
+          <Link to={"/app"}>
+            <img src={Logo} alt="이음 로고" loading="lazy" />
+          </Link>
+          <User>
+            <UserImg src="/eum.png" alt="유저 프로필 사진" loading="lazy" />
+            <UserInfo>
+              <span className="name">김하늘</span>
+              <span className="role">Starter</span>
+            </UserInfo>
+          </User>
+        </Layout>
+      </Frame>
+
+      <NavBar>
+        {Object.entries(NAV_ITEMS[type]).map(([path, name], i) => (
+          <Nav
+            to={path}
+            key={i}
+            ref={el => {
+              navRefs.current[i] = el;
+            }}
+          >
+            {name}
+          </Nav>
+        ))}
+        <Indicator
+          style={{
+            left: indicatorStyle.left,
+            width: indicatorStyle.width,
+          }}
+        />
+      </NavBar>
+    </>
+  );
+}
+
+export default AppHeader;
