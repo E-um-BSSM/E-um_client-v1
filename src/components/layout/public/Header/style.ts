@@ -3,16 +3,21 @@ import type { SerializedStyles } from "@emotion/react";
 import { Link } from "react-router-dom";
 import type { PageType } from "@/types/Page";
 
-export const Frame = styled.div`
+interface FrameProps {
+  $type: PageType;
+}
+
+export const Frame = styled.div<FrameProps>`
   display: flex;
   width: 100%;
   justify-content: flex-end;
   align-items: center;
   flex-direction: column;
+  ${({ $type }) => $type === "app" && "border-bottom: 1px solid var(--natural-300);"}
   z-index: 10;
   position: fixed;
   top: 0;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 `;
 
 export const Layout = styled.div`
