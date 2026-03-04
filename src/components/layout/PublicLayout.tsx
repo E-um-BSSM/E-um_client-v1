@@ -1,4 +1,5 @@
-import { Header } from "@/components/layout/public";
+import { PublicHeader } from "@/components/layout/public";
+import { Footer } from "@/components/layout/public";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import type { PageType } from "@/types/Page";
@@ -8,15 +9,15 @@ function PublicLayout() {
   const [pageType, setPageType] = useState(defaultPageType);
 
   return (
-    <div className="publicLayout">
-      <header>
-        <Header type={pageType} />
-      </header>
+    <>
+      <PublicHeader type={pageType} />
 
       <main>
         <Outlet context={setPageType} />
       </main>
-    </div>
+
+      <Footer type={pageType} />
+    </>
   );
 }
 

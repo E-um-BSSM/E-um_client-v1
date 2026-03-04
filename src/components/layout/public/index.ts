@@ -1,4 +1,5 @@
 import Footer from "./Footer";
-import Header from "./Header";
+import PublicHeader from "./PublicHeader";
+import AppHeader from "./AppHeader";
 
-export { Footer, Header };
+export { Footer, PublicHeader, AppHeader };

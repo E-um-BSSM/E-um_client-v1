@@ -1,21 +1,17 @@
-import { Footer, Header } from "@/components/layout/public";
+import { Footer, AppHeader } from "@/components/layout/public";
 import { Outlet } from "react-router-dom";
 
 function AppLayout() {
   return (
-    <div className="appLayout">
-      <header>
-        <Header type="app" />
-      </header>
+    <>
+      <AppHeader />
 
       <main>
         <Outlet />
       </main>
 
-      <footer>
-        <Footer type="app" />
-      </footer>
-    </div>
+      <Footer type="app" />
+    </>
   );
 }
 
