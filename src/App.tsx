@@ -23,54 +23,54 @@ function App() {
             <Route path="signup" element={<pages.SignUpPage />} />
             <Route path="bsm/callback" element={<pages.BSMCallbackPage />} />
           </Route>
-        </Route>
-        {/* app */}
-        <Route path="/app" element={<layouts.AppLayout />}>
-          <Route index element={<pages.MainPage />} />
-          {/* class */}
-          <Route path="class">
-            <Route path="create" element={<pages.CreateClassPage />} />
-            <Route path="detail" element={<pages.MyClassDetailPage />} />
-            <Route path="manage" element={<pages.ManageClassPage />} />
-            <Route path="rate" element={<pages.RatePage />} />
-            <Route path="schedule" element={<pages.SchedulePage />} />
-            <Route path="assignment" element={<pages.ClassDetailPage />} />
-          </Route>
-          {/* knowledge */}
-          <Route path="know">
-            <Route path="create" element={<pages.CreateKnowledgePage />} />
-            <Route path="detail" element={<pages.KnowledgeDetailPage />} />
-            <Route path="list" element={<pages.KnowledgeListPage />} />
-            <Route path="modify" element={<pages.ModifyKnowledgePage />} />
-            <Route path="search" element={<pages.SearchKnowledgePage />} />
-          </Route>
-          {/* mentoring */}
-          <Route path="mento">
-            <Route index element={<pages.MentoringMainPage />} />
-            <Route path="create" element={<pages.CreateRecruitmentPage />} />
-            <Route path="modify" element={<pages.ModifyRecruitmentPage />} />
-            <Route path="detail" element={<pages.RecruitmentDetailPage />} />
-            <Route path="list" element={<pages.RecruitmentListPage />} />
-            <Route path="search" element={<pages.SearchRecruitmentPage />} />
-          </Route>
-          {/* qna */}
-          <Route path="qna">
-            <Route path="create" element={<pages.CreateQnaPage />} />
-            <Route path="modify" element={<pages.ModifyQnaPage />} />
-            <Route path="detail" element={<pages.QnaDetailPage />} />
-            <Route path="list" element={<pages.QnaListPage />} />
-            <Route path="search" element={<pages.SearchQnaPage />} />
-          </Route>
-          {/* user */}
-          <Route path="user">
+          {/* app */}
+          <Route path="app" element={<layouts.AppLayout />}>
+            <Route index element={<pages.MainPage />} />
+            {/* class */}
             <Route path="class">
-              <Route path="list" element={<pages.MyClassListPage />} />
+              <Route path="create" element={<pages.CreateClassPage />} />
               <Route path="detail" element={<pages.MyClassDetailPage />} />
+              <Route path="manage" element={<pages.ManageClassPage />} />
+              <Route path="rate" element={<pages.RatePage />} />
+              <Route path="schedule" element={<pages.SchedulePage />} />
+              <Route path="assignment" element={<pages.ClassDetailPage />} />
             </Route>
-            <Route path="profile" element={<pages.EditProfilePage />} />
-            <Route path="posts" element={<pages.PostListPage />} />
+            {/* knowledge */}
+            <Route path="know">
+              <Route path="create" element={<pages.CreateKnowledgePage />} />
+              <Route path="detail" element={<pages.KnowledgeDetailPage />} />
+              <Route path="list" element={<pages.KnowledgeListPage />} />
+              <Route path="modify" element={<pages.ModifyKnowledgePage />} />
+              <Route path="search" element={<pages.SearchKnowledgePage />} />
+            </Route>
+            {/* mentoring */}
+            <Route path="mento">
+              <Route index element={<pages.MentoringMainPage />} />
+              <Route path="create" element={<pages.CreateRecruitmentPage />} />
+              <Route path="modify" element={<pages.ModifyRecruitmentPage />} />
+              <Route path="detail" element={<pages.RecruitmentDetailPage />} />
+              <Route path="list" element={<pages.RecruitmentListPage />} />
+              <Route path="search" element={<pages.SearchRecruitmentPage />} />
+            </Route>
+            {/* qna */}
+            <Route path="qna">
+              <Route path="create" element={<pages.CreateQnaPage />} />
+              <Route path="modify" element={<pages.ModifyQnaPage />} />
+              <Route path="detail" element={<pages.QnaDetailPage />} />
+              <Route path="list" element={<pages.QnaListPage />} />
+              <Route path="search" element={<pages.SearchQnaPage />} />
+            </Route>
+            {/* user */}
+            <Route path="user">
+              <Route path="class">
+                <Route path="list" element={<pages.MyClassListPage />} />
+                <Route path="detail" element={<pages.MyClassDetailPage />} />
+              </Route>
+              <Route path="profile" element={<pages.EditProfilePage />} />
+              <Route path="posts" element={<pages.PostListPage />} />
+            </Route>
           </Route>
-          <Route path="*" element={<pages.MainPage />} />
+          <Route path="*" element={<pages.NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
