@@ -1,12 +1,15 @@
-import { Frame, Layout, NavBar, Nav, Indicator, User, UserImg, UserInfo } from "./style";
+import { Frame, Layout, NavBar, Nav, Indicator, User, UserImg, UserInfo, FallbackUser } from "./style";
 import Logo from "@/assets/eum_header_logo.svg";
 import { Link, useLocation } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { NAV_ITEMS } from "@/constants/navigation";
+import { useAuthStore } from "@/stores";
 
 function AppHeader() {
   const type = "app";
   const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const user = useAuthStore(state => state.user);
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
   const [indicatorStyle, setIndicatorStyle] = useState({
     left: 0,
     width: 0,
@@ -37,13 +40,17 @@ function AppHeader() {
           <Link to={"/app"}>
             <img src={Logo} alt="이음 로고" loading="lazy" />
           </Link>
-          <User>
-            <UserImg src="/eum.png" alt="유저 프로필 사진" loading="lazy" />
-            <UserInfo>
-              <span className="name">김하늘</span>
-              <span className="role">Starter</span>
-            </UserInfo>
-          </User>
+          {isAuthenticated && user ? (
+            <User>
+              <UserImg src="/eum.png" alt="유저 프로필 사진" loading="lazy" />
+              <UserInfo>
+                <span className="name">{user.username}</span>
+                <span className="role">{user.system_role}</span>
+              </UserInfo>
+            </User>
+          ) : (
+            <FallbackUser>로그인이 필요합니다.</FallbackUser>
+          )}
         </Layout>
       </Frame>
 

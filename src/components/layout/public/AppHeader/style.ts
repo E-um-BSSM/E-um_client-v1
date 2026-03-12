@@ -59,6 +59,13 @@ export const UserInfo = styled.div`
   }
 `;
 
+export const FallbackUser = styled.span`
+  font-family: Pretendard;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--natural-500);
+`;
+
 export const NavBar = styled.nav`
   display: flex;
   align-items: center;
