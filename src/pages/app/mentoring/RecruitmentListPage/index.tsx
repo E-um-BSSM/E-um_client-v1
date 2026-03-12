@@ -1,4 +1,4 @@
-import { CardContainer } from "@/pages/app/mentoring/CreateRecruitmentPage/styles";
+import { CardContainer } from "@/pages/app/mentoring/MentoringMainPage/styles";
 import {
   BodyContainer,
   ContentContainer,

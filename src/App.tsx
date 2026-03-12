@@ -23,8 +23,9 @@ function App() {
             <Route path="signup" element={<pages.SignUpPage />} />
             <Route path="bsm/callback" element={<pages.BSMCallbackPage />} />
           </Route>
+          {/* app */}
+          <Route path="*" element={<pages.NotFoundPage />} />
         </Route>
-        {/* app */}
         <Route path="/app" element={<layouts.AppLayout />}>
           <Route index element={<pages.MainPage />} />
           {/* class */}
@@ -46,6 +47,7 @@ function App() {
           </Route>
           {/* mentoring */}
           <Route path="mento">
+            <Route index element={<pages.MentoringMainPage />} />
             <Route path="create" element={<pages.CreateRecruitmentPage />} />
             <Route path="modify" element={<pages.ModifyRecruitmentPage />} />
             <Route path="detail" element={<pages.RecruitmentDetailPage />} />
@@ -69,7 +71,7 @@ function App() {
             <Route path="profile" element={<pages.EditProfilePage />} />
             <Route path="posts" element={<pages.PostListPage />} />
           </Route>
-          <Route path="*" element={<pages.MainPage />} />
+          <Route path="*" element={<pages.NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

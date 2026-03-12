@@ -1,80 +1,227 @@
+import { useState, useRef } from "react";
+import { css } from "@emotion/react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
+import { Input, Button } from "@/components/ui/atom";
 import {
-  BodyContainer,
-  ContentContainer,
-  WriteGenerateContainer,
-  DialogContainer,
-  Title,
-  Description,
-  FindContainer,
-  FindDialogContainer,
-  AllViwe,
-  CardContainer,
-} from "@/pages/app/mentoring/CreateRecruitmentPage/styles";
-import { WriteGenerateButton, RecruitmentCard } from "@/components";
-import { useNavigate } from "react-router-dom";
+  Container,
+  Inner,
+  PageTitle,
+  Section,
+  SectionHeader,
+  SectionTitle,
+  SectionDesc,
+  MarkdownToolbar,
+  ToolbarTools,
+  ToolbarGroup,
+  ToolButton,
+  RightButtons,
+  Textarea,
+  PreviewContainer,
+} from "./styles";
+import DLcircleFull from "@/assets/DLcircle_primary-400.svg";
+import DLcircleEmpty from "@/assets/DLcircle_natural-300.svg";
 
+const DEFAULT_MENTORING_INFO = `## 멘토링 안내***
 
-export default function CreateRecruitmentPage() {
-  const navigate = useNavigate();
-  const cardList = [
-    {
-      name: "홍길동",
-      description: "안녕하세요! 저는 프론트엔드 개발자 홍길동입니다. 함께 성장해요!",
-      level: 3,
-    },
-    {
-      name: "김철수",
-      description: "백엔드 개발에 관심 있는 분들을 위한 멘토링을 진행합니다. 많은 참여 부탁드려요!",
-      level: 2,
-    },
-    {
-      name: "이영희",
-      description: "데이터 사이언스 분야에서 함께 공부할 멘티를 모집합니다. 열정 가득한 분들 환영해요!",
-      level: 4,
-    },
-    {
-      name: "박민수",
-      description: "풀스택 개발자로서의 경험을 나누고 싶습니다. 함께 성장해요!",
-      level: 5,
-    },
-    {
-      name: "최수진",
-      description: "UI/UX 디자인에 관심 있는 분들을 위한 멘토링을 진행합니다. 많은 참여 부탁드려요!",
-      level: 1,
-    },
-    {
-      name: "정다은",
-      description: "모바일 앱 개발에 열정을 가진 멘티를 모집합니다. 함께 도전해봐요!",
-      level: 3,
-    },
-  ];
+### 멘토링 기간
+---
+2026.02.01 ~ 2026.03.02
+
+### 멘토링 내용
+---
+1일차 : C언어 기초
+2일차 : 포인터 설명해줌ㅇㅇ
+
+### 멘토링 커리큘럼
+---`;
+
+function CreateRecruitmentPage() {
+  const [title, setTitle] = useState("");
+  const [mentorIntro, setMentorIntro] = useState("");
+  const [mentoringInfo, setMentoringInfo] = useState(DEFAULT_MENTORING_INFO);
+  const [difficulty, setDifficulty] = useState(1);
+  const [isPreview, setIsPreview] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleDifficultyClick = (level: number) => {
+    setDifficulty(level);
+  };
+
+  const togglePreview = () => {
+    setIsPreview(!isPreview);
+  };
+
+  const insertMarkdown = (symbol: string, type: "block" | "inline" | "wrap" = "block") => {
+    if (!textareaRef.current) return;
+
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = mentoringInfo;
+
+    let before = text.substring(0, start);
+    let selected = text.substring(start, end);
+    let after = text.substring(end);
+
+    let newText = "";
+    let newCursorPos = start;
+
+    if (type === "block") {
+      // Find start of the current line
+      const lineStart = before.lastIndexOf("\n") + 1;
+      before = text.substring(0, lineStart);
+      selected = text.substring(lineStart, end);
+      newText = before + symbol + selected + after;
+      newCursorPos = end + symbol.length;
+    } else if (type === "wrap") {
+      newText = before + symbol + selected + symbol + after;
+      newCursorPos = end + symbol.length;
+    } else if (type === "inline") {
+      newText = before + symbol + selected + after;
+      newCursorPos = end + symbol.length;
+    }
+
+    setMentoringInfo(newText);
+
+    // Focus back and set cursor position in next tick
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
+  };
+
+  const isFormValid = title.trim() !== "" && mentorIntro.trim() !== "" && mentoringInfo.trim() !== "";
+
   return (
-    <>
-      <BodyContainer>
-        <ContentContainer>
-          <WriteGenerateContainer>
-            <DialogContainer>
-              <Title>누구나 멘토가 될 수 있어요</Title>
-              <Description>함께 할 멘티를 모집하고, 클래스를 개설하세요</Description>
-            </DialogContainer>
-            <WriteGenerateButton />
-          </WriteGenerateContainer>
-          <FindContainer>
-            <FindDialogContainer>
-              <DialogContainer>
-                <Title>함께 하고 싶은 멘토를 찾아요</Title>
-                <Description>멘토들이 쓴 모집 글 목록을 확인할 수 있어요 </Description>
-              </DialogContainer>
-              <AllViwe onClick={() => navigate("/app/mento/list")}>전체보기 &gt;</AllViwe>
-            </FindDialogContainer>
-            <CardContainer>
-              {cardList.map(({ name, description, level }, idx) => (
-                <RecruitmentCard key={idx} name={name} description={description} level={level} />
-              ))}
-            </CardContainer>
-          </FindContainer>
-        </ContentContainer>
-      </BodyContainer>
-    </>
+    <Container>
+      <Inner>
+        <PageTitle>모집글 생성하기</PageTitle>
+
+        <Section>
+          <SectionHeader>
+            <SectionTitle>모집글 제목</SectionTitle>
+            <SectionDesc>자신의 클래스 모집 문구를 간단히 작성하세요</SectionDesc>
+          </SectionHeader>
+          <Input placeholder="제목을 입력하세요" value={title} onChange={e => setTitle(e.target.value)} />
+        </Section>
+
+        <Section>
+          <SectionHeader>
+            <SectionTitle>멘토 소개</SectionTitle>
+            <SectionDesc>멘티들에게 자신이 어떤 멘토인지 소개하세요</SectionDesc>
+          </SectionHeader>
+          <Input placeholder="소개글을 입력하세요" value={mentorIntro} onChange={e => setMentorIntro(e.target.value)} />
+        </Section>
+
+        <Section>
+          <SectionHeader>
+            <SectionTitle>멘토링 안내</SectionTitle>
+            <SectionDesc>멘토링 관련 설명할 내용을 마크다운 언어로 작성하세요</SectionDesc>
+          </SectionHeader>
+
+          <MarkdownToolbar>
+            <ToolbarTools>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <span style={{ color: "#64748B", fontSize: "1.125rem", fontWeight: 400 }}>
+                  <span style={{ color: "var(--primary-500)", fontWeight: 600 }}>*</span> 난이도 설정
+                </span>
+                <div style={{ display: "flex", gap: "0.25rem" }}>
+                  {[1, 2, 3, 4, 5].map(level => (
+                    <img
+                      key={level}
+                      src={level <= difficulty ? DLcircleFull : DLcircleEmpty}
+                      alt={`difficulty-${level}`}
+                      width={20}
+                      height={20}
+                      onClick={() => handleDifficultyClick(level)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
+                <ToolbarGroup>
+                  <ToolButton onClick={() => insertMarkdown("# ")}>H1</ToolButton>
+                  <ToolButton onClick={() => insertMarkdown("## ")}>H2</ToolButton>
+                  <ToolButton onClick={() => insertMarkdown("### ")}>H3</ToolButton>
+                  <ToolButton onClick={() => insertMarkdown("#### ")}>H4</ToolButton>
+                </ToolbarGroup>
+                <ToolbarGroup>
+                  <ToolButton onClick={() => insertMarkdown("**", "wrap")} style={{ fontWeight: 700 }}>
+                    B
+                  </ToolButton>
+                  <ToolButton onClick={() => insertMarkdown("_", "wrap")} style={{ fontWeight: 500 }}>
+                    /
+                  </ToolButton>
+                  <ToolButton onClick={() => insertMarkdown("> ")} style={{ fontSize: "1.25rem" }}>
+                    “
+                  </ToolButton>
+                </ToolbarGroup>
+                <ToolbarGroup>
+                  <ToolButton onClick={() => insertMarkdown("[]()", "inline")}>
+                    <span style={{ fontSize: "1.25rem" }}>🔗</span>
+                  </ToolButton>
+                  <ToolButton onClick={() => insertMarkdown("![]()", "inline")}>
+                    <span style={{ fontSize: "1.25rem" }}>📤</span>
+                  </ToolButton>
+                </ToolbarGroup>
+              </div>
+            </ToolbarTools>
+            <RightButtons>
+              <Button
+                activate={isPreview}
+                onClick={togglePreview}
+                customStyle={css`
+                  width: auto;
+                  height: 3rem;
+                  padding: 0 2.5rem;
+                  border-radius: 0.5rem;
+                  background-color: ${isPreview ? "var(--primary-900)" : "#d1d5db"};
+                  color: ${isPreview ? "var(--white)" : "#4b5563"};
+                  font-size: 1.125rem;
+                  &:hover {
+                    background-color: ${isPreview ? "var(--primary-700)" : "#9ca3af"};
+                  }
+                `}
+              >
+                미리보기
+              </Button>
+              <Button
+                activate={isFormValid}
+                customStyle={css`
+                  width: auto;
+                  height: 3rem;
+                  padding: 0 2.5rem;
+                  border-radius: 0.5rem;
+                  font-size: 1.125rem;
+                `}
+              >
+                글 올리기
+              </Button>
+            </RightButtons>
+          </MarkdownToolbar>
+
+          {isPreview ? (
+            <PreviewContainer>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+                {mentoringInfo}
+              </ReactMarkdown>
+            </PreviewContainer>
+          ) : (
+            <Textarea
+              ref={textareaRef}
+              placeholder="내용을 입력하세요..."
+              value={mentoringInfo}
+              onChange={e => setMentoringInfo(e.target.value)}
+            />
+          )}
+        </Section>
+      </Inner>
+    </Container>
   );
 }
+
+export default CreateRecruitmentPage;

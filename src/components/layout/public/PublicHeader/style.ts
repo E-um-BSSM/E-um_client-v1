@@ -1,18 +1,17 @@
 import styled from "@emotion/styled";
 import type { SerializedStyles } from "@emotion/react";
 import { Link } from "react-router-dom";
-import type { PageType } from "@/types/Page";
 
-export const Frame = styled.div`
+export const Frame = styled.header`
   display: flex;
   width: 100%;
   justify-content: flex-end;
   align-items: center;
   flex-direction: column;
   z-index: 10;
-  position: fixed;
+  position: sticky;
   top: 0;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 `;
 
 export const Layout = styled.div`
@@ -57,68 +56,12 @@ export const AuthButton = styled(Link, {
   ${({ customStyle }) => customStyle}
 `;
 
-export const User = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.75rem;
-  align-self: stretch;
-`;
-
-export const UserImg = styled.img`
-  width: 2.8125rem;
-  height: 2.8125rem;
-  aspect-ratio: 1/1;
-  border-radius: 2.8125rem;
-  object-fit: cover;
-`;
-
-export const UserInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.125rem;
-
-  font-family: Pretendard;
-  font-style: normal;
-  font-weight: 500;
-  text-align: center;
-  & .name {
-    font-size: 1.125rem;
-    line-height: 1.375rem;
-    color: var(--text-primary);
-  }
-  & .role {
-    font-size: 1rem;
-    line-height: 1.25rem;
-    color: var(--natural-400);
-  }
-`;
-
-export const FallbackUser = styled.span`
-  font-family: Pretendard;
-  font-size: 1rem;
-  font-weight: 400;
-  color: var(--natural-500);
-`;
-
-interface NavBarProps {
-  type: PageType;
-}
-
-export const NavBar = styled.div<NavBarProps>`
+export const NavBar = styled.nav`
   display: flex;
   align-items: center;
   height: 100%;
-
-  ${({ type }) =>
-    type !== "app"
-      ? `position: absolute;
-        margin: 0 auto;`
-      : `
-      position: relative;
-      margin-left: 5rem;
-      align-self: flex-start;`}
+  position: absolute;
+  margin: 0 auto;
 `;
 
 export const Nav = styled(Link)`

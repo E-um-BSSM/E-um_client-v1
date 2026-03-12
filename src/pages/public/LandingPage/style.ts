@@ -1,31 +1,31 @@
 import styled from "@emotion/styled";
-import { keyframes } from '@emotion/react';
+import { keyframes } from "@emotion/react";
 
 const FontSizeValues = {
-  title: '3rem',
-  subtitle: '2.4rem',
-  text: '1.6rem',
-  caption: '1.3rem',
+  title: "3rem",
+  subtitle: "2.4rem",
+  text: "1.6rem",
+  caption: "1.3rem",
 } as const;
 
 const TextColorValues = {
-  highlight: '#235FFF',
-  primary: '#0F172A',
-  secondary: '#334155',
-  disabled: '#64748B',
-  muted: '#FFFFFF',
+  highlight: "#235FFF",
+  primary: "#0F172A",
+  secondary: "#334155",
+  disabled: "#64748B",
+  muted: "#FFFFFF",
 } as const;
 
 const TextWeightValues = {
-  regular: '400',
-  semibold: '600',
+  regular: "400",
+  semibold: "600",
 } as const;
 
 type FontSize = keyof typeof FontSizeValues;
 type TextColor = keyof typeof TextColorValues;
 type TextWeight = keyof typeof TextWeightValues;
-type Gap = '4px' | '8px' | '12px' | '16px' | '20px' | '28px';
-type Align = 'flex-start' | 'center';
+type Gap = "4px" | "8px" | "12px" | "16px" | "20px" | "28px";
+type Align = "flex-start" | "center";
 
 export const Row = styled.div<{
   gap: Gap;
@@ -33,8 +33,8 @@ export const Row = styled.div<{
 }>`
   display: flex;
   flex-direction: row;
-  align-items: ${({align}) => align};
-  gap: ${({gap}) => gap};
+  align-items: ${({ align }) => align};
+  gap: ${({ gap }) => gap};
 `;
 
 export const Stack = styled.div<{
@@ -43,8 +43,8 @@ export const Stack = styled.div<{
 }>`
   display: flex;
   flex-direction: column;
-  align-items: ${({align}) => align};
-  gap: ${({gap}) => gap};
+  align-items: ${({ align }) => align};
+  gap: ${({ gap }) => gap};
 `;
 
 export const Text = styled.p<{
@@ -52,18 +52,18 @@ export const Text = styled.p<{
   size: FontSize;
   weight: TextWeight;
 }>`
-  color: ${({color}) => TextColorValues[color]};
-  font-size: ${({size}) => FontSizeValues[size]};
-  font-weight: ${({weight}) => TextWeightValues[weight]};
+  color: ${({ color }) => TextColorValues[color]};
+  font-size: ${({ size }) => FontSizeValues[size]};
+  font-weight: ${({ weight }) => TextWeightValues[weight]};
 `;
 
 export const Button = styled.button`
   padding: 16px 24px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 1.3rem;
   font-weight: 400;
   border-radius: 9999px;
-  background-color: #235FFF;
+  background-color: #235fff;
 `;
 
 export const Container = styled.div`
@@ -93,23 +93,23 @@ export const FeatureContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 80px;
-  background-color: #4F7FFF;
+  background-color: #4f7fff;
 `;
 
 export const FeatureCard = styled.div`
   padding: 24px;
   width: 280px;
   height: 140px;
-  color: #FFFFFF;
+  color: #ffffff;
   text-align: center;
   font-size: 1.5rem;
   font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #FFFFFF;
+  border: 2px solid #ffffff;
   border-radius: 24px;
-  background-color: #9AB5FF;
+  background-color: #9ab5ff;
 `;
 
 export const TogetherContainer = styled.div`
@@ -119,7 +119,7 @@ export const TogetherContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 80px;
-  background: linear-gradient(to bottom, #FFFFFF, #E9EFFF);
+  background: linear-gradient(to bottom, #ffffff, #e9efff);
 `;
 
 const slideLeft = keyframes`
@@ -172,9 +172,9 @@ export const TogetherCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid #E7EBEE;
+  border: 1px solid #e7ebee;
   border-radius: 24px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   transition: 0.2s;
 
   &:hover {

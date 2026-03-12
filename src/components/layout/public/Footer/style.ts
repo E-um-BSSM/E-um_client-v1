@@ -4,14 +4,14 @@ interface BgProps {
   color: "lightGray" | "white";
 }
 
-export const Frame = styled.div<BgProps>`
+export const Frame = styled.footer<BgProps>`
   display: flex;
   width: 100%;
   height: 25rem;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  border-top : 0.1rem solid var(--natural-300);
+  border-top: 0.1rem solid var(--natural-300);
 
   background-color: ${({ color }) =>
     color === "lightGray" ? "var(--natural-100)" : color === "white" ? "var(--white)" : "var(--black)"};
