@@ -1,14 +1,16 @@
 import { create } from "zustand";
-import type { signInResponse } from "@/models";
+import type { authTokens } from "@/models";
 
 const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 const AUTH_USER_KEY = "auth_user";
 
+/**
+ * MVP 로그인 응답(authTokens)은 유저 정보를 포함하지 않는다.
+ * 따라서 화면 표시에 필요한 최소 정보(username)만 클라이언트에서 보관한다.
+ */
 interface AuthUser {
   username: string;
-  system_role: string;
-  equipped_badge: string | null;
 }
 
 interface AuthState {
@@ -17,7 +19,7 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: AuthUser | null;
-  setAuthFromSignIn: (payload: signInResponse, remember: boolean) => void;
+  setAuthFromSignIn: (tokens: authTokens, user: AuthUser, keepSignedIn: boolean) => void;
   hydrateAuth: () => void;
   clearAuth: () => void;
 }
@@ -39,8 +41,8 @@ const parseAuthUser = (raw: string | null): AuthUser | null => {
 
   try {
     const parsed = JSON.parse(raw) as AuthUser;
-    if (!parsed.username || !parsed.system_role) return null;
-    return parsed;
+    if (!parsed.username) return null;
+    return { username: parsed.username };
   } catch {
     return null;
   }
@@ -99,32 +101,28 @@ export const useAuthStore = create<AuthState>(set => ({
   accessToken: null,
   refreshToken: null,
   user: null,
-  setAuthFromSignIn: (payload: signInResponse, remember: boolean) => {
-    const user: AuthUser = {
-      username: payload.username,
-      system_role: payload.system_role,
-      equipped_badge: payload.equipped_badge ?? null,
-    };
+  setAuthFromSignIn: (tokens: authTokens, user: AuthUser, keepSignedIn: boolean) => {
+    const authUser: AuthUser = { username: user.username };
 
     if (isBrowser) {
-      const targetStorage = remember ? localStorage : sessionStorage;
-      const resetStorage = remember ? sessionStorage : localStorage;
+      const targetStorage = keepSignedIn ? localStorage : sessionStorage;
+      const resetStorage = keepSignedIn ? sessionStorage : localStorage;
 
       resetStorage.removeItem(ACCESS_TOKEN_KEY);
       resetStorage.removeItem(REFRESH_TOKEN_KEY);
       resetStorage.removeItem(AUTH_USER_KEY);
 
-      targetStorage.setItem(ACCESS_TOKEN_KEY, payload.access_token);
-      targetStorage.setItem(REFRESH_TOKEN_KEY, payload.refresh_token);
-      targetStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+      targetStorage.setItem(ACCESS_TOKEN_KEY, tokens.access_token);
+      targetStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh_token);
+      targetStorage.setItem(AUTH_USER_KEY, JSON.stringify(authUser));
     }
 
     set({
       isAuthenticated: true,
-      remember,
-      accessToken: payload.access_token,
-      refreshToken: payload.refresh_token,
-      user,
+      remember: keepSignedIn,
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+      user: authUser,
     });
   },
   hydrateAuth: () => {

@@ -1,13 +1,13 @@
 import { req } from "@/apis/axiosInstance";
-import type { assignmentRequest, assignmentResponse, globalResponse } from "@/models";
+import type { assignmentResponse, assignmentUpdateRequest } from "@/models";
 
 export const assignmentPATCH = {
-  assignmentUpdate: async (
-    class_id: number,
-    assignment_id: number,
-    body: assignmentRequest,
-  ): Promise<globalResponse<assignmentResponse>> => {
-    const response = await req.patch(`/classes/${class_id}/assignments/${assignment_id}`, body);
+  updateAssignment: async (
+    classId: number,
+    assignmentId: number,
+    body: assignmentUpdateRequest,
+  ): Promise<assignmentResponse> => {
+    const response = await req.patch(`/classes/${classId}/assignments/${assignmentId}`, body);
     return response.data;
   },
 };

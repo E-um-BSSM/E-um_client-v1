@@ -1,14 +1,9 @@
 import { req } from "@/apis/axiosInstance";
-import type { ApiResponse, classRequest, classResponse, classSearchRequest, ClassroomListPayload, globalResponse } from "@/models";
+import type { classCreateRequest, classResponse } from "@/models";
 
 export const classPOST = {
-  classCreate: async (body: classRequest): Promise<globalResponse<classResponse>> => {
-    const response = await req.post("/classes", body);
-    return response.data;
-  },
-
-  classListSearch: async (params?: classSearchRequest): Promise<ApiResponse<ClassroomListPayload>> => {
-    const response = await req.get("/classes/search", { params });
+  createClass: async (body: classCreateRequest): Promise<classResponse> => {
+    const response = await req.post(`/classes`, body);
     return response.data;
   },
 };

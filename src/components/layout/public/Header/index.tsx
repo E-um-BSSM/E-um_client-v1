@@ -73,7 +73,6 @@ function Header({ type }: props) {
               <UserImg src="/eum.png" alt="유저 프로필 사진" loading="lazy" />
               <UserInfo>
                 <span className="name">{user.username}</span>
-                <span className="role">{user.system_role}</span>
               </UserInfo>
             </User>
           ) : (

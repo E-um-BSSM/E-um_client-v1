@@ -83,7 +83,7 @@ function SignUpPage() {
       setIsSendingCode(true);
       setIsError(false);
       setStatusMessage("");
-      await authPOST.sendVerificationCode({ email });
+      await authPOST.sendEmailCode({ email });
       setIsEmailVerified(false);
       setVerificationCode("");
       setRemainingSeconds(300);
@@ -152,12 +152,11 @@ function SignUpPage() {
       setIsError(false);
       setStatusMessage("");
 
-      await authPOST.signUp({
+      await authPOST.signup({
         username: id,
         email,
         password: pw,
-        phone,
-        auth_provider: "LOCAL",
+        privacy_agreed: agreePersonal,
       });
 
       setStatusMessage("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
@@ -283,7 +282,7 @@ function SignUpPage() {
           <RegisterBtn type="submit" disabled={!canSubmit || isSubmitting}>
             {isSubmitting ? "회원가입 중..." : "회원가입하기"}
           </RegisterBtn>
-          <MoveLogin to="/auth/login">BSM으로 로그인하기</MoveLogin>
+          <MoveLogin to="/auth/login">로그인하기</MoveLogin>
         </SubmitContainer>
       </FormSection>
     </Main>

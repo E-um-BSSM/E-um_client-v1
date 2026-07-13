@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { DifficultyLevel } from "@/components";
 import { useGlobalStyle } from "@/stores/useStyle";
-import { assignmentGET, classDELETE, classGET, inviteGET, memberGET, scheduleGET } from "@/apis/class";
-import { classPOST } from "@/apis/class/class";
+import { assignmentGET, classDELETE, classGET, classPATCH, inviteGET, memberGET, noticeGET } from "@/apis/class";
 import { submissionGET, submissionPOST } from "@/apis/class/submission";
 import type {
-  assignmentSearchResponse,
-  classCodeResponse,
-  classResponse,
-  classScheduleResponse,
+  AccessScope,
+  assignmentResponse,
+  classDetailResponse,
+  ClassStatus,
   submissionResponse,
-  waitingListResponse,
+  waitingMemberResponse,
 } from "@/models";
 import {
   ActionButtonRow,
@@ -101,7 +100,7 @@ import {
   WaitlistSection,
 } from "./styles";
 import { assignmentPOST } from "@/apis/class/assignment/post";
-import { schedulePOST } from "@/apis/class/schedule/post";
+import { noticePOST } from "@/apis/class/notice/post";
 import { memberPATCH } from "@/apis/class/member/patch";
 import { memberDELETE } from "@/apis/class/member/delete";
 import { submissionPATCH } from "@/apis/class/submission/patch";
@@ -131,6 +130,16 @@ type Notice = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+const selectStyle: React.CSSProperties = {
+  padding: "0.75rem 1rem",
+  borderRadius: "0.5rem",
+  border: "1px solid var(--natural-300)",
+  fontFamily: "Pretendard",
+  fontSize: "1rem",
+  color: "var(--text-primary)",
+  background: "var(--white)",
+};
+
 const toDateLabel = (dateValue: string) => {
   if (!dateValue) return "-";
   const date = new Date(dateValue);
@@ -142,15 +151,15 @@ const toDateLabel = (dateValue: string) => {
 };
 
 const resolveAssignmentStatus = (
-  assignment: assignmentSearchResponse,
+  assignment: assignmentResponse,
   submission?: submissionResponse,
 ): AssignmentStatus => {
   if (submission) {
     const hasFeedback =
-      submission.feedback?.trim().length > 0 || (typeof submission.score === "number" && submission.score > 0);
+      (submission.feedback?.trim().length ?? 0) > 0 || (typeof submission.score === "number" && submission.score > 0);
     return hasFeedback ? "feedback" : "done";
   }
-  const dueDate = new Date(assignment.due_date);
+  const dueDate = new Date(assignment.due_date ?? "");
   if (!Number.isNaN(dueDate.getTime()) && dueDate.getTime() < Date.now()) return "deadline";
   return "submit";
 };
@@ -160,49 +169,11 @@ const pickLatestSubmission = (list: submissionResponse[]) => {
   return [...list].sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime())[0];
 };
 
-const normalizeClassInfo = (item: classResponse): classResponse => {
-  const raw = item as unknown as Record<string, unknown>;
-
-  const pickString = (...keys: string[]) => {
-    for (const key of keys) {
-      const value = raw[key];
-      if (typeof value === "string" && value.trim().length > 0) {
-        return value;
-      }
-    }
-    return "";
-  };
-
-  const pickNumber = (...keys: string[]) => {
-    for (const key of keys) {
-      const value = raw[key];
-      if (typeof value === "number" && Number.isFinite(value)) {
-        return value;
-      }
-    }
-    return 0;
-  };
-
-  const tagsValue = raw.tags;
-  const normalizedTags = Array.isArray(tagsValue) ? tagsValue.filter((tag): tag is string => typeof tag === "string") : [];
-
-  return {
-    title: pickString("title", "class_title"),
-    description: pickString("description", "content", "class_description"),
-    tags: normalizedTags,
-    difficulty: pickNumber("difficulty", "level"),
-    classroom_id: pickNumber("classroom_id", "class_id"),
-    classroom_code: pickString("classroom_code", "class_code") || null,
-    created_by: pickString("created_by", "creator", "mentor_name", "username"),
-    class_id: pickNumber("class_id", "classroom_id"),
-    class_code: pickString("class_code", "classroom_code") || null,
-  };
-};
-
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function MyClassDetailPage() {
   const setFooterColor = useGlobalStyle(state => state.setFooterColor);
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   // Determine role: ?role=mento → mentor view, otherwise → mentee view
@@ -211,11 +182,11 @@ export default function MyClassDetailPage() {
 
   const [loadState, setLoadState] = useState<LoadState>("idle");
   const [resolvedClassId, setResolvedClassId] = useState<number | null>(null);
-  const [classInfo, setClassInfo] = useState<classResponse | null>(null);
+  const [classInfo, setClassInfo] = useState<classDetailResponse | null>(null);
   const [inviteCode, setInviteCode] = useState("");
   const [assignments, setAssignments] = useState<RenderAssignment[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [mentees, setMentees] = useState<waitingListResponse[]>([]);
+  const [mentees, setMentees] = useState<waitingMemberResponse[]>([]);
 
   // Menti submit-assignment modal state
   const [submitModalAssignment, setSubmitModalAssignment] = useState<RenderAssignment | null>(null);
@@ -228,6 +199,15 @@ export default function MyClassDetailPage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [submissionListModal, setSubmissionListModal] = useState<RenderAssignment | null>(null);
   const [gradingModal, setGradingModal] = useState<submissionResponse | null>(null);
+  const [isClassEditOpen, setIsClassEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  // 클래스 수정 폼
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editDifficulty, setEditDifficulty] = useState(1);
+  const [editAccessScope, setEditAccessScope] = useState<AccessScope>("PUBLIC");
+  const [editStatus, setEditStatus] = useState<ClassStatus>("RECRUITING");
 
   // Mento form states
   const [assignTitle, setAssignTitle] = useState("");
@@ -260,6 +240,8 @@ export default function MyClassDetailPage() {
     setIsNoticeCreateOpen(false);
     setSubmissionListModal(null);
     setGradingModal(null);
+    setIsClassEditOpen(false);
+    setIsDeleteOpen(false);
   };
 
   const resetSubmissionForm = () => {
@@ -271,54 +253,49 @@ export default function MyClassDetailPage() {
   // ── Data fetching ──────────────────────────────────────────────────────────
 
   const fetchDetailData = async (classId: number) => {
-    // Shared fetch: class info + assignments + schedules (notices)
-    const [classRes, assignmentRes, scheduleRes] = await Promise.all([
-      classGET.classSingleSearch(classId),
-      assignmentGET.assignmentSearch(classId),
-      scheduleGET.classScheduleListSearch(classId),
+    // Shared fetch: class info + assignments + notices
+    const [classRes, assignmentRes, noticeRes] = await Promise.all([
+      classGET.getClass(classId),
+      assignmentGET.getAssignments(classId),
+      noticeGET.getNotices(classId),
     ]);
 
-    setClassInfo(normalizeClassInfo(classRes.data));
+    setClassInfo(classRes);
 
-    const assignmentList: assignmentSearchResponse[] =
-      assignmentRes.data.content ?? assignmentRes.data.assignments ?? [];
-
-    const scheduleList: classScheduleResponse[] = scheduleRes.data.content ?? scheduleRes.data.schedules ?? [];
+    const assignmentList: assignmentResponse[] = assignmentRes.items;
 
     setNotices(
-      scheduleList.slice(0, 5).map(s => ({
-        id: s.schedule_id,
-        title: s.title,
-        content: s.description || "공지 내용이 없습니다.",
+      noticeRes.items.slice(0, 5).map(n => ({
+        id: n.id,
+        title: n.title,
+        content: n.content,
       })),
     );
 
     if (isMento) {
       // Mento view: invite code + mentee list, no submission resolution needed
       const [inviteRes, memberRes] = await Promise.allSettled([
-        inviteGET.classInviteCodeGet(classId),
-        memberGET.waitingListSearch(classId),
+        inviteGET.getInviteCode(classId),
+        memberGET.getWaitingList(classId),
       ]);
 
       if (inviteRes.status === "fulfilled") {
-        const code = (inviteRes.value.data as classCodeResponse).class_code ?? "";
-        setInviteCode(code);
+        setInviteCode(inviteRes.value.code ?? "");
       }
 
       if (memberRes.status === "fulfilled") {
-        const list: waitingListResponse[] = memberRes.value.data.content ?? memberRes.value.data.waiting ?? [];
-        setMentees(list);
+        setMentees(memberRes.value.items);
       }
 
       // Assignments for mento: no status resolution
       setAssignments(
         assignmentList.map(a => ({
-          id: a.assignment_id,
+          id: a.id,
           title: a.title,
-          deadline: `~ ${toDateLabel(a.due_date)}`,
-          description: a.description,
+          deadline: `~ ${toDateLabel(a.due_date ?? "")}`,
+          description: a.description ?? "",
           status: "submit" as AssignmentStatus,
-          rawDueDate: a.due_date,
+          rawDueDate: a.due_date ?? "",
         })),
       );
     } else {
@@ -326,12 +303,10 @@ export default function MyClassDetailPage() {
       const submissionPairs = await Promise.all(
         assignmentList.map(async assignment => {
           try {
-            const submissionRes = await submissionGET.submissionSearch(classId, assignment.assignment_id);
-            const submissionList: submissionResponse[] =
-              submissionRes.data.submissions ?? submissionRes.data.content ?? [];
-            return { assignmentId: assignment.assignment_id, submission: pickLatestSubmission(submissionList) };
+            const submissionRes = await submissionGET.getSubmissions(classId, assignment.id);
+            return { assignmentId: assignment.id, submission: pickLatestSubmission(submissionRes.items) };
           } catch {
-            return { assignmentId: assignment.assignment_id, submission: undefined };
+            return { assignmentId: assignment.id, submission: undefined };
           }
         }),
       );
@@ -340,14 +315,14 @@ export default function MyClassDetailPage() {
 
       setAssignments(
         assignmentList.map(a => {
-          const submission = submissionMap.get(a.assignment_id);
+          const submission = submissionMap.get(a.id);
           return {
-            id: a.assignment_id,
+            id: a.id,
             title: a.title,
-            deadline: `~ ${toDateLabel(a.due_date)}`,
-            description: a.description,
+            deadline: `~ ${toDateLabel(a.due_date ?? "")}`,
+            description: a.description ?? "",
             status: resolveAssignmentStatus(a, submission),
-            rawDueDate: a.due_date,
+            rawDueDate: a.due_date ?? "",
             submission,
           };
         }),
@@ -365,9 +340,9 @@ export default function MyClassDetailPage() {
         let classId = Number.isFinite(queryClassId) && queryClassId > 0 ? queryClassId : null;
 
         if (!classId) {
-          const listResponse = await classPOST.classListSearch();
-          const list = listResponse.data.classrooms ?? [];
-          classId = list[0]?.classroom_id ?? list[0]?.class_id ?? null;
+          const listResponse = await classGET.getMyClasses();
+          const list = listResponse.items;
+          classId = list[0]?.id ?? null;
         }
 
         if (!classId) {
@@ -413,7 +388,7 @@ export default function MyClassDetailPage() {
     if (!hasSubmissionValue || !submitModalAssignment || !resolvedClassId) return;
     try {
       const fileUrl = submissionLink.trim() || selectedFileName.trim();
-      await submissionPOST.submissionSubmit(resolvedClassId, submitModalAssignment.id, {
+      await submissionPOST.submitAssignment(resolvedClassId, submitModalAssignment.id, {
         content: fileUrl,
         file_url: fileUrl,
       });
@@ -437,7 +412,7 @@ export default function MyClassDetailPage() {
     e.preventDefault();
     if (!resolvedClassId || !assignTitle || !assignDueDate) return;
     try {
-      await assignmentPOST.assignmentCreate(resolvedClassId, {
+      await assignmentPOST.createAssignment(resolvedClassId, {
         title: assignTitle,
         description: assignDesc,
         due_date: new Date(assignDueDate).toISOString(),
@@ -456,8 +431,8 @@ export default function MyClassDetailPage() {
   const handleOpenSubmissionList = async (assignment: RenderAssignment) => {
     if (!resolvedClassId) return;
     try {
-      const res = await submissionGET.submissionSearch(resolvedClassId, assignment.id);
-      setSubmissions(res.data.submissions ?? res.data.content ?? []);
+      const res = await submissionGET.getSubmissions(resolvedClassId, assignment.id);
+      setSubmissions(res.items);
       setSubmissionListModal(assignment);
     } catch (err) {
       console.error(err);
@@ -473,13 +448,13 @@ export default function MyClassDetailPage() {
   const onSubmitGrading = async () => {
     if (!resolvedClassId || !submissionListModal || !gradingModal) return;
     try {
-      await submissionPATCH.submissionFeedback(resolvedClassId, submissionListModal.id, gradingModal.submission_id, {
+      await submissionPATCH.gradeSubmission(resolvedClassId, submissionListModal.id, gradingModal.id, {
         score: gradingScore,
         feedback: gradingFeedback,
       });
       // Refresh list
-      const res = await submissionGET.submissionSearch(resolvedClassId, submissionListModal.id);
-      setSubmissions(res.data.submissions ?? res.data.content ?? []);
+      const res = await submissionGET.getSubmissions(resolvedClassId, submissionListModal.id);
+      setSubmissions(res.items);
       setGradingModal(null);
     } catch (err) {
       console.error(err);
@@ -492,13 +467,9 @@ export default function MyClassDetailPage() {
     e.preventDefault();
     if (!resolvedClassId || !noticeTitle || !noticeContent) return;
     try {
-      await schedulePOST.classScheduleRegister(resolvedClassId, {
+      await noticePOST.createNotice(resolvedClassId, {
         title: noticeTitle,
-        description: noticeContent,
-        start_at: new Date().toISOString(),
-        end_at: new Date(Date.now() + 86400000 * 365).toISOString(), // Long duration for notice
-        location: "Notice",
-        status: "Notice",
+        content: noticeContent,
       });
       setIsNoticeCreateOpen(false);
       setNoticeTitle("");
@@ -511,24 +482,20 @@ export default function MyClassDetailPage() {
 
   // ── Mento membership actions ───────────────────────────────────────────────
 
-  const handleAcceptMentee = async () => {
+  const handleAcceptMentee = async (userId: string) => {
     if (!resolvedClassId) return;
     try {
-      // Assuming class_id is enough for the unified accept endpoint
-      // backend might handle specific user via other means or this is a "accept all"
-      // But based on Figma, we should pass user_id if possible.
-      // Re-reading member/patch.ts, it doesn't take user_id.
-      await memberPATCH.memberAccept(resolvedClassId);
+      await memberPATCH.acceptMember(resolvedClassId, userId);
       await fetchDetailData(resolvedClassId);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleRejectMentee = async () => {
+  const handleRejectMentee = async (userId: string) => {
     if (!resolvedClassId) return;
     try {
-      await memberDELETE.memberDisagree(resolvedClassId);
+      await memberDELETE.removeMember(resolvedClassId, userId);
       await fetchDetailData(resolvedClassId);
     } catch (err) {
       console.error(err);
@@ -537,13 +504,39 @@ export default function MyClassDetailPage() {
 
   // ── Mento actions ─────────────────────────────────────────────────────────
 
+  const openClassEdit = () => {
+    setEditTitle(classInfo?.title ?? "");
+    setEditDescription(classInfo?.description ?? "");
+    setEditDifficulty(classInfo?.difficulty || 1);
+    setEditAccessScope(classInfo?.access_scope ?? "PUBLIC");
+    setEditStatus(classInfo?.status ?? "RECRUITING");
+    setIsClassEditOpen(true);
+  };
+
+  const handleUpdateClass = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resolvedClassId || !editTitle.trim()) return;
+    try {
+      await classPATCH.updateClass(resolvedClassId, {
+        title: editTitle.trim(),
+        description: editDescription.trim() || null,
+        difficulty: editDifficulty,
+        access_scope: editAccessScope,
+        status: editStatus,
+      });
+      setIsClassEditOpen(false);
+      await fetchDetailData(resolvedClassId);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleDeleteClass = async () => {
     if (!resolvedClassId) return;
-    const confirmed = window.confirm("정말로 클래스를 삭제하시겠습니까?");
-    if (!confirmed) return;
     try {
-      await classDELETE.classDelete(resolvedClassId);
-      window.history.back();
+      await classDELETE.deleteClass(resolvedClassId);
+      setIsDeleteOpen(false);
+      navigate("/app");
     } catch {
       // ignore
     }
@@ -571,13 +564,16 @@ export default function MyClassDetailPage() {
                 <OutlinedButton type="button" onClick={() => setIsWaitlistOpen(!isWaitlistOpen)}>
                   클래스 대기리스트
                 </OutlinedButton>
-                <DangerButton type="button" onClick={handleDeleteClass}>
+                <OutlinedButton type="button" onClick={openClassEdit}>
+                  클래스 수정하기
+                </OutlinedButton>
+                <DangerButton type="button" onClick={() => setIsDeleteOpen(true)}>
                   클래스 삭제하기
                 </DangerButton>
               </ActionButtonRow>
               <InviteCodeRow>
                 <InviteCodeLabel>초대 코드</InviteCodeLabel>
-                <InviteCodeValue>{inviteCode || classInfo?.class_code || classInfo?.classroom_code || "—"}</InviteCodeValue>
+                <InviteCodeValue>{inviteCode || classInfo?.invite_code || "—"}</InviteCodeValue>
               </InviteCodeRow>
             </ClassActions>
           )}
@@ -604,16 +600,16 @@ export default function MyClassDetailPage() {
                     <EmptyText>대기 중인 사람이 없습니다.</EmptyText>
                   ) : (
                     mentees.map(m => (
-                      <WaitlistItem key={m.user_id}>
+                      <WaitlistItem key={m.user.user_id}>
                         <WaitlistInfo>
                           <MiniAvatar src="/eum.png" alt="멘티 프로필" />
-                          <MenteeName>{m.user_id}</MenteeName>
+                          <MenteeName>{m.user.nickname}</MenteeName>
                         </WaitlistInfo>
                         <WaitlistActions>
-                          <WaitlistButton variant="accept" onClick={() => handleAcceptMentee()}>
+                          <WaitlistButton variant="accept" onClick={() => handleAcceptMentee(m.user.user_id)}>
                             참가 허용
                           </WaitlistButton>
-                          <WaitlistButton variant="reject" onClick={() => handleRejectMentee()}>
+                          <WaitlistButton variant="reject" onClick={() => handleRejectMentee(m.user.user_id)}>
                             참가 거부
                           </WaitlistButton>
                         </WaitlistActions>
@@ -698,7 +694,7 @@ export default function MyClassDetailPage() {
               <MentorCard>
                 <MentorHeader>
                   <Avatar src="/eum.png" alt="멘토 프로필" loading="lazy" />
-                  <MentorName>{classInfo?.created_by ?? "멘토 이름"}</MentorName>
+                  <MentorName>{classInfo?.mentor?.nickname ?? "멘토 이름"}</MentorName>
                 </MentorHeader>
                 <MentorDesc>{classInfo?.tags?.join(" · ") || "멘토 소개"}</MentorDesc>
               </MentorCard>
@@ -717,9 +713,9 @@ export default function MyClassDetailPage() {
                   <MenteeCard>
                     <MenteeListView>
                       {mentees.map(m => (
-                        <MenteeItem key={m.user_id}>
+                        <MenteeItem key={m.user.user_id}>
                           <MiniAvatar src="/eum.png" alt="멘티 프로필" loading="lazy" />
-                          <MenteeName>{m.user_id}</MenteeName>
+                          <MenteeName>{m.user.nickname}</MenteeName>
                         </MenteeItem>
                       ))}
                     </MenteeListView>
@@ -768,7 +764,9 @@ export default function MyClassDetailPage() {
         isAssignmentCreateOpen ||
         isNoticeCreateOpen ||
         submissionListModal ||
-        gradingModal) && (
+        gradingModal ||
+        isClassEditOpen ||
+        isDeleteOpen) && (
         <Overlay onClick={closeAllModals}>
           {/* Menti: submit assignment modal */}
           {submitModalAssignment && (
@@ -876,8 +874,91 @@ export default function MyClassDetailPage() {
             </MentoModal>
           )}
 
-          {/* Mento: submission list modal */}
-          {submissionListModal && (
+          {/* Mento: class edit modal */}
+          {isClassEditOpen && (
+            <MentoModal onClick={e => e.stopPropagation()}>
+              <CloseButton type="button" onClick={() => setIsClassEditOpen(false)}>
+                ×
+              </CloseButton>
+              <ModalTitle>클래스 수정하기</ModalTitle>
+              <ModalForm onSubmit={handleUpdateClass}>
+                <FormGroup>
+                  <FormLabel>클래스 제목</FormLabel>
+                  <FormInput
+                    placeholder="클래스 제목"
+                    value={editTitle}
+                    onChange={e => setEditTitle(e.target.value)}
+                    required
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <FormLabel>클래스 소개</FormLabel>
+                  <FormTextarea
+                    placeholder="클래스 소개"
+                    value={editDescription}
+                    onChange={e => setEditDescription(e.target.value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <FormLabel>난이도</FormLabel>
+                  <DotRow>
+                    {[1, 2, 3, 4, 5].map(v => (
+                      <Dot key={v} active={editDifficulty >= v} onClick={() => setEditDifficulty(v)} />
+                    ))}
+                  </DotRow>
+                </FormGroup>
+                <FormGroup>
+                  <FormLabel>공개 설정</FormLabel>
+                  <select
+                    value={editAccessScope}
+                    onChange={e => setEditAccessScope(e.target.value as AccessScope)}
+                    style={selectStyle}
+                  >
+                    <option value="PUBLIC">공개</option>
+                    <option value="UNLISTED">일부 공개</option>
+                    <option value="PRIVATE">비공개</option>
+                  </select>
+                </FormGroup>
+                <FormGroup>
+                  <FormLabel>클래스 상태</FormLabel>
+                  <select
+                    value={editStatus}
+                    onChange={e => setEditStatus(e.target.value as ClassStatus)}
+                    style={selectStyle}
+                  >
+                    <option value="RECRUITING">모집 중</option>
+                    <option value="ACTIVE">진행 중</option>
+                    <option value="CLOSED">종료</option>
+                  </select>
+                </FormGroup>
+                <SubmitButton type="submit" active={!!editTitle.trim()}>
+                  수정하기
+                </SubmitButton>
+              </ModalForm>
+            </MentoModal>
+          )}
+
+          {/* Mento: delete confirm modal */}
+          {isDeleteOpen && (
+            <MentoModal onClick={e => e.stopPropagation()}>
+              <CloseButton type="button" onClick={() => setIsDeleteOpen(false)}>
+                ×
+              </CloseButton>
+              <ModalTitle>클래스를 삭제할까요?</ModalTitle>
+              <ModalSubTitle>삭제하면 되돌릴 수 없습니다.</ModalSubTitle>
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                <SubmitButton type="button" active={false} onClick={() => setIsDeleteOpen(false)}>
+                  취소
+                </SubmitButton>
+                <SubmitButton type="button" active={true} onClick={handleDeleteClass}>
+                  삭제하기
+                </SubmitButton>
+              </div>
+            </MentoModal>
+          )}
+
+          {/* Mento: submission list modal (채점 모달이 열려 있으면 숨김) */}
+          {submissionListModal && !gradingModal && (
             <SubmissionListModal onClick={e => e.stopPropagation()}>
               <CloseButton type="button" onClick={closeAllModals}>
                 ×
@@ -888,17 +969,17 @@ export default function MyClassDetailPage() {
                   <EmptyText>제출된 과제가 없습니다.</EmptyText>
                 ) : (
                   submissions.map(s => (
-                    <SubmissionItem key={s.submission_id}>
+                    <SubmissionItem key={s.id}>
                       <SubmissionInfo>
                         <MiniAvatar src="/eum.png" alt="멘티" />
-                        <MenteeName>{s.user_id}</MenteeName>
+                        <MenteeName>{s.mentee.nickname}</MenteeName>
                         {s.file_url && (
                           <ExternalLink href={s.file_url} target="_blank" rel="noopener noreferrer">
                             {s.file_url}
                           </ExternalLink>
                         )}
                       </SubmissionInfo>
-                      {s.status === "graded" ? (
+                      {s.status === "GRADED" ? (
                         <MiniButton variant="muted" disabled>
                           채점 완료
                         </MiniButton>
@@ -917,14 +998,14 @@ export default function MyClassDetailPage() {
           {/* Mento: grading modal */}
           {gradingModal && (
             <MentoModal onClick={e => e.stopPropagation()}>
-              <CloseButton type="button" onClick={closeAllModals}>
+              <CloseButton type="button" onClick={() => setGradingModal(null)}>
                 ×
               </CloseButton>
               <ModalTitle>채점 및 피드백</ModalTitle>
               <FeedbackHeader>
                 <FeedbackLine>
                   <MiniAvatar src="/eum.png" alt="멘티" />
-                  <MenteeName>{gradingModal.user_id}</MenteeName>
+                  <MenteeName>{gradingModal.mentee.nickname}</MenteeName>
                 </FeedbackLine>
                 <ScoreLine>
                   <ScoreText>채점 ({gradingScore}/100)</ScoreText>
@@ -958,7 +1039,7 @@ export default function MyClassDetailPage() {
               <FeedbackHeader>
                 <FeedbackLine>
                   <MiniAvatar src="/eum.png" alt="멘티 프로필" loading="lazy" />
-                  <FeedbackName>{feedbackModalAssignment.submission?.user_id ?? "멘티 이름"}</FeedbackName>
+                  <FeedbackName>{feedbackModalAssignment.submission?.mentee.nickname ?? "멘티 이름"}</FeedbackName>
                 </FeedbackLine>
                 <ScoreLine>
                   <ScoreText>채점 ({feedbackModalAssignment.submission?.score ?? 0}/100)</ScoreText>

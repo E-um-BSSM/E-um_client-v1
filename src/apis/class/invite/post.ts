@@ -1,9 +1,9 @@
 import { req } from "@/apis/axiosInstance";
-import type { globalResponse } from "@/models";
+import type { inviteCodeResponse } from "@/models";
 
 export const invitePOST = {
-  classInviteCodeCreate: async (class_id: number): Promise<globalResponse<object>> => {
-    const response = await req.post(`/classes/${class_id}/invite`);
+  createInviteCode: async (classId: number): Promise<inviteCodeResponse> => {
+    const response = await req.post(`/classes/${classId}/invite`);
     return response.data;
   },
 };

@@ -1,9 +1,22 @@
 import { req } from "@/apis/axiosInstance";
-import type { classResponse, globalResponse } from "@/models";
+import type {
+  classDetailResponse,
+  classSearchRequest,
+  classSummaryPageResponse,
+  myClassSearchRequest,
+} from "@/models";
 
 export const classGET = {
-  classSingleSearch: async (class_id: number): Promise<globalResponse<classResponse>> => {
-    const response = await req.get(`/classes/${class_id}`);
+  searchClasses: async (params?: classSearchRequest): Promise<classSummaryPageResponse> => {
+    const response = await req.get(`/classes/search`, { params });
+    return response.data;
+  },
+  getMyClasses: async (params?: myClassSearchRequest): Promise<classSummaryPageResponse> => {
+    const response = await req.get(`/classes/my`, { params });
+    return response.data;
+  },
+  getClass: async (classId: number): Promise<classDetailResponse> => {
+    const response = await req.get(`/classes/${classId}`);
     return response.data;
   },
 };

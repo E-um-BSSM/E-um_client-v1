@@ -13,3 +13,8 @@ button {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0);
 }
+
+/* 앱 헤더가 position: fixed 라 본문을 가리므로, 헤더 높이만큼 본문을 내린다. */
+.appLayout > main {
+  padding-top: 8.25rem;
+}

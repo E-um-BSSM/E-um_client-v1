@@ -1,9 +1,7 @@
 import { req } from "@/apis/axiosInstance";
-import type { globalResponse } from "@/models";
 
 export const assignmentDELETE = {
-  assignmentDelete: async (class_id: number, assignment_id: number): Promise<globalResponse<object>> => {
-    const response = await req.delete(`/classes/${class_id}/assignments/${assignment_id}`);
-    return response.data;
+  deleteAssignment: async (classId: number, assignmentId: number): Promise<void> => {
+    await req.delete(`/classes/${classId}/assignments/${assignmentId}`);
   },
 };

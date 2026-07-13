@@ -53,21 +53,23 @@ export const RecentMentoringTitleContainer = styled.div`
   align-self: stretch;
 `;
 export const MentoringContent = styled.div`
-  /*내용 틀 (최근,인기 공통)*/
+  /*내용 틀 (최근,인기 공통) - 한 줄에 최대 4개, 좌→우로 채움*/
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   gap: 1.5rem;
+  width: 69.5rem;
 `;
 
 export const Popular = styled.div`
-  /*인기 멘토링/커뮤니티 가장 큰 틀*/
+  /*인기 멘토링 가장 큰 틀*/
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2.5rem;
 `;
 export const PopularTitleContainer = styled.div`
-  /*인기 멘토링/커뮤니티 제목 틀*/
+  /*인기 멘토링 제목 틀*/
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -82,7 +84,7 @@ export const PopularMentoringContent = styled.div`
   width:69.5rem;
 `;
 export const PopularTitle = styled.div`
-  /*인기 멘토링/커뮤니티 제목 그룹*/
+  /*인기 멘토링 제목 그룹*/
   display: flex;
   flex-direction: column;
   align-items: flex-start;

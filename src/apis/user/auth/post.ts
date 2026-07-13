@@ -1,39 +1,43 @@
 import { req } from "@/apis/axiosInstance";
 import type {
-  globalResponse,
-  signInRequest,
-  signInResponse,
-  signOutRequest,
-  signOutResponse,
-  signUpRequest,
-  signUpResponse,
-  sendVerificationCodeRequest,
-  verifyEmailCodeRequest,
+  authTokens,
+  emailSendRequest,
+  emailVerifyRequest,
+  passwordResetConfirm,
+  passwordResetRequest,
   refreshRequest,
-  refreshResponse,
+  signinRequest,
+  signupRequest,
+  verificationResult,
 } from "@/models";
 
 export const authPOST = {
-  signUp: async (body: signUpRequest): Promise<globalResponse<signUpResponse>> => {
+  signup: async (body: signupRequest): Promise<authTokens> => {
     const response = await req.post(`/auth/signup`, body);
     return response.data;
   },
-  signIn: async (body: signInRequest): Promise<globalResponse<signInResponse>> => {
+  signin: async (body: signinRequest): Promise<authTokens> => {
     const response = await req.post(`/auth/signin`, body);
     return response.data;
   },
-  signOut: async (body: signOutRequest): Promise<globalResponse<signOutResponse>> => {
-    const response = await req.post(`/auth/signout`, body);
-    return response.data;
+  signout: async (): Promise<void> => {
+    await req.post(`/auth/signout`);
   },
-  refresh: async (body: refreshRequest): Promise<globalResponse<refreshResponse>> => {
+  refresh: async (body: refreshRequest): Promise<authTokens> => {
     const response = await req.post(`/auth/refresh`, body);
     return response.data;
   },
-  sendVerificationCode: async (body: sendVerificationCodeRequest): Promise<void> => {
+  sendEmailCode: async (body: emailSendRequest): Promise<void> => {
     await req.post(`/auth/email/send`, body);
   },
-  verifyEmailCode: async (body: verifyEmailCodeRequest): Promise<void> => {
-    await req.post(`/auth/email/verify`, body);
+  verifyEmailCode: async (body: emailVerifyRequest): Promise<verificationResult> => {
+    const response = await req.post(`/auth/email/verify`, body);
+    return response.data;
+  },
+  requestPasswordReset: async (body: passwordResetRequest): Promise<void> => {
+    await req.post(`/auth/password/reset-request`, body);
+  },
+  resetPassword: async (body: passwordResetConfirm): Promise<void> => {
+    await req.post(`/auth/password/reset`, body);
   },
 };

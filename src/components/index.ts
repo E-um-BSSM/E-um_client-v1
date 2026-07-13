@@ -9,6 +9,8 @@ export * from "./feature/buttons/FindClassButton";
 export * from "./feature/search/RecruitmentSearchBar";
 export * from "./feature/cards/MiniMentoringCard";
 export * from "./feature/cards/MiniRecruitmentCard";
+export * from "./feature/cards/ClassSummaryAside";
 export * from "./feature/search/ClassSearchBar";
 export * from "./feature/toggle/MentoMentiSwitchButton";
+export * from "./feature/Markdown";
 export * from "./ui/common";

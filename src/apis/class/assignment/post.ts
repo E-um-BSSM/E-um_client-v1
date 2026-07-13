@@ -1,13 +1,9 @@
 import { req } from "@/apis/axiosInstance";
-import type {
-  assignmentRequest,
-  assignmentResponse,
-  globalResponse,
-} from "@/models/index";
+import type { assignmentCreateRequest, assignmentResponse } from "@/models";
 
 export const assignmentPOST = {
-  assignmentCreate: async (class_id: number, body: assignmentRequest): Promise<globalResponse<assignmentResponse>> => {
-    const response = await req.post(`/classes/${class_id}/assignments`, body);
+  createAssignment: async (classId: number, body: assignmentCreateRequest): Promise<assignmentResponse> => {
+    const response = await req.post(`/classes/${classId}/assignments`, body);
     return response.data;
   },
 };

@@ -1,7 +1,17 @@
 import { Container, Description, Info, Profile } from "./style";
 import {RecruitmentDetailButton, DifficultyLevel} from "@/components";
 
-export function RecruitmentCard({ name, description, level }: { name: string; description: string; level: number }) {
+export function RecruitmentCard({
+  name,
+  description,
+  level,
+  onClick,
+}: {
+  name: string;
+  description: string;
+  level: number;
+  onClick?: () => void;
+}) {
   return (
     <Container>
       <Info>
@@ -12,7 +22,7 @@ export function RecruitmentCard({ name, description, level }: { name: string; de
         <Description>{description}</Description>
       </Info>
       <DifficultyLevel level={level} />
-      <RecruitmentDetailButton />
+      <RecruitmentDetailButton onClick={onClick} />
     </Container>
   );
 }

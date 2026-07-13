@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { classPOST } from "@/apis/class/class";
+import { classGET, joinPOST, memberGET } from "@/apis/class";
 import { MiniMentoringCard, MiniRecruitmentCard, FindClassButton, ClassSearchBar, RadioSwitch } from "@/components";
-import type { ClassroomListPayload, classResponse } from "@/models";
+import type { classSummaryResponse } from "@/models";
 import {
   MyMentoringCardContainer,
   MyWrapper,
@@ -15,172 +16,86 @@ import {
   RecentMentoringEmpty,
   TopContainer,
   MyRecruitmentCardContainer,
+  InviteJoinArea,
+  InviteJoinButton,
+  ModalBackdrop,
+  ModalPanel,
+  ModalHeader,
+  ModalTitle,
+  ModalCloseButton,
+  InviteJoinForm,
+  InviteJoinInput,
+  InviteJoinMessage,
 } from "./styles";
 
 type RoleFilter = "Mento" | "Menti";
 
-type RecruitmentClass = classResponse & {
+type RecruitmentClass = classSummaryResponse & {
   applicantCount: number;
 };
 
 type RoleSectionData = {
-  mentoringClasses: classResponse[];
+  mentoringClasses: classSummaryResponse[];
   recruitmentClasses: RecruitmentClass[];
 };
 
-const getJwtPayload = (token: string) => {
-  try {
-    const payload = token.split(".")[1];
-    if (!payload) {
-      return null;
-    }
-
-    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const decoded = atob(normalized);
-    return JSON.parse(decoded) as Record<string, unknown>;
-  } catch {
-    return null;
-  }
-};
-
-const getCurrentUsername = () => {
-  const directKeys = ["username", "userName", "user_id", "userId"];
-  for (const key of directKeys) {
-    const value = localStorage.getItem(key) ?? sessionStorage.getItem(key);
-    if (value) {
-      return value;
-    }
-  }
-
-  const objectKeys = ["user", "auth", "account", "auth_user"];
-  for (const key of objectKeys) {
-    const raw = localStorage.getItem(key) ?? sessionStorage.getItem(key);
-    if (!raw) {
-      continue;
-    }
-
-    try {
-      const parsed = JSON.parse(raw) as Record<string, unknown>;
-      if (typeof parsed.username === "string" && parsed.username) {
-        return parsed.username;
-      }
-      if (typeof parsed.user_id === "string" && parsed.user_id) {
-        return parsed.user_id;
-      }
-    } catch {
-      continue;
-    }
-  }
-
-  const tokenKeys = ["access_token", "accessToken", "token"];
-  for (const key of tokenKeys) {
-    const token = localStorage.getItem(key) ?? sessionStorage.getItem(key);
-    if (!token) {
-      continue;
-    }
-
-    const payload = getJwtPayload(token);
-    if (!payload) {
-      continue;
-    }
-
-    const username = payload.username;
-    if (typeof username === "string" && username) {
-      return username;
-    }
-
-    const userId = payload.user_id;
-    if (typeof userId === "string" && userId) {
-      return userId;
-    }
-
-    const sub = payload.sub;
-    if (typeof sub === "string" && sub) {
-      return sub;
-    }
-  }
-
-  return null;
-};
-
-const normalizeClassResponse = (item: classResponse): classResponse => {
-  return {
-    ...item,
-    class_id: item.class_id ?? item.classroom_id,
-    class_code: item.class_code ?? item.classroom_code,
-  };
-};
-
-const extractClassList = (data: ClassroomListPayload): classResponse[] => {
-  return data.classrooms.map(normalizeClassResponse);
-};
+const EMPTY_ROLE_DATA: RoleSectionData = { mentoringClasses: [], recruitmentClasses: [] };
 
 export default function MyPage() {
   const navigate = useNavigate();
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("Mento");
   const [isLoading, setIsLoading] = useState(true);
-  const [mentorData, setMentorData] = useState<RoleSectionData>({ mentoringClasses: [], recruitmentClasses: [] });
-  const [menteeData, setMenteeData] = useState<RoleSectionData>({ mentoringClasses: [], recruitmentClasses: [] });
+  const [mentorData, setMentorData] = useState<RoleSectionData>(EMPTY_ROLE_DATA);
+  const [menteeData, setMenteeData] = useState<RoleSectionData>(EMPTY_ROLE_DATA);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [classId, setClassId] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
+  const [inviteMessage, setInviteMessage] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
+
+  const fetchClassList = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const [mentorActiveResponse, mentorRecruitingResponse, menteeActiveResponse, menteeWaitingResponse] =
+        await Promise.all([
+          classGET.getMyClasses({ role: "MENTOR", status: "ACTIVE", membership: "ACCEPTED" }),
+          classGET.getMyClasses({ role: "MENTOR", status: "RECRUITING" }),
+          classGET.getMyClasses({ role: "MENTEE", status: "ACTIVE", membership: "ACCEPTED" }),
+          classGET.getMyClasses({ role: "MENTEE", status: "RECRUITING", membership: "WAITING" }),
+        ]);
+
+      const mentorRecruitment: RecruitmentClass[] = await Promise.all(
+        mentorRecruitingResponse.items.map(async item => {
+          let applicantCount = item.mentee_count ?? 0;
+          try {
+            const waiting = await memberGET.getWaitingList(item.id, { size: 1 });
+            applicantCount = waiting.page.total_elements;
+          } catch {
+            // 대기 리스트 조회 실패 시 요약값 유지
+          }
+          return { ...item, applicantCount };
+        }),
+      );
+
+      setMentorData({
+        mentoringClasses: mentorActiveResponse.items,
+        recruitmentClasses: mentorRecruitment,
+      });
+      setMenteeData({
+        mentoringClasses: menteeActiveResponse.items,
+        recruitmentClasses: menteeWaitingResponse.items.map(item => ({ ...item, applicantCount: 0 })),
+      });
+    } catch {
+      setMentorData(EMPTY_ROLE_DATA);
+      setMenteeData(EMPTY_ROLE_DATA);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchClassList = async () => {
-      setIsLoading(true);
-      try {
-        const activeResponse = await classPOST.classListSearch({ classroomStatus: "ACTIVE" });
-        const activeClasses = extractClassList(activeResponse.data);
-        const username = getCurrentUsername();
-        if (!isMounted) {
-          return;
-        }
-
-        if (!username) {
-          setMentorData({
-            mentoringClasses: activeClasses,
-            recruitmentClasses: [],
-          });
-          setMenteeData({
-            mentoringClasses: [],
-            recruitmentClasses: [],
-          });
-          return;
-        }
-
-        const mentorGoingClasses = activeClasses.filter(item => item.created_by === username);
-        const menteeGoingClasses = activeClasses.filter(item => item.created_by !== username);
-
-        if (!isMounted) {
-          return;
-        }
-
-        setMentorData({
-          mentoringClasses: mentorGoingClasses,
-          recruitmentClasses: [],
-        });
-        setMenteeData({
-          mentoringClasses: menteeGoingClasses,
-          recruitmentClasses: [],
-        });
-      } catch {
-        if (!isMounted) {
-          return;
-        }
-        setMentorData({ mentoringClasses: [], recruitmentClasses: [] });
-        setMenteeData({ mentoringClasses: [], recruitmentClasses: [] });
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchClassList();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    void fetchClassList();
+  }, [fetchClassList]);
 
   const currentData = useMemo(
     () => (roleFilter === "Mento" ? mentorData : menteeData),
@@ -189,6 +104,42 @@ export default function MyPage() {
   const recruitmentTitle = roleFilter === "Mento" ? "모집 중인 클래스" : "신청한 모집글";
   const recruitmentEmptyMessage = roleFilter === "Mento" ? "현재 모집 중인 클래스가 없어요" : "신청한 모집글이 없어요";
   const recruitmentCardVariant = roleFilter === "Menti" ? "menti" : "mento";
+  const inviteJoinSucceeded = inviteMessage.includes("완료");
+
+  const handleInviteJoin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const numericClassId = Number(classId);
+    const trimmedInviteCode = inviteCode.trim();
+
+    if (!Number.isInteger(numericClassId) || numericClassId <= 0) {
+      setInviteMessage("클래스 ID를 입력해주세요.");
+      return;
+    }
+
+    if (!trimmedInviteCode) {
+      setInviteMessage("초대코드를 입력해주세요.");
+      return;
+    }
+
+    setIsJoining(true);
+    try {
+      await joinPOST.applyToClass(numericClassId, { invite_code: trimmedInviteCode });
+      setInviteMessage("클래스 참가 요청이 완료됐어요.");
+      setClassId("");
+      setInviteCode("");
+      await fetchClassList();
+    } catch {
+      setInviteMessage("참가에 실패했어요. 클래스 ID와 초대코드를 다시 확인해주세요.");
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
+  const closeInviteModal = () => {
+    setIsInviteModalOpen(false);
+    setInviteMessage("");
+  };
 
   const renderEmpty = (message: string) => (
     <RecentMentoringEmpty>
@@ -239,12 +190,14 @@ export default function MyPage() {
                 ? renderEmpty(recruitmentEmptyMessage)
                 : currentData.recruitmentClasses.map(item => (
                     <MiniRecruitmentCard
-                      key={item.class_id}
+                      key={item.id}
                       title={item.title}
                       variant={recruitmentCardVariant}
                       applicantCount={item.applicantCount}
-                      mentorName={item.created_by}
-                      onActionClick={roleFilter === "Mento" ? () => navigate("/app/class/create") : undefined}
+                      mentorName={item.mentor?.nickname ?? ""}
+                      onActionClick={
+                        roleFilter === "Mento" ? () => navigate(`/app/class/create?classId=${item.id}`) : undefined
+                      }
                     />
                   ))}
             </MyRecruitmentCardContainer>
@@ -260,12 +213,12 @@ export default function MyPage() {
                 ? renderEmpty("현재 진행 중인 멘토링이 없어요")
                 : currentData.mentoringClasses.map(item => (
                     <MiniMentoringCard
-                      key={item.class_id}
+                      key={item.id}
                       title={item.title}
-                      lecturer={item.created_by}
+                      lecturer={item.mentor?.nickname ?? ""}
                       onClick={() =>
                         navigate(
-                          `/app/class/detail?classId=${item.class_id}&role=${roleFilter === "Mento" ? "mento" : "menti"}`,
+                          `/app/class/detail?classId=${item.id}&role=${roleFilter === "Mento" ? "mento" : "menti"}`,
                         )
                       }
                     />
@@ -273,7 +226,52 @@ export default function MyPage() {
             </MyMentoringCardContainer>
           </MyWrapper>
         </MyContainer>
+
+        {roleFilter === "Menti" && (
+          <InviteJoinArea>
+            <InviteJoinButton type="button" onClick={() => setIsInviteModalOpen(true)}>
+              초대코드로 참가하기
+            </InviteJoinButton>
+          </InviteJoinArea>
+        )}
       </ContentContainer>
+
+      {isInviteModalOpen && (
+        <ModalBackdrop role="presentation" onMouseDown={closeInviteModal}>
+          <ModalPanel role="dialog" aria-modal="true" aria-labelledby="invite-join-title" onMouseDown={event => event.stopPropagation()}>
+            <ModalHeader>
+              <ModalTitle id="invite-join-title">초대코드 입력</ModalTitle>
+              <ModalCloseButton type="button" onClick={closeInviteModal} aria-label="닫기">
+                ×
+              </ModalCloseButton>
+            </ModalHeader>
+            <InviteJoinForm onSubmit={handleInviteJoin}>
+              <InviteJoinInput
+                value={classId}
+                onChange={event => {
+                  setClassId(event.target.value);
+                  setInviteMessage("");
+                }}
+                inputMode="numeric"
+                placeholder="클래스 ID"
+                autoFocus
+              />
+              <InviteJoinInput
+                value={inviteCode}
+                onChange={event => {
+                  setInviteCode(event.target.value);
+                  setInviteMessage("");
+                }}
+                placeholder="초대코드"
+              />
+              {inviteMessage && <InviteJoinMessage isSuccess={inviteJoinSucceeded}>{inviteMessage}</InviteJoinMessage>}
+              <InviteJoinButton type="submit" disabled={isJoining}>
+                {isJoining ? "참가 중" : "참가하기"}
+              </InviteJoinButton>
+            </InviteJoinForm>
+          </ModalPanel>
+        </ModalBackdrop>
+      )}
     </Container>
   );
 }

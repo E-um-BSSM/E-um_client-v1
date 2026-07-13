@@ -1,34 +1,19 @@
-export interface signUpResponse {
-  username: string;
-  email: string;
-  phone: string;
-  system_role: string;
-  auth_provider: string;
-  strength: number;
-  created_at: string;
-  currency: number;
-  daily_compensation_at: string;
-  equipped_badge: string;
-}
+// Auth 응답 모델. 명세 components.schemas 기준.
 
-export interface signInResponse {
-  username: string;
-  system_role: string;
+/** 인증 토큰 응답(로그인·재발급 성공 시). 유저 정보를 포함하지 않는다. */
+export interface authTokens {
   access_token: string;
   refresh_token: string;
-  expires_in: string;
-  currency: number;
-  daily_compensation_at: string | null;
-  equipped_badge: string | null;
-  auth_provider: string;
-  phone: string | null;
+  token_type: string;
+  expires_in?: number;
 }
 
-export interface refreshResponse {
-  access_token: string;
-  expires_in: string;
+/** 이메일 인증 결과. */
+export interface verificationResult {
+  verified: boolean;
 }
 
-export interface signOutResponse {
-  message: string;
+/** 아이디·이메일 중복 확인 결과(available=true: 사용 가능). */
+export interface availabilityResponse {
+  available: boolean;
 }

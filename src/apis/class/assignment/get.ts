@@ -1,11 +1,13 @@
 import { req } from "@/apis/axiosInstance";
-import type { assignmentSearchResponse, globalResponse } from "@/models";
+import type { assignmentPageResponse, assignmentResponse, pageRequest } from "@/models";
 
 export const assignmentGET = {
-  assignmentSearch: async (
-    class_id: number,
-  ): Promise<globalResponse<{ content?: assignmentSearchResponse[]; assignments?: assignmentSearchResponse[] }>> => {
-    const response = await req.get(`/classes/${class_id}/assignments`);
+  getAssignments: async (classId: number, params?: pageRequest): Promise<assignmentPageResponse> => {
+    const response = await req.get(`/classes/${classId}/assignments`, { params });
+    return response.data;
+  },
+  getAssignment: async (classId: number, assignmentId: number): Promise<assignmentResponse> => {
+    const response = await req.get(`/classes/${classId}/assignments/${assignmentId}`);
     return response.data;
   },
 };

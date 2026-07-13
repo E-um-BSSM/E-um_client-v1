@@ -40,7 +40,6 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isBSMPending, setIsBSMPending] = useState(false);
 
   useEffect(() => {
     setPageType("public");
@@ -54,21 +53,13 @@ function LoginPage() {
 
     try {
       setErrorMessage("");
-      const response = await mutateAsync({ email, password });
-      setAuthFromSignIn(response.data, remember);
+      const tokens = await mutateAsync({ username: email, password, keep_signed_in: remember });
+      setAuthFromSignIn(tokens, { username: email }, remember);
       navigate("/app");
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;
       setErrorMessage(axiosError.response?.data?.message ?? "로그인에 실패했습니다. 입력값을 다시 확인해주세요.");
     }
-  };
-
-  const handleBSMLogin = async () => {
-    if (isBSMPending) return;
-
-    setIsBSMPending(true);
-    setErrorMessage("");
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/bsm/login`;
   };
 
   return (
@@ -104,9 +95,6 @@ function LoginPage() {
         <ButtonContainer>
           <Button type="submit" activate={canSubmit} disabled={!canSubmit || isPending}>
             {isPending ? "로그인 중..." : "로그인"}
-          </Button>
-          <Button type="button" activate={!isBSMPending} disabled={isBSMPending} onClick={handleBSMLogin}>
-            {isBSMPending ? "BSM 로그인 중..." : "BSM으로 로그인하기"}
           </Button>
           <SignupContainer>
             <SignupText>계정이 없으신가요?</SignupText>

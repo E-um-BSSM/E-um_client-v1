@@ -100,7 +100,7 @@ function LandingPage() {
           <Stack gap='8px' align="flex-start">
             <Text color="primary" size='title' weight='semibold'> 작은 만남이 큰 경험으로 </Text>
             <Row gap='4px' align='center'>
-              <Text color="disabled" size='text' weight='regular'> 지식을 나누고 경험을 이어가는 멘토링 커뮤니티 플랫폼 </Text>
+              <Text color="disabled" size='text' weight='regular'> 지식을 나누고 경험을 이어가는 멘토링 플랫폼 </Text>
               <Text color="highlight" size='text' weight='semibold'> 이음 </Text>
             </Row>
           </Stack>
@@ -142,10 +142,6 @@ function LandingPage() {
           <Card
             title='멘토 - 멘티 연결'
             description='관심 분야로 매칭하여 함께 성장해요'
-          />
-          <Card
-            title='커뮤니티 게시판'
-            description='원하는 정보를 쉽게 찾고 문제를 해결해요'
           />
           <Card
             title='리뷰 시스템'

@@ -35,7 +35,9 @@ import Rarrow from "@/assets/AllViewRarrow_primary-500.svg";
 import Rarrow_natural from "@/assets/Rarrow_natural-400.svg";
 import Post_tag from "@/assets/Post_tag.svg";
 import { MentoringCard, FindClassButton } from "@/components";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMyClasses, useClassSearch } from "@/hooks";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -44,70 +46,32 @@ import "swiper/css/scrollbar";
 import { useGlobalStyle } from "@/stores/useStyle";
 
 export default function MainPage() {
+  const navigate = useNavigate();
   const setFooterColor = useGlobalStyle(state => state.setFooterColor);
   useEffect(() => {
     setFooterColor("white");
   }, [setFooterColor]);
 
-  const DUMMY_NOTICES = [
-    { id: 1, title: "서비스 점검 안내", date: "2024.03.20" },
-    { id: 2, title: "새로운 기능 출시", date: "2024.03.18" },
-    { id: 3, title: "이용약관 변경 안내", date: "2024.03.15" },
-  ];
-  const DUMMY_POSTS = [
-    {
-      id: 1,
-      title: "AI 코딩 도구 전쟁: 클로드 4.5 소넷",
-      content: "AI 코딩 도구 전쟁에서 승자는 바로 클로드 4.5 소넷이었으며...",
-      author: "테크매니아",
-      date: "2024.03.21",
-      imgURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhg8TwksDw03khK8X87Tgs7AfWNPsGMYQbRA&s",
-    },
-    {
-      id: 2,
-      title: "리액트 상태 관리의 미래",
-      content: "리액트 19에서 변화하는 상태 관리 패러다임에 대해 알아봅니다...",
-      author: "프론트엔드술사",
-      date: "2024.03.22",
-      imgURL: "url",
-    },
-    {
-      id: 3,
-      title: "Tailwind vs Styled Components",
-      content: "스타일링 도구 선택의 고민, 어떤 것이 더 효율적일까요?",
-      author: "디자인시스템",
-      date: "2024.03.23",
-      imgURL: "url",
-    },
-  ];
-  const [selectedPost, setSelectedPost] = useState(DUMMY_POSTS[0]);
-  const bannerData = [
-    {
-      id: 1,
-      imgUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhg8TwksDw03khK8X87Tgs7AfWNPsGMYQbRA&s",
-      link: "/event1",
-    },
-    {
-      id: 2,
-      imgUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-m1vO2RqDgqbJeXENiXMBzdnbestw-JQBkw&s",
-      link: "/event2",
-    },
-    { id: 3, imgUrl: "https://example.com/banner3.png", link: "/event3" },
-  ];
-  const RecentMentoringData = [
-    { id: 1, title: "React 기초 마스터", lecturer: "김철수" },
-    { id: 2, title: "UI/UX 디자인 입문", lecturer: "이영희" },
-    { id: 3, title: "Node.js 백엔드 구축", lecturer: "박지성" },
-    { id: 4, title: "프론트엔드 포트폴리오", lecturer: "최유리" },
-    { id: 5, title: "데이터 구조와 알고리즘", lecturer: "홍길동" }, // 5번째 데이터
-  ];
-  const PopularMentoringData = [
-    { id: 1, title: "React 기초 마스터", lecturer: "김철수" },
-    { id: 2, title: "UI/UX 디자인 입문", lecturer: "이영희" },
-    { id: 3, title: "Node.js 백엔드 구축", lecturer: "박지성" },
-    { id: 4, title: "프론트엔드 포트폴리오", lecturer: "최유리" },
-    { id: 5, title: "데이터 구조와 알고리즘", lecturer: "홍길동" }, // 5번째 데이터
-  ];
+  // 내 최근 멘토링 / 인기 클래스 → 실제 API(classes)
+  const { data: myClasses } = useMyClasses();
+  const { data: popularClasses } = useClassSearch({ sort: "popular" });
+
+  const RecentMentoringData = myClasses?.items ?? [];
+  const PopularMentoringData = popularClasses?.items ?? [];
+
+  // out-of-MVP 게시글/공지/배너: 전용 API 미제공 -> 빈 상태
+  type CommunityPost = {
+    id: number;
+    title: string;
+    content: string;
+    author: string;
+    date: string;
+    imgURL: string;
+  };
+  const communityPosts: CommunityPost[] = [];
+  const notices: { id: number; title: string; date: string }[] = [];
+  const bannerData: { id: number; imgUrl: string; link: string }[] = [];
+  const [selectedPost, setSelectedPost] = useState<CommunityPost | null>(communityPosts[0] ?? null);
   return (
     <>
       <Container>
@@ -146,7 +110,12 @@ export default function MainPage() {
           <MentoringContent>
             {RecentMentoringData.length > 0 ? (
               RecentMentoringData.slice(0, 4).map(item => (
-                <MentoringCard key={item.id} title={item.title} lecturer={item.lecturer} />
+                <MentoringCard
+                  key={item.id}
+                  title={item.title}
+                  lecturer={item.mentor?.nickname ?? ""}
+                  onClick={() => navigate(`/app/class/detail?classId=${item.id}`)}
+                />
               ))
             ) : (
               <RecentMentoringEmpty>
@@ -196,13 +165,23 @@ export default function MainPage() {
                 <>
                   <MentoringContent>
                     {PopularMentoringData.slice(0, 4).map(item => (
-                      <MentoringCard key={item.id} title={item.title} lecturer={item.lecturer} />
+                      <MentoringCard
+                  key={item.id}
+                  title={item.title}
+                  lecturer={item.mentor?.nickname ?? ""}
+                  onClick={() => navigate(`/app/class/detail?classId=${item.id}`)}
+                />
                     ))}
                   </MentoringContent>
                   {PopularMentoringData.length > 4 && (
                     <MentoringContent>
                       {PopularMentoringData.slice(4, 8).map(item => (
-                        <MentoringCard key={item.id} title={item.title} lecturer={item.lecturer} />
+                        <MentoringCard
+                  key={item.id}
+                  title={item.title}
+                  lecturer={item.mentor?.nickname ?? ""}
+                  onClick={() => navigate(`/app/class/detail?classId=${item.id}`)}
+                />
                       ))}
                     </MentoringContent>
                   )}
@@ -239,6 +218,7 @@ export default function MainPage() {
           </Popular>
         </MoreMentoringContainer>
         <Popular style={{ width: "69.5rem" }}>
+          {selectedPost && (
           <PopularCommunityContent>
             <div
               style={{
@@ -321,7 +301,7 @@ export default function MainPage() {
               </PreviewPopularPostInfo>
             </PreviewPopularPostContent>
             <PostButtonContainer>
-              {DUMMY_POSTS.slice(0, 3).map(post => (
+              {communityPosts.slice(0, 3).map(post => (
                 <PostButtonWrapper key={post.id} onClick={() => setSelectedPost(post)}>
                   <PostButtonContent>
                     <PostButtonText>
@@ -334,13 +314,14 @@ export default function MainPage() {
               ))}
             </PostButtonContainer>
           </PopularCommunityContent>
+          )}
         </Popular>
       </Container>
       <NotificationContainer>
         <NotificationName>공지사항</NotificationName>
         <NotificationContentContainer>
-          {DUMMY_NOTICES.map(notice => (
-            <NotificationContent>
+          {notices.map(notice => (
+            <NotificationContent key={notice.id}>
               <NotificationTitle>{notice.title}</NotificationTitle>
               <img src={Rarrow_natural} alt="arrow-right" />
             </NotificationContent>

@@ -1,11 +1,13 @@
 import { req } from "@/apis/axiosInstance";
-import type { globalResponse, waitingListResponse } from "@/models";
+import type { memberPageResponse, pageRequest, waitingMemberPageResponse } from "@/models";
 
 export const memberGET = {
-  waitingListSearch: async (
-    class_id: number,
-  ): Promise<globalResponse<{ content?: waitingListResponse[]; waiting?: waitingListResponse[] }>> => {
-    const response = await req.get(`/classes/${class_id}/waiting`);
+  getMembers: async (classId: number, params?: pageRequest): Promise<memberPageResponse> => {
+    const response = await req.get(`/classes/${classId}/members`, { params });
+    return response.data;
+  },
+  getWaitingList: async (classId: number, params?: pageRequest): Promise<waitingMemberPageResponse> => {
+    const response = await req.get(`/classes/${classId}/waiting`, { params });
     return response.data;
   },
 };

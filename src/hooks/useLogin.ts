@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { authPOST } from "@/apis/user/auth";
-import type { signInRequest } from "@/models";
+import type { signinRequest } from "@/models";
 
+/** 로그인 뮤테이션. authTokens 를 반환한다. */
 export default function useLogin() {
   return useMutation({
-    mutationFn: ({ email, password }: signInRequest) => authPOST.signIn({ email: email, password: password }),
+    mutationFn: (body: signinRequest) => authPOST.signin(body),
   });
 }
