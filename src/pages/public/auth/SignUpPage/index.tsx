@@ -22,6 +22,7 @@ import {
 import { CustomCheckbox } from "@/components/ui/atom";
 import { useNavigate } from "react-router-dom";
 import { authPOST } from "@/apis/user/auth";
+import { authGET } from "@/apis/user/auth";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -32,8 +33,10 @@ function SignUpPage() {
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false);
 
   const [id, setId] = useState("");
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
   const [pw, setPw] = useState("");
   const [checkPw, setCheckPw] = useState("");
   const [email, setEmail] = useState("");
@@ -122,6 +125,7 @@ function SignUpPage() {
 
   const canSubmit =
     id.trim().length > 0 &&
+    isNicknameAvailable &&
     pw.trim().length > 0 &&
     checkPw.trim().length > 0 &&
     emailTyped &&
@@ -135,6 +139,28 @@ function SignUpPage() {
       return;
     }
     await handleSendVerificationCode();
+  };
+
+  const handleCheckNickname = async () => {
+    const nickname = id.trim();
+    if (!nickname || isCheckingNickname) return;
+
+    try {
+      setIsCheckingNickname(true);
+      setIsError(false);
+      setStatusMessage("");
+      const { available } = await authGET.checkUsername(nickname);
+      setIsNicknameAvailable(available);
+      setStatusMessage(available ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다.");
+      setIsError(!available);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      setIsNicknameAvailable(false);
+      setIsError(true);
+      setStatusMessage(axiosError.response?.data?.message ?? "닉네임 중복 확인에 실패했습니다.");
+    } finally {
+      setIsCheckingNickname(false);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -180,14 +206,33 @@ function SignUpPage() {
         <InfoContainer>
           <InputContainer>
             <Field>
-              <Label required>아이디</Label>
-              <Input
-                placeholder="아이디를 입력하세요."
-                type="text"
-                id="id"
-                onChange={e => setId(e.target.value)}
-                value={id}
-              />
+              <Label required>닉네임</Label>
+              <EmailInput>
+                <Input
+                  placeholder="닉네임을 입력하세요."
+                  type="text"
+                  id="nickname"
+                  onChange={e => {
+                    setId(e.target.value);
+                    setIsNicknameAvailable(false);
+                  }}
+                  value={id}
+                  customStyle={css`
+                    flex: 2 0 0;
+                  `}
+                />
+                <Button
+                  type="button"
+                  activate={id.trim().length > 0 && !isCheckingNickname}
+                  disabled={!id.trim() || isCheckingNickname}
+                  onClick={handleCheckNickname}
+                  customStyle={css`
+                    flex: 1 0 0;
+                  `}
+                >
+                  {isCheckingNickname ? "확인 중..." : "중복 확인"}
+                </Button>
+              </EmailInput>
             </Field>
             <Field>
               <Label required>비밀번호</Label>
