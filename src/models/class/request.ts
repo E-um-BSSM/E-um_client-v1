@@ -1,4 +1,12 @@
-import type { AccessScope, ClassStatus, QuestionType, Role, SubmissionStatus } from "@/models/global";
+import type {
+  AccessScope,
+  ClassSearchSort,
+  ClassStatus,
+  MemberStatus,
+  QuestionType,
+  Role,
+  SubmissionStatus,
+} from "@/models/global";
 import type { applicationAnswer } from "./response";
 
 /* =========================================================
@@ -45,7 +53,7 @@ export interface classSearchRequest {
   keyword?: string;
   difficulty?: number;
   status?: ClassStatus;
-  sort?: string;
+  sort?: ClassSearchSort;
   page?: number;
   size?: number;
 }
@@ -54,7 +62,7 @@ export interface classSearchRequest {
 export interface myClassSearchRequest {
   role?: Role;
   status?: ClassStatus;
-  membership?: string;
+  membership?: MemberStatus;
   page?: number;
   size?: number;
 }
@@ -68,6 +76,11 @@ export interface joinRequest {
   invite_code?: string | null;
   message?: string | null;
   answers?: applicationAnswer[] | null;
+}
+
+/** 초대 코드로 가입 신청 요청. invite_code가 반드시 필요하다. */
+export interface joinByCodeRequest extends joinRequest {
+  invite_code: string | null;
 }
 
 /* =========================================================
@@ -139,5 +152,5 @@ export interface applicationQuestionInput {
 
 /** 지원서 폼 설정/수정 요청(전달한 질문 목록으로 폼 전체 대체). */
 export interface applicationFormUpdateRequest {
-  questions: applicationQuestionInput[];
+  questions?: applicationQuestionInput[] | null;
 }

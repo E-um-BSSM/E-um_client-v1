@@ -4,8 +4,8 @@
 export interface authTokens {
   access_token: string;
   refresh_token: string;
-  token_type: string;
-  expires_in?: number;
+  token_type: "Bearer";
+  expires_in: number;
 }
 
 /** 이메일 인증 결과. */

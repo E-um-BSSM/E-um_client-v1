@@ -138,3 +138,7 @@ export const ErrorText = styled.p`
   font-weight: 400;
   line-height: 1.25rem;
 `;
+
+export const SuccessText = styled(ErrorText)`
+  color: var(--primary-500);
+`;

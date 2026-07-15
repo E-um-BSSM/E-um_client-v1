@@ -8,7 +8,7 @@ import {
   memberGET,
   memberPATCH,
 } from "@/apis/class";
-import type { joinRequest, pageRequest } from "@/models";
+import type { joinByCodeRequest, joinRequest, pageRequest } from "@/models";
 
 export const memberKeys = {
   all: ["members"] as const,
@@ -63,7 +63,7 @@ export function useApplyToClass(classId: number) {
 export function useJoinByCode() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (body: joinRequest) => joinPOST.joinByCode(body),
+    mutationFn: (body: joinByCodeRequest) => joinPOST.joinByCode(body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: memberKeys.all });
     },
@@ -79,7 +79,7 @@ export function useCancelApplication(classId: number) {
 export function useAcceptMember(classId: number) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (userId: string) => memberPATCH.acceptMember(classId, userId),
+    mutationFn: (userId: number) => memberPATCH.acceptMember(classId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: memberKeys.byClass(classId) });
     },
@@ -89,7 +89,7 @@ export function useAcceptMember(classId: number) {
 export function useRemoveMember(classId: number) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (userId: string) => memberDELETE.removeMember(classId, userId),
+    mutationFn: (userId: number) => memberDELETE.removeMember(classId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: memberKeys.byClass(classId) });
     },

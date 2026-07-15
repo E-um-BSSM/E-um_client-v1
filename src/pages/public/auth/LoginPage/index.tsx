@@ -22,10 +22,12 @@ import {
   SignupText,
   SignupLink,
   ErrorText,
+  SuccessText,
 } from "./style";
 import type { PageType } from "@/types/Page";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import useLogin from "@/hooks/useLogin";
+import { useRequestPasswordReset } from "@/hooks";
 import { useAuthStore } from "@/stores";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
@@ -34,12 +36,14 @@ function LoginPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
   const navigate = useNavigate();
   const { mutateAsync, isPending } = useLogin();
+  const { mutateAsync: requestPasswordReset, isPending: isPasswordResetRequestPending } = useRequestPasswordReset();
   const setAuthFromSignIn = useAuthStore(state => state.setAuthFromSignIn);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     setPageType("public");
@@ -53,12 +57,32 @@ function LoginPage() {
 
     try {
       setErrorMessage("");
+      setSuccessMessage("");
       const tokens = await mutateAsync({ username: email, password, keep_signed_in: remember });
       setAuthFromSignIn(tokens, { username: email }, remember);
       navigate("/app");
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;
       setErrorMessage(axiosError.response?.data?.message ?? "로그인에 실패했습니다. 입력값을 다시 확인해주세요.");
+    }
+  };
+
+  const handlePasswordResetRequest = async () => {
+    const normalizedEmail = email.trim();
+    if (!normalizedEmail || isPasswordResetRequestPending) {
+      setSuccessMessage("");
+      setErrorMessage("비밀번호를 재설정할 이메일을 입력해주세요.");
+      return;
+    }
+
+    try {
+      setErrorMessage("");
+      await requestPasswordReset({ email: normalizedEmail });
+      setSuccessMessage("비밀번호 재설정 안내를 이메일로 전송했습니다.");
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      setSuccessMessage("");
+      setErrorMessage(axiosError.response?.data?.message ?? "비밀번호 재설정 요청에 실패했습니다.");
     }
   };
 
@@ -85,12 +109,15 @@ function LoginPage() {
           </Field>
         </FieldsContainer>
         {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
+        {successMessage && <SuccessText>{successMessage}</SuccessText>}
         <BottomContainer>
           <RememberContainer>
             <CustomCheckbox checked={remember} size={1.5} onChange={() => setRemember(!remember)} />
             <RememberText>로그인 유지하기</RememberText>
           </RememberContainer>
-          <ForgotPassword>비밀번호 찾기</ForgotPassword>
+          <ForgotPassword type="button" onClick={handlePasswordResetRequest} disabled={isPasswordResetRequestPending}>
+            {isPasswordResetRequestPending ? "전송 중..." : "비밀번호 찾기"}
+          </ForgotPassword>
         </BottomContainer>
         <ButtonContainer>
           <Button type="submit" activate={canSubmit} disabled={!canSubmit || isPending}>

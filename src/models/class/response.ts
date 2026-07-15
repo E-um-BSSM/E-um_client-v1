@@ -19,14 +19,14 @@ export interface classResponse {
   title: string;
   description?: string | null;
   difficulty: number;
-  tags?: string[];
+  tags: string[];
   access_scope: AccessScope;
   status: ClassStatus;
   banner_image_url?: string | null;
   mentor: UserSummary;
-  mentee_count?: number;
-  created_at?: string;
-  updated_at?: string;
+  mentee_count: number;
+  created_at: string;
+  updated_at: string;
   mentor_introduction?: string | null;
   guide?: string | null;
 }
@@ -34,7 +34,7 @@ export interface classResponse {
 /** 클래스 상세(기본 정보 + 초대코드·과제수·내 역할). */
 export interface classDetailResponse extends classResponse {
   invite_code?: string | null;
-  assignment_count?: number;
+  assignment_count: number;
   my_role?: Role | null;
 }
 
@@ -45,8 +45,8 @@ export interface classSummaryResponse {
   banner_image_url?: string | null;
   difficulty: number;
   status: ClassStatus;
-  mentor?: UserSummary;
-  mentee_count?: number;
+  mentor: UserSummary;
+  mentee_count: number;
 }
 
 export type classSummaryPageResponse = PageResponse<classSummaryResponse>;
@@ -58,7 +58,7 @@ export type classSummaryPageResponse = PageResponse<classSummaryResponse>;
 /** 클래스 초대 코드. */
 export interface inviteCodeResponse {
   class_id: number;
-  code: string;
+  code?: string | null;
   expires_at?: string | null;
 }
 
@@ -75,7 +75,7 @@ export interface waitingMemberResponse {
   user: UserSummary;
   message?: string | null;
   applied_at: string;
-  answers?: applicationAnswer[] | null;
+  answers: applicationAnswer[];
 }
 
 export type memberPageResponse = PageResponse<memberResponse>;
@@ -93,9 +93,9 @@ export interface assignmentResponse {
   description?: string | null;
   due_date?: string | null;
   difficulty?: number | null;
-  submission_count?: number;
+  submission_count: number;
   my_submission_status?: SubmissionStatus | null;
-  created_at?: string;
+  created_at: string;
 }
 
 export type assignmentPageResponse = PageResponse<assignmentResponse>;
@@ -132,7 +132,7 @@ export interface noticeResponse {
   content: string;
   author: UserSummary;
   created_at: string;
-  updated_at?: string;
+  updated_at: string;
 }
 
 export type noticePageResponse = PageResponse<noticeResponse>;
@@ -145,12 +145,12 @@ export type noticePageResponse = PageResponse<noticeResponse>;
 export interface applicationQuestionResponse {
   id: number;
   type: QuestionType;
-  order?: number;
+  order: number;
   title: string;
   description?: string | null;
-  required?: boolean;
+  required: boolean;
   max_length?: number | null;
-  options?: string[] | null;
+  options: string[];
 }
 
 /** 클래스 지원서 폼. */

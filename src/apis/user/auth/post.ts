@@ -3,7 +3,7 @@ import type {
   authTokens,
   emailSendRequest,
   emailVerifyRequest,
-  passwordResetConfirm,
+  passwordResetConfirmRequest,
   passwordResetRequest,
   refreshRequest,
   signinRequest,
@@ -37,7 +37,7 @@ export const authPOST = {
   requestPasswordReset: async (body: passwordResetRequest): Promise<void> => {
     await req.post(`/auth/password/reset-request`, body);
   },
-  resetPassword: async (body: passwordResetConfirm): Promise<void> => {
+  resetPassword: async (body: passwordResetConfirmRequest): Promise<void> => {
     await req.post(`/auth/password/reset`, body);
   },
 };

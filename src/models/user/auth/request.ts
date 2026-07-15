@@ -12,7 +12,7 @@ export interface signupRequest {
 export interface signinRequest {
   username: string;
   password: string;
-  keep_signed_in?: boolean;
+  keep_signed_in?: boolean | null;
 }
 
 /** 액세스 토큰 재발급 요청. */
@@ -37,7 +37,7 @@ export interface passwordResetRequest {
 }
 
 /** 비밀번호 재설정 확정. */
-export interface passwordResetConfirm {
+export interface passwordResetConfirmRequest {
   token: string;
   new_password: string;
 }

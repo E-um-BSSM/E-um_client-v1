@@ -2,8 +2,7 @@
 
 /** 회원 요약 정보. 작성자/사용자 표현에 재사용. */
 export interface UserSummary {
-  // ERD: users.id 는 varchar → string
-  user_id: string;
+  user_id: number;
   username: string;
   nickname: string;
   avatar_url?: string | null;
@@ -29,6 +28,6 @@ export interface ErrorResponse {
   code: string;
   message: string;
   status: number;
-  timestamp?: string;
-  path?: string | null;
+  timestamp: string;
+  path: string;
 }

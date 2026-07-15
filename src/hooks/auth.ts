@@ -3,7 +3,7 @@ import { authGET, authPOST } from "@/apis/user/auth";
 import type {
   emailSendRequest,
   emailVerifyRequest,
-  passwordResetConfirm,
+  passwordResetConfirmRequest,
   passwordResetRequest,
   signinRequest,
   signupRequest,
@@ -71,6 +71,6 @@ export function useRequestPasswordReset() {
 
 export function useResetPassword() {
   return useMutation({
-    mutationFn: (body: passwordResetConfirm) => authPOST.resetPassword(body),
+    mutationFn: (body: passwordResetConfirmRequest) => authPOST.resetPassword(body),
   });
 }

@@ -482,7 +482,7 @@ export default function MyClassDetailPage() {
 
   // ── Mento membership actions ───────────────────────────────────────────────
 
-  const handleAcceptMentee = async (userId: string) => {
+  const handleAcceptMentee = async (userId: number) => {
     if (!resolvedClassId) return;
     try {
       await memberPATCH.acceptMember(resolvedClassId, userId);
@@ -492,7 +492,7 @@ export default function MyClassDetailPage() {
     }
   };
 
-  const handleRejectMentee = async (userId: string) => {
+  const handleRejectMentee = async (userId: number) => {
     if (!resolvedClassId) return;
     try {
       await memberDELETE.removeMember(resolvedClassId, userId);
