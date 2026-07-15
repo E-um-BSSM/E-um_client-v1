@@ -14,6 +14,7 @@ interface AuthUser {
 }
 
 interface AuthState {
+  isHydrated: boolean;
   isAuthenticated: boolean;
   remember: boolean;
   accessToken: string | null;
@@ -101,6 +102,7 @@ export const getStoredRefreshToken = (): string | null => {
 };
 
 export const useAuthStore = create<AuthState>(set => ({
+  isHydrated: false,
   isAuthenticated: false,
   remember: false,
   accessToken: null,
@@ -133,6 +135,7 @@ export const useAuthStore = create<AuthState>(set => ({
   hydrateAuth: () => {
     const stored = getStoredAuth();
     set({
+      isHydrated: true,
       isAuthenticated: Boolean(stored.accessToken && stored.refreshToken && stored.user),
       remember: stored.remember,
       accessToken: stored.accessToken,
@@ -143,6 +146,7 @@ export const useAuthStore = create<AuthState>(set => ({
   clearAuth: () => {
     clearStorage();
     set({
+      isHydrated: true,
       isAuthenticated: false,
       remember: false,
       accessToken: null,
