@@ -91,7 +91,7 @@ function LandingPage() {
     if (sectionIndex !== undefined && sectionIndex !== currentSection) {
       setCurrentSection(sectionIndex);
     }
-  }, [location.hash]);
+  }, [currentSection, location.hash]);
 
   function MAIN() {
     return (

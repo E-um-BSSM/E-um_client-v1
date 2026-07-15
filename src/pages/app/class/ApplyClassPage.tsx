@@ -4,7 +4,9 @@ import styled from "@emotion/styled";
 import { ClassSummaryAside } from "@/components";
 import { useApplicationForm, useApplyToClass, useClass } from "@/hooks";
 import { getErrorMessage } from "@/lib/error";
-import type { applicationAnswer } from "@/models";
+import type { applicationAnswer, applicationQuestionResponse } from "@/models";
+
+const EMPTY_QUESTIONS: applicationQuestionResponse[] = [];
 
 export default function ApplyClassPage() {
   const [searchParams] = useSearchParams();
@@ -20,7 +22,7 @@ export default function ApplyClassPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const questions = formData?.questions ?? [];
+  const questions = formData?.questions ?? EMPTY_QUESTIONS;
 
   const setAnswer = (questionId: number, value: string) =>
     setAnswers(prev => ({ ...prev, [questionId]: value }));
