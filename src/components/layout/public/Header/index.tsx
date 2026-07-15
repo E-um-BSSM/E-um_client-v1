@@ -9,6 +9,10 @@ import {
   LogoutButton,
   Nav,
   NavBar,
+  SignoutConfirm,
+  SignoutConfirmActions,
+  SignoutConfirmButton,
+  SignoutConfirmText,
   User,
   UserImg,
   UserInfo,
@@ -32,6 +36,7 @@ function Header({ type }: props) {
   const clearAuth = useAuthStore(state => state.clearAuth);
   const navigate = useNavigate();
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [isSignoutConfirmOpen, setIsSignoutConfirmOpen] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({
     left: 0,
     width: 0,
@@ -104,9 +109,22 @@ function Header({ type }: props) {
               <UserInfo>
                 <span className="name">{user.username}</span>
               </UserInfo>
-              <LogoutButton type="button" onClick={handleSignout} disabled={isSigningOut}>
-                {isSigningOut ? "로그아웃 중..." : "로그아웃"}
+              <LogoutButton type="button" onClick={() => setIsSignoutConfirmOpen(true)} disabled={isSigningOut}>
+                로그아웃
               </LogoutButton>
+              {isSignoutConfirmOpen && (
+                <SignoutConfirm role="dialog" aria-label="로그아웃 확인">
+                  <SignoutConfirmText>로그아웃 하시겠습니까?</SignoutConfirmText>
+                  <SignoutConfirmActions>
+                    <SignoutConfirmButton type="button" onClick={() => setIsSignoutConfirmOpen(false)} disabled={isSigningOut}>
+                      취소
+                    </SignoutConfirmButton>
+                    <SignoutConfirmButton type="button" primary onClick={handleSignout} disabled={isSigningOut}>
+                      {isSigningOut ? "로그아웃 중..." : "확인"}
+                    </SignoutConfirmButton>
+                  </SignoutConfirmActions>
+                </SignoutConfirm>
+              )}
             </User>
           ) : (
             <FallbackUser>로그인이 필요합니다.</FallbackUser>
