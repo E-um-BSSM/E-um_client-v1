@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { PageType } from "@/types/Page";
 import { css } from "@emotion/react";
-import { Button, Input } from "@/components/ui/atom";
+import { Button, Input, PasswordInput } from "@/components/ui/atom";
 import { AxiosError } from "axios";
 import {
   AgreeBox,
@@ -191,9 +191,8 @@ function SignUpPage() {
             </Field>
             <Field>
               <Label required>비밀번호</Label>
-              <Input
+              <PasswordInput
                 placeholder="비밀번호를 입력하세요."
-                type="password"
                 name="pw"
                 onChange={e => setPw(e.target.value)}
                 value={pw}
@@ -201,9 +200,8 @@ function SignUpPage() {
             </Field>
             <Field>
               <Label required>비밀번호 확인</Label>
-              <Input
+              <PasswordInput
                 placeholder="비밀번호를 입력하세요."
-                type="password"
                 name="check-pw"
                 onChange={e => setCheckPw(e.target.value)}
                 value={checkPw}

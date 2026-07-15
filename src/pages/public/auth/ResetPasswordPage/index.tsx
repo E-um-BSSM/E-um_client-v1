@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
-import { Button, Input } from "@/components/ui/atom";
+import { Button, PasswordInput } from "@/components/ui/atom";
 import { useResetPassword } from "@/hooks";
 import type { PageType } from "@/types/Page";
 import {
@@ -74,8 +74,7 @@ function ResetPasswordPage() {
       <Form onSubmit={handleSubmit}>
         <Field>
           <Label>새 비밀번호</Label>
-          <Input
-            type="password"
+          <PasswordInput
             placeholder="8자 이상 입력하세요."
             value={password}
             onChange={event => setPassword(event.target.value)}
@@ -84,8 +83,7 @@ function ResetPasswordPage() {
         </Field>
         <Field>
           <Label>새 비밀번호 확인</Label>
-          <Input
-            type="password"
+          <PasswordInput
             placeholder="새 비밀번호를 다시 입력하세요."
             value={passwordConfirmation}
             onChange={event => setPasswordConfirmation(event.target.value)}

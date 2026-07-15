@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Input from "@/components/ui/atom/Input";
+import PasswordInput from "@/components/ui/atom/PasswordInput";
 import Button from "@/components/ui/atom/Button";
 import CustomCheckbox from "@/components/ui/atom/CustomCheckbox";
 import { AxiosError } from "axios";
@@ -100,8 +101,7 @@ function LoginPage() {
           </Field>
           <Field>
             <Label>비밀번호</Label>
-            <Input
-              type="password"
+            <PasswordInput
               placeholder="비밀번호를 입력하세요."
               value={password}
               onChange={e => setPassword(e.target.value)}
