@@ -130,8 +130,7 @@ function SignUpPage() {
     checkPw.trim().length > 0 &&
     emailTyped &&
     isEmailVerified &&
-    phone.trim().length > 0 &&
-    agreePersonal;
+    phone.trim().length > 0;
 
   const handleEmailAuthAction = async () => {
     if (isCodeSent && !isEmailVerified) {
@@ -166,6 +165,12 @@ function SignUpPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!canSubmit || isSubmitting) return;
+
+    if (!agreePersonal) {
+      setIsError(true);
+      setStatusMessage("회원가입을 위해 개인정보 수집에 동의해주세요.");
+      return;
+    }
 
     if (pw !== checkPw) {
       setIsError(true);
