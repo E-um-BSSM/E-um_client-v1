@@ -1,11 +1,25 @@
 import type { PageType } from "@/types/Page";
-import { Actions, AuthButton, Frame, Layout, NavBar, Nav, Indicator, User, UserImg, UserInfo, FallbackUser } from "./style";
+import {
+  Actions,
+  AuthButton,
+  FallbackUser,
+  Frame,
+  Indicator,
+  Layout,
+  LogoutButton,
+  Nav,
+  NavBar,
+  User,
+  UserImg,
+  UserInfo,
+} from "./style";
 import Logo from "@/assets/eum_header_logo.svg";
 import { css } from "@emotion/react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { NAV_ITEMS } from "@/constants/navigation";
 import { useAuthStore } from "@/stores";
+import { authPOST } from "@/apis/user/auth";
 
 interface props {
   type: PageType;
@@ -15,6 +29,9 @@ function Header({ type }: props) {
   const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const user = useAuthStore(state => state.user);
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const clearAuth = useAuthStore(state => state.clearAuth);
+  const navigate = useNavigate();
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({
     left: 0,
     width: 0,
@@ -39,6 +56,19 @@ function Header({ type }: props) {
       width: rect.width,
     });
   }, [hash, pathname, type]);
+
+  const handleSignout = async () => {
+    if (isSigningOut) return;
+
+    try {
+      setIsSigningOut(true);
+      await authPOST.signout();
+    } finally {
+      clearAuth();
+      navigate("/auth/login", { replace: true });
+      setIsSigningOut(false);
+    }
+  };
 
   return (
     <>
@@ -74,6 +104,9 @@ function Header({ type }: props) {
               <UserInfo>
                 <span className="name">{user.username}</span>
               </UserInfo>
+              <LogoutButton type="button" onClick={handleSignout} disabled={isSigningOut}>
+                {isSigningOut ? "로그아웃 중..." : "로그아웃"}
+              </LogoutButton>
             </User>
           ) : (
             <FallbackUser>로그인이 필요합니다.</FallbackUser>

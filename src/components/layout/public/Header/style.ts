@@ -95,6 +95,22 @@ export const UserInfo = styled.div`
   }
 `;
 
+export const LogoutButton = styled.button`
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--natural-300);
+  border-radius: 0.5rem;
+  background: var(--white);
+  color: var(--natural-600);
+  cursor: pointer;
+  font-family: Pretendard;
+  font-size: 0.875rem;
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+`;
+
 export const FallbackUser = styled.span`
   font-family: Pretendard;
   font-size: 1rem;
