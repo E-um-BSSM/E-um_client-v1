@@ -22,6 +22,7 @@ function App() {
             <Route path="login" element={<pages.LoginPage />} />
             <Route path="signup" element={<pages.SignUpPage />} />
           </Route>
+          <Route path="reset-password" element={<pages.ResetPasswordPage />} />
         </Route>
         {/* app */}
         <Route path="/app" element={<layouts.AppLayout />}>
