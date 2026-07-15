@@ -218,7 +218,7 @@ export default function MyPage() {
                       lecturer={item.mentor?.nickname ?? ""}
                       onClick={() =>
                         navigate(
-                          `/app/class/detail?classId=${item.id}&role=${roleFilter === "Mento" ? "mento" : "menti"}`,
+                          `/app/class/detail?classId=${item.id}`,
                         )
                       }
                     />

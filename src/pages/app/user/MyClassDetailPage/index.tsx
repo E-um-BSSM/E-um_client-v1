@@ -108,7 +108,6 @@ import Rarrow from "@/assets/Rarrow_natural-400.svg";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type Role = "mento" | "menti";
 type AssignmentStatus = "submit" | "deadline" | "done" | "feedback";
 type LoadState = "idle" | "loading" | "success" | "error";
 
@@ -176,10 +175,6 @@ export default function MyClassDetailPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Determine role: ?role=mento → mentor view, otherwise → mentee view
-  const role: Role = searchParams.get("role") === "mento" ? "mento" : "menti";
-  const isMento = role === "mento";
-
   const [loadState, setLoadState] = useState<LoadState>("idle");
   const [resolvedClassId, setResolvedClassId] = useState<number | null>(null);
   const [classInfo, setClassInfo] = useState<classDetailResponse | null>(null);
@@ -187,6 +182,7 @@ export default function MyClassDetailPage() {
   const [assignments, setAssignments] = useState<RenderAssignment[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [mentees, setMentees] = useState<waitingMemberResponse[]>([]);
+  const isMento = classInfo?.my_role === "MENTOR";
 
   // Menti submit-assignment modal state
   const [submitModalAssignment, setSubmitModalAssignment] = useState<RenderAssignment | null>(null);
@@ -261,6 +257,7 @@ export default function MyClassDetailPage() {
     ]);
 
     setClassInfo(classRes);
+    const isMentor = classRes.my_role === "MENTOR";
 
     const assignmentList: assignmentResponse[] = assignmentRes.items;
 
@@ -272,7 +269,7 @@ export default function MyClassDetailPage() {
       })),
     );
 
-    if (isMento) {
+    if (isMentor) {
       // Mento view: invite code + mentee list, no submission resolution needed
       const [inviteRes, memberRes] = await Promise.allSettled([
         inviteGET.getInviteCode(classId),

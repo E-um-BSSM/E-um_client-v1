@@ -74,7 +74,7 @@ export default function CreateClassPage() {
           access_scope: accessScope,
           status: "ACTIVE",
         });
-        navigate(`/app/class/detail?classId=${classId}&role=mento`);
+        navigate(`/app/class/detail?classId=${classId}`);
       } else {
         const created = await classPOST.createClass({
           title: title.trim(),
@@ -88,7 +88,7 @@ export default function CreateClassPage() {
         } catch {
           // 초대코드 발급 실패는 흐름을 막지 않음
         }
-        navigate(`/app/class/detail?classId=${created.id}&role=mento`);
+        navigate(`/app/class/detail?classId=${created.id}`);
       }
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
