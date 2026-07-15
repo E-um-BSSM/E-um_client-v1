@@ -95,6 +95,11 @@ export const getStoredAccessToken = (): string | null => {
   return accessToken;
 };
 
+export const getStoredRefreshToken = (): string | null => {
+  const { refreshToken } = getStoredAuth();
+  return refreshToken;
+};
+
 export const useAuthStore = create<AuthState>(set => ({
   isAuthenticated: false,
   remember: false,
@@ -146,3 +151,28 @@ export const useAuthStore = create<AuthState>(set => ({
     });
   },
 }));
+
+/**
+ * Refresh 응답의 토큰을 기존 로그인 유지 방식(local/session storage)에 맞춰 교체한다.
+ */
+export const updateStoredAuthTokens = (tokens: authTokens) => {
+  const stored = getStoredAuth();
+  if (!stored.user) {
+    useAuthStore.getState().clearAuth();
+    return;
+  }
+
+  if (isBrowser) {
+    const storage = stored.remember ? localStorage : sessionStorage;
+    storage.setItem(ACCESS_TOKEN_KEY, tokens.access_token);
+    storage.setItem(REFRESH_TOKEN_KEY, tokens.refresh_token);
+  }
+
+  useAuthStore.setState({
+    isAuthenticated: true,
+    remember: stored.remember,
+    accessToken: tokens.access_token,
+    refreshToken: tokens.refresh_token,
+    user: stored.user,
+  });
+};
