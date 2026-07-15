@@ -40,7 +40,7 @@ function LoginPage() {
   const { mutateAsync: requestPasswordReset, isPending: isPasswordResetRequestPending } = useRequestPasswordReset();
   const setAuthFromSignIn = useAuthStore(state => state.setAuthFromSignIn);
 
-  const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -50,7 +50,7 @@ function LoginPage() {
     setPageType("public");
   }, [setPageType]);
 
-  const canSubmit = email.trim().length > 0 && password.trim().length > 0;
+  const canSubmit = nickname.trim().length > 0 && password.trim().length > 0;
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,8 +59,8 @@ function LoginPage() {
     try {
       setErrorMessage("");
       setSuccessMessage("");
-      const tokens = await mutateAsync({ username: email, password, keep_signed_in: remember });
-      setAuthFromSignIn(tokens, { username: email }, remember);
+      const tokens = await mutateAsync({ username: nickname, password, keep_signed_in: remember });
+      setAuthFromSignIn(tokens, { username: nickname }, remember);
       navigate("/app");
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;
@@ -69,7 +69,7 @@ function LoginPage() {
   };
 
   const handlePasswordResetRequest = async () => {
-    const normalizedEmail = email.trim();
+    const normalizedEmail = nickname.trim();
     if (!normalizedEmail || isPasswordResetRequestPending) {
       setSuccessMessage("");
       setErrorMessage("비밀번호를 재설정할 이메일을 입력해주세요.");
@@ -96,8 +96,8 @@ function LoginPage() {
       <Form onSubmit={handleLogin}>
         <FieldsContainer>
           <Field>
-            <Label>이메일</Label>
-            <Input placeholder="이메일을 입력하세요." value={email} onChange={e => setEmail(e.target.value)} />
+            <Label>닉네임</Label>
+            <Input placeholder="닉네임을 입력하세요." value={nickname} onChange={e => setNickname(e.target.value)} />
           </Field>
           <Field>
             <Label>비밀번호</Label>
