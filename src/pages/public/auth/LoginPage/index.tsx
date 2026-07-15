@@ -23,6 +23,11 @@ import {
   SignupText,
   SignupLink,
   ErrorText,
+  ModalActions,
+  ModalBody,
+  ModalOverlay,
+  ModalTitle,
+  SecondaryButton,
   SuccessText,
 } from "./style";
 import type { PageType } from "@/types/Page";
@@ -45,6 +50,10 @@ function LoginPage() {
   const [remember, setRemember] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isPasswordResetModalOpen, setIsPasswordResetModalOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetMessage, setResetMessage] = useState("");
+  const [isResetError, setIsResetError] = useState(false);
 
   useEffect(() => {
     setPageType("public");
@@ -68,23 +77,32 @@ function LoginPage() {
     }
   };
 
-  const handlePasswordResetRequest = async () => {
-    const normalizedEmail = nickname.trim();
+  const handlePasswordResetRequest = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const normalizedEmail = resetEmail.trim();
     if (!normalizedEmail || isPasswordResetRequestPending) {
-      setSuccessMessage("");
-      setErrorMessage("비밀번호를 재설정할 이메일을 입력해주세요.");
+      setIsResetError(true);
+      setResetMessage("비밀번호를 재설정할 이메일을 입력해주세요.");
       return;
     }
 
     try {
-      setErrorMessage("");
+      setIsResetError(false);
+      setResetMessage("");
       await requestPasswordReset({ email: normalizedEmail });
-      setSuccessMessage("비밀번호 재설정 안내를 이메일로 전송했습니다.");
+      setResetMessage("비밀번호 재설정 안내를 이메일로 전송했습니다.");
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;
-      setSuccessMessage("");
-      setErrorMessage(axiosError.response?.data?.message ?? "비밀번호 재설정 요청에 실패했습니다.");
+      setIsResetError(true);
+      setResetMessage(axiosError.response?.data?.message ?? "비밀번호 재설정 요청에 실패했습니다.");
     }
+  };
+
+  const openPasswordResetModal = () => {
+    setResetEmail("");
+    setResetMessage("");
+    setIsResetError(false);
+    setIsPasswordResetModalOpen(true);
   };
 
   return (
@@ -115,8 +133,8 @@ function LoginPage() {
             <CustomCheckbox checked={remember} size={1.5} onChange={() => setRemember(!remember)} />
             <RememberText>로그인 유지하기</RememberText>
           </RememberContainer>
-          <ForgotPassword type="button" onClick={handlePasswordResetRequest} disabled={isPasswordResetRequestPending}>
-            {isPasswordResetRequestPending ? "전송 중..." : "비밀번호 찾기"}
+          <ForgotPassword type="button" onClick={openPasswordResetModal}>
+            비밀번호 찾기
           </ForgotPassword>
         </BottomContainer>
         <ButtonContainer>
@@ -131,6 +149,34 @@ function LoginPage() {
           </SignupContainer>
         </ButtonContainer>
       </Form>
+      {isPasswordResetModalOpen && (
+        <ModalOverlay onMouseDown={() => setIsPasswordResetModalOpen(false)}>
+          <ModalBody role="dialog" aria-modal="true" aria-labelledby="password-reset-title" onMouseDown={event => event.stopPropagation()}>
+            <ModalTitle id="password-reset-title">비밀번호 찾기</ModalTitle>
+            <form onSubmit={handlePasswordResetRequest}>
+              <Field>
+                <Label>이메일</Label>
+                <Input
+                  type="email"
+                  placeholder="가입한 이메일을 입력하세요."
+                  value={resetEmail}
+                  onChange={event => setResetEmail(event.target.value)}
+                  disabled={isPasswordResetRequestPending}
+                />
+              </Field>
+              {resetMessage && (isResetError ? <ErrorText>{resetMessage}</ErrorText> : <SuccessText>{resetMessage}</SuccessText>)}
+              <ModalActions>
+                <SecondaryButton type="button" onClick={() => setIsPasswordResetModalOpen(false)}>
+                  취소
+                </SecondaryButton>
+                <Button type="submit" activate={resetEmail.trim().length > 0} disabled={!resetEmail.trim() || isPasswordResetRequestPending}>
+                  {isPasswordResetRequestPending ? "전송 중..." : "메일 발송"}
+                </Button>
+              </ModalActions>
+            </form>
+          </ModalBody>
+        </ModalOverlay>
+      )}
     </Main>
   );
 }

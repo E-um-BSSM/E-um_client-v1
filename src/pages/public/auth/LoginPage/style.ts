@@ -142,3 +142,57 @@ export const ErrorText = styled.p`
 export const SuccessText = styled(ErrorText)`
   color: var(--primary-500);
 `;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-l);
+  background: rgb(15 23 42 / 45%);
+  z-index: 20;
+`;
+
+export const ModalBody = styled.div`
+  width: min(100%, 28rem);
+  padding: var(--spacing-xl);
+  border-radius: 0.75rem;
+  background: var(--white);
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-m);
+  }
+`;
+
+export const ModalTitle = styled.h2`
+  margin: 0 0 var(--spacing-l);
+  color: var(--text-primary);
+  font-family: Pretendard;
+  font-size: 1.5rem;
+  font-weight: 600;
+`;
+
+export const ModalActions = styled.div`
+  display: flex;
+  gap: var(--spacing-s);
+  justify-content: flex-end;
+
+  button {
+    width: auto;
+    min-width: 6rem;
+  }
+`;
+
+export const SecondaryButton = styled.button`
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--natural-300);
+  border-radius: 0.75rem;
+  background: var(--white);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: Pretendard;
+  font-size: 1.125rem;
+`;
