@@ -62,14 +62,18 @@ function Header({ type }: props) {
     });
   }, [hash, pathname, type]);
 
-  const handleSignout = async () => {
+  const handleSignout = async (allSessions = false) => {
     if (isSigningOut) return;
 
     try {
       setIsSigningOut(true);
-      const refreshToken = getStoredRefreshToken();
-      if (refreshToken) {
-        await authPOST.signout({ refresh_token: refreshToken });
+      if (allSessions) {
+        await authPOST.signoutAll();
+      } else {
+        const refreshToken = getStoredRefreshToken();
+        if (refreshToken) {
+          await authPOST.signout({ refresh_token: refreshToken });
+        }
       }
     } finally {
       clearAuth();
@@ -117,13 +121,16 @@ function Header({ type }: props) {
               </LogoutButton>
               {isSignoutConfirmOpen && (
                 <SignoutConfirm role="dialog" aria-label="로그아웃 확인">
-                  <SignoutConfirmText>로그아웃 하시겠습니까?</SignoutConfirmText>
+                  <SignoutConfirmText>로그아웃 방식을 선택하세요.</SignoutConfirmText>
                   <SignoutConfirmActions>
                     <SignoutConfirmButton type="button" onClick={() => setIsSignoutConfirmOpen(false)} disabled={isSigningOut}>
                       취소
                     </SignoutConfirmButton>
-                    <SignoutConfirmButton type="button" primary onClick={handleSignout} disabled={isSigningOut}>
-                      {isSigningOut ? "로그아웃 중..." : "확인"}
+                    <SignoutConfirmButton type="button" onClick={() => handleSignout(false)} disabled={isSigningOut}>
+                      현재 기기
+                    </SignoutConfirmButton>
+                    <SignoutConfirmButton type="button" primary onClick={() => handleSignout(true)} disabled={isSigningOut}>
+                      {isSigningOut ? "로그아웃 중..." : "모든 기기"}
                     </SignoutConfirmButton>
                   </SignoutConfirmActions>
                 </SignoutConfirm>

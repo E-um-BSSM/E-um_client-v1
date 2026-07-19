@@ -23,6 +23,9 @@ export const authPOST = {
   signout: async (body: refreshRequest): Promise<void> => {
     await req.post(`/auth/signout`, body);
   },
+  signoutAll: async (): Promise<void> => {
+    await req.post(`/auth/signout-all`);
+  },
   refresh: async (body: refreshRequest): Promise<authTokens> => {
     const response = await req.post(`/auth/refresh`, body);
     return response.data;
