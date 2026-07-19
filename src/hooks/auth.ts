@@ -5,6 +5,7 @@ import type {
   emailVerifyRequest,
   passwordResetConfirmRequest,
   passwordResetRequest,
+  refreshRequest,
   signinRequest,
   signupRequest,
 } from "@/models";
@@ -47,7 +48,7 @@ export function useSignin() {
 
 export function useSignout() {
   return useMutation({
-    mutationFn: () => authPOST.signout(),
+    mutationFn: (body: refreshRequest) => authPOST.signout(body),
   });
 }
 

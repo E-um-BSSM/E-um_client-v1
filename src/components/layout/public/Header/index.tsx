@@ -22,7 +22,7 @@ import { css } from "@emotion/react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { NAV_ITEMS } from "@/constants/navigation";
-import { useAuthStore } from "@/stores";
+import { getStoredRefreshToken, useAuthStore } from "@/stores";
 import { authPOST } from "@/apis/user/auth";
 
 interface props {
@@ -67,7 +67,10 @@ function Header({ type }: props) {
 
     try {
       setIsSigningOut(true);
-      await authPOST.signout();
+      const refreshToken = getStoredRefreshToken();
+      if (refreshToken) {
+        await authPOST.signout({ refresh_token: refreshToken });
+      }
     } finally {
       clearAuth();
       navigate("/auth/login", { replace: true });
