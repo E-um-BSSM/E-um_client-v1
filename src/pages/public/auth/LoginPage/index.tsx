@@ -4,7 +4,6 @@ import Input from "@/components/ui/atom/Input";
 import PasswordInput from "@/components/ui/atom/PasswordInput";
 import Button from "@/components/ui/atom/Button";
 import CustomCheckbox from "@/components/ui/atom/CustomCheckbox";
-import { AxiosError } from "axios";
 import {
   Main,
   TitleSection,
@@ -35,6 +34,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import useLogin from "@/hooks/useLogin";
 import { useRequestPasswordReset } from "@/hooks";
 import { useAuthStore } from "@/stores";
+import { getErrorMessage } from "@/lib/error";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -72,8 +72,7 @@ function LoginPage() {
       setAuthFromSignIn(tokens, { username: nickname }, remember);
       navigate("/app");
     } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string }>;
-      setErrorMessage(axiosError.response?.data?.message ?? "로그인에 실패했습니다. 입력값을 다시 확인해주세요.");
+      setErrorMessage(getErrorMessage(error, "로그인에 실패했습니다. 입력값을 다시 확인해주세요."));
     }
   };
 
@@ -92,9 +91,8 @@ function LoginPage() {
       await requestPasswordReset({ email: normalizedEmail });
       setResetMessage("비밀번호 재설정 안내를 이메일로 전송했습니다.");
     } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string }>;
       setIsResetError(true);
-      setResetMessage(axiosError.response?.data?.message ?? "비밀번호 재설정 요청에 실패했습니다.");
+      setResetMessage(getErrorMessage(error, "비밀번호 재설정 요청에 실패했습니다."));
     }
   };
 

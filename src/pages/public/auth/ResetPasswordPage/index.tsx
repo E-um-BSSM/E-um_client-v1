@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
 import { useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { Button, PasswordInput } from "@/components/ui/atom";
 import { useResetPassword } from "@/hooks";
+import { getErrorMessage } from "@/lib/error";
 import type { PageType } from "@/types/Page";
 import {
   Field,
@@ -59,9 +59,8 @@ function ResetPasswordPage() {
       setStatusMessage("비밀번호가 재설정되었습니다. 로그인 페이지로 이동합니다.");
       window.setTimeout(() => navigate("/auth/login"), 1000);
     } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string }>;
       setIsError(true);
-      setStatusMessage(axiosError.response?.data?.message ?? "비밀번호 재설정에 실패했습니다. 링크를 다시 확인해주세요.");
+      setStatusMessage(getErrorMessage(error, "비밀번호 재설정에 실패했습니다. 링크를 다시 확인해주세요."));
     }
   };
 

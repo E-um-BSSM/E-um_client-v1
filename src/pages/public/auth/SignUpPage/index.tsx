@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import type { PageType } from "@/types/Page";
 import { css } from "@emotion/react";
 import { Button, Input, PasswordInput } from "@/components/ui/atom";
-import { AxiosError } from "axios";
 import {
   AgreeBox,
   EmailInput,
@@ -23,6 +22,7 @@ import { CustomCheckbox } from "@/components/ui/atom";
 import { useNavigate } from "react-router-dom";
 import { authPOST } from "@/apis/user/auth";
 import { authGET } from "@/apis/user/auth";
+import { getErrorMessage } from "@/lib/error";
 
 type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
@@ -92,9 +92,8 @@ function SignUpPage() {
       setRemainingSeconds(300);
       setStatusMessage("인증번호를 전송했습니다. 5분 내에 인증해주세요.");
     } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string }>;
       setIsError(true);
-      setStatusMessage(axiosError.response?.data?.message ?? "인증번호 전송에 실패했습니다.");
+      setStatusMessage(getErrorMessage(error, "인증번호 전송에 실패했습니다."));
     } finally {
       setIsSendingCode(false);
     }
@@ -115,9 +114,8 @@ function SignUpPage() {
       setIsEmailVerified(true);
       setStatusMessage("이메일 인증이 완료되었습니다.");
     } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string }>;
       setIsError(true);
-      setStatusMessage(axiosError.response?.data?.message ?? "인증번호 확인에 실패했습니다.");
+      setStatusMessage(getErrorMessage(error, "인증번호 확인에 실패했습니다."));
     } finally {
       setIsVerifyingCode(false);
     }
@@ -153,10 +151,9 @@ function SignUpPage() {
       setStatusMessage(available ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다.");
       setIsError(!available);
     } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string }>;
       setIsNicknameAvailable(false);
       setIsError(true);
-      setStatusMessage(axiosError.response?.data?.message ?? "닉네임 중복 확인에 실패했습니다.");
+      setStatusMessage(getErrorMessage(error, "닉네임 중복 확인에 실패했습니다."));
     } finally {
       setIsCheckingNickname(false);
     }
@@ -193,9 +190,8 @@ function SignUpPage() {
       setStatusMessage("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
       setTimeout(() => navigate("/auth/login"), 1000);
     } catch (error) {
-      const axiosError = error as AxiosError<{ message?: string }>;
       setIsError(true);
-      setStatusMessage(axiosError.response?.data?.message ?? "회원가입에 실패했습니다. 입력값을 다시 확인해주세요.");
+      setStatusMessage(getErrorMessage(error, "회원가입에 실패했습니다. 입력값을 다시 확인해주세요."));
     } finally {
       setIsSubmitting(false);
     }

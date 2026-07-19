@@ -1,6 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import type { authTokens } from "@/models";
 import { getStoredAccessToken, getStoredRefreshToken, updateStoredAuthTokens, useAuthStore } from "@/stores";
+import { getErrorMessage } from "@/lib/error";
 
 export const req = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -55,6 +56,12 @@ req.interceptors.response.use(
         return response.data;
       })
       .catch(refreshError => {
+        if (axios.isAxiosError(refreshError) && refreshError.response?.status === 429) {
+          if (typeof window !== "undefined") {
+            window.alert(getErrorMessage(refreshError));
+          }
+          throw refreshError;
+        }
         useAuthStore.getState().clearAuth();
         if (typeof window !== "undefined" && !window.location.pathname.startsWith("/auth/")) {
           window.location.assign("/auth/login");
