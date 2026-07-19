@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Input from "@/components/ui/atom/Input";
 import PasswordInput from "@/components/ui/atom/PasswordInput";
 import Button from "@/components/ui/atom/Button";
@@ -41,6 +41,7 @@ type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 function LoginPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { mutateAsync, isPending } = useLogin();
   const { mutateAsync: requestPasswordReset, isPending: isPasswordResetRequestPending } = useRequestPasswordReset();
   const setAuthFromSignIn = useAuthStore(state => state.setAuthFromSignIn);
@@ -58,6 +59,12 @@ function LoginPage() {
   useEffect(() => {
     setPageType("public");
   }, [setPageType]);
+
+  useEffect(() => {
+    if (searchParams.get("reason") === "session_expired") {
+      setErrorMessage("보안을 위해 다시 로그인해주세요.");
+    }
+  }, [searchParams]);
 
   const canSubmit = nickname.trim().length > 0 && password.trim().length > 0;
 

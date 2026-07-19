@@ -62,7 +62,7 @@ req.interceptors.response.use(
         }
         useAuthStore.getState().clearAuth();
         if (typeof window !== "undefined" && !window.location.pathname.startsWith("/auth/")) {
-          window.location.assign("/auth/login");
+          window.location.assign("/auth/login?reason=session_expired");
         }
         throw refreshError;
       })
