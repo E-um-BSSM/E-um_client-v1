@@ -5,12 +5,10 @@ import { getErrorMessage } from "@/lib/error";
 
 export const req = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
 });
 
 const refreshClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
 });
 
 let refreshPromise: Promise<authTokens> | null = null;
