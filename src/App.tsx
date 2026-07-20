@@ -28,7 +28,8 @@ function App() {
         {/* app */}
         <Route element={<RequireAuth />}>
           <Route path="/app" element={<layouts.AppLayout />}>
-            <Route index element={<pages.MainPage />} />
+            {/* 홈 화면 라우팅은 현재 비활성화합니다. */}
+            {/* <Route index element={<pages.MainPage />} /> */}
             {/* class */}
             <Route path="class">
               <Route path="create" element={<pages.CreateClassPage />} />
@@ -74,7 +75,8 @@ function App() {
               <Route path="profile" element={<pages.EditProfilePage />} />
               <Route path="posts" element={<pages.PostListPage />} />
             </Route>
-            <Route path="*" element={<pages.MainPage />} />
+            {/* 홈 화면 fallback 라우팅은 현재 비활성화합니다. */}
+            {/* <Route path="*" element={<pages.MainPage />} /> */}
           </Route>
         </Route>
       </Routes>

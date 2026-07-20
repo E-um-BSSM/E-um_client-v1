@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { DifficultyLevel } from "@/components";
 import { useGlobalStyle } from "@/stores/useStyle";
 import { assignmentGET, classDELETE, classGET, classPATCH, inviteGET, memberGET, noticeGET } from "@/apis/class";
@@ -175,7 +175,6 @@ const pickLatestSubmission = (list: submissionResponse[]) => {
 
 export default function MyClassDetailPage() {
   const setFooterColor = useGlobalStyle(state => state.setFooterColor);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [loadState, setLoadState] = useState<LoadState>("idle");
@@ -552,7 +551,8 @@ export default function MyClassDetailPage() {
     try {
       await classDELETE.deleteClass(resolvedClassId);
       setIsDeleteOpen(false);
-      navigate("/app");
+      // 홈 화면(/app) 이동은 현재 비활성화합니다.
+      // navigate("/app");
     } catch {
       // ignore
     }

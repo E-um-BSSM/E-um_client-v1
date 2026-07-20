@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import { ClassSummaryAside } from "@/components";
 import { useApplicationForm, useApplyToClass, useClass } from "@/hooks";
@@ -10,7 +10,6 @@ const EMPTY_QUESTIONS: applicationQuestionResponse[] = [];
 
 export default function ApplyClassPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const classId = Number(searchParams.get("classId"));
   const validClassId = Number.isInteger(classId) && classId > 0;
 
@@ -42,7 +41,8 @@ export default function ApplyClassPage() {
       }));
       await mutateAsync({ answers: payload });
       setShowConfirm(false);
-      navigate("/app");
+      // 홈 화면(/app) 이동은 현재 비활성화합니다.
+      // navigate("/app");
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
     }

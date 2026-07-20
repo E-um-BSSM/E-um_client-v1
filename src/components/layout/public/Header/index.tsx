@@ -86,9 +86,14 @@ function Header({ type }: props) {
     <>
       <Frame>
         <Layout>
-          <Link to={type === "app" ? "/app" : "/#MAIN"}>
+          {type === "app" ? (
+            // 앱 홈 화면 이동은 현재 비활성화합니다.
             <img src={Logo} alt="이음 로고" loading="lazy" />
-          </Link>
+          ) : (
+            <Link to="/#MAIN">
+              <img src={Logo} alt="이음 로고" loading="lazy" />
+            </Link>
+          )}
           {type !== "app" ? (
             <Actions>
               <AuthButton

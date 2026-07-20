@@ -30,7 +30,7 @@ import {
   SuccessText,
 } from "./style";
 import type { PageType } from "@/types/Page";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import useLogin from "@/hooks/useLogin";
 import { useRequestPasswordReset } from "@/hooks";
 import { useAuthStore } from "@/stores";
@@ -40,7 +40,6 @@ type PageTypeSetter = React.Dispatch<React.SetStateAction<PageType>>;
 
 function LoginPage() {
   const setPageType = useOutletContext<PageTypeSetter>();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { mutateAsync, isPending } = useLogin();
   const { mutateAsync: requestPasswordReset, isPending: isPasswordResetRequestPending } = useRequestPasswordReset();
@@ -77,7 +76,8 @@ function LoginPage() {
       setSuccessMessage("");
       const tokens = await mutateAsync({ username: nickname, password, keep_signed_in: remember });
       setAuthFromSignIn(tokens, { username: nickname }, remember);
-      navigate("/app");
+      // 홈 화면(/app) 이동은 현재 비활성화합니다.
+      // navigate("/app");
     } catch (error) {
       setErrorMessage(getErrorMessage(error, "로그인에 실패했습니다. 입력값을 다시 확인해주세요."));
     }
