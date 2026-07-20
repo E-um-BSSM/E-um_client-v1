@@ -167,7 +167,13 @@ export default function CreateClassPage() {
                 </LevelLabel>
                 <Dots>
                   {[1, 2, 3, 4, 5].map(v => (
-                    <Dot key={v} type="button" aria-label={`난이도 ${v}`} active={difficulty >= v} onClick={() => setDifficulty(v)} />
+                    <Dot
+                      key={v}
+                      type="button"
+                      aria-label={`난이도 ${v}`}
+                      active={difficulty >= v}
+                      onClick={() => setDifficulty(v)}
+                    />
                   ))}
                 </Dots>
               </LevelRow>
@@ -202,7 +208,7 @@ export default function CreateClassPage() {
 
           <SubmitWrap>
             <Button type="button" activate={canSubmit} disabled={!canSubmit || isSubmitting} onClick={handleSubmit}>
-              {isSubmitting ? "개설 중..." : "글 올리기"}
+              {isSubmitting ? "개설 중..." : "클래스 개설하기"}
             </Button>
           </SubmitWrap>
         </Form>
