@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import { isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { classGET, joinPOST, memberGET } from "@/apis/class";
 import { MiniMentoringCard, MiniRecruitmentCard, FindClassButton, ClassSearchBar, RadioSwitch } from "@/components";
@@ -121,8 +122,12 @@ export default function MyPage() {
       setInviteMessage("클래스 참가 요청이 완료됐어요.");
       setInviteCode("");
       await fetchClassList();
-    } catch {
-      setInviteMessage("참가에 실패했어요. 초대코드를 다시 확인해주세요.");
+    } catch (error) {
+      setInviteMessage(
+        isAxiosError(error) && error.response?.status === 409
+          ? "이미 참가한 클래스입니다."
+          : "참가에 실패했어요. 초대코드를 다시 확인해주세요.",
+      );
     } finally {
       setIsJoining(false);
     }
