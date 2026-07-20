@@ -82,6 +82,7 @@ import {
   OutlinedButton,
   Overlay,
   PageContainer,
+  PendingFeedbackText,
   RightColumn,
   RemoveMenteeButton,
   ScoreLine,
@@ -157,9 +158,7 @@ const resolveAssignmentStatus = (
   submission?: submissionResponse,
 ): AssignmentStatus => {
   if (submission) {
-    const hasFeedback =
-      (submission.feedback?.trim().length ?? 0) > 0 || (typeof submission.score === "number" && submission.score > 0);
-    return hasFeedback ? "feedback" : "done";
+    return "feedback";
   }
   const dueDate = new Date(assignment.due_date ?? "");
   if (!Number.isNaN(dueDate.getTime()) && dueDate.getTime() < Date.now()) return "deadline";
@@ -700,7 +699,7 @@ export default function MyClassDetailPage() {
                           {assignment.status === "submit" && "제출하기"}
                           {assignment.status === "deadline" && "제출 마감"}
                           {assignment.status === "done" && "제출 완료"}
-                          {assignment.status === "feedback" && "피드백 확인"}
+                          {assignment.status === "feedback" && "채점 확인하기"}
                         </AssignmentButton>
                       )}
                     </AssignmentCard>
@@ -1068,22 +1067,28 @@ export default function MyClassDetailPage() {
               <CloseButton type="button" onClick={closeAllModals} aria-label="모달 닫기">
                 ×
               </CloseButton>
-              <ModalTitle>채점 및 피드백 확인</ModalTitle>
-              <FeedbackHeader>
-                <FeedbackLine>
-                  <MiniAvatar src="/eum.png" alt="멘티 프로필" loading="lazy" />
-                  <FeedbackName>{feedbackModalAssignment.submission?.mentee.nickname ?? "멘티 이름"}</FeedbackName>
-                </FeedbackLine>
-                <ScoreLine>
-                  <ScoreText>채점 ({feedbackModalAssignment.submission?.score ?? 0}/100)</ScoreText>
-                  <DotRow>
-                    {new Array(5).fill(0).map((_, i) => (
-                      <Dot key={i} active={i < feedbackScore} />
-                    ))}
-                  </DotRow>
-                </ScoreLine>
-              </FeedbackHeader>
-              <FeedbackInput>{feedbackModalAssignment.submission?.feedback || "피드백 내용"}</FeedbackInput>
+              <ModalTitle>채점 확인하기</ModalTitle>
+              {feedbackModalAssignment.submission?.status === "GRADED" ? (
+                <>
+                  <FeedbackHeader>
+                    <FeedbackLine>
+                      <MiniAvatar src="/eum.png" alt="멘토 프로필" loading="lazy" />
+                      <FeedbackName>멘토 피드백</FeedbackName>
+                    </FeedbackLine>
+                    <ScoreLine>
+                      <ScoreText>채점 ({feedbackModalAssignment.submission.score ?? 0}/100)</ScoreText>
+                      <DotRow>
+                        {new Array(5).fill(0).map((_, i) => (
+                          <Dot key={i} active={i < feedbackScore} />
+                        ))}
+                      </DotRow>
+                    </ScoreLine>
+                  </FeedbackHeader>
+                  <FeedbackInput>{feedbackModalAssignment.submission.feedback || "멘토가 피드백을 남겼습니다."}</FeedbackInput>
+                </>
+              ) : (
+                <PendingFeedbackText>피드백을 기다려주세요</PendingFeedbackText>
+              )}
             </FeedbackModal>
           )}
 

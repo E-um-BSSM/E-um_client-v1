@@ -802,6 +802,15 @@ export const FeedbackInput = styled.div`
   color: var(--text-muted);
 `;
 
+export const PendingFeedbackText = styled.p`
+  margin-top: 2.25rem;
+  color: var(--text-muted);
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.3;
+`;
+
 export const NoticeBody = styled.p`
   margin-top: 1.5rem;
   color: var(--text-secondary);
