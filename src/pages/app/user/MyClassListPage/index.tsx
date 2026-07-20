@@ -48,7 +48,6 @@ export default function MyPage() {
   const [mentorData, setMentorData] = useState<RoleSectionData>(EMPTY_ROLE_DATA);
   const [menteeData, setMenteeData] = useState<RoleSectionData>(EMPTY_ROLE_DATA);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const [classId, setClassId] = useState("");
   const [inviteCode, setInviteCode] = useState("");
   const [inviteMessage, setInviteMessage] = useState("");
   const [isJoining, setIsJoining] = useState(false);
@@ -109,13 +108,7 @@ export default function MyPage() {
   const handleInviteJoin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const numericClassId = Number(classId);
     const trimmedInviteCode = inviteCode.trim();
-
-    if (!Number.isInteger(numericClassId) || numericClassId <= 0) {
-      setInviteMessage("클래스 ID를 입력해주세요.");
-      return;
-    }
 
     if (!trimmedInviteCode) {
       setInviteMessage("초대코드를 입력해주세요.");
@@ -124,13 +117,12 @@ export default function MyPage() {
 
     setIsJoining(true);
     try {
-      await joinPOST.applyToClass(numericClassId, { invite_code: trimmedInviteCode });
+      await joinPOST.joinByCode({ invite_code: trimmedInviteCode });
       setInviteMessage("클래스 참가 요청이 완료됐어요.");
-      setClassId("");
       setInviteCode("");
       await fetchClassList();
     } catch {
-      setInviteMessage("참가에 실패했어요. 클래스 ID와 초대코드를 다시 확인해주세요.");
+      setInviteMessage("참가에 실패했어요. 초대코드를 다시 확인해주세요.");
     } finally {
       setIsJoining(false);
     }
@@ -247,22 +239,13 @@ export default function MyPage() {
             </ModalHeader>
             <InviteJoinForm onSubmit={handleInviteJoin}>
               <InviteJoinInput
-                value={classId}
-                onChange={event => {
-                  setClassId(event.target.value);
-                  setInviteMessage("");
-                }}
-                inputMode="numeric"
-                placeholder="클래스 ID"
-                autoFocus
-              />
-              <InviteJoinInput
                 value={inviteCode}
                 onChange={event => {
                   setInviteCode(event.target.value);
                   setInviteMessage("");
                 }}
                 placeholder="초대코드"
+                autoFocus
               />
               {inviteMessage && <InviteJoinMessage isSuccess={inviteJoinSucceeded}>{inviteMessage}</InviteJoinMessage>}
               <InviteJoinButton type="submit" disabled={isJoining}>
