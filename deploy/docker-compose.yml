@@ -1,0 +1,12 @@
+services:
+  eum-client:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-}
+    image: eum-client:latest
+    container_name: eum-client
+    restart: unless-stopped
+    ports:
+      - "8001:3000"

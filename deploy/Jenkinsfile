@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    environment {
+        COMPOSE_FILE = 'deploy/docker-compose.yml'
+        ENV_FILE = 'deploy/.env'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Prepare .env') {
+            steps {
+                // Jenkins > Credentials 에 "Secret file" 타입으로 등록된 .env 파일을 가져온다.
+                withCredentials([file(credentialsId: 'eum-client-env', variable: 'ENV_FILE_SRC')]) {
+                    sh 'cp "$ENV_FILE_SRC" "$ENV_FILE"'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d --build'
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'rm -f "$ENV_FILE"'
+        }
+    }
+}
