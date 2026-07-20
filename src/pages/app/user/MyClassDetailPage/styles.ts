@@ -441,7 +441,30 @@ export const MenteeListView = styled.div`
 export const MenteeItem = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+`;
+
+export const MenteeInfo = styled.div`
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
+`;
+
+export const RemoveMenteeButton = styled.button`
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--utility-error, #ff1c30);
+  border-radius: 0.5rem;
+  background: var(--white);
+  color: var(--utility-error, #ff1c30);
+  cursor: pointer;
+  font-family: Pretendard;
+  font-size: 0.875rem;
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
 `;
 
 export const MiniAvatar = styled.img`

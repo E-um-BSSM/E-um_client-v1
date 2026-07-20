@@ -9,6 +9,7 @@ import type {
   assignmentResponse,
   classDetailResponse,
   ClassStatus,
+  memberResponse,
   submissionResponse,
   waitingMemberResponse,
 } from "@/models";
@@ -57,6 +58,7 @@ import {
   InviteCodeValue,
   LeftColumn,
   MenteeCard,
+  MenteeInfo,
   MenteeItem,
   MenteeListView,
   MenteeName,
@@ -81,6 +83,7 @@ import {
   Overlay,
   PageContainer,
   RightColumn,
+  RemoveMenteeButton,
   ScoreLine,
   ScoreText,
   Section,
@@ -181,7 +184,9 @@ export default function MyClassDetailPage() {
   const [inviteCode, setInviteCode] = useState("");
   const [assignments, setAssignments] = useState<RenderAssignment[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [mentees, setMentees] = useState<waitingMemberResponse[]>([]);
+  const [waitingMentees, setWaitingMentees] = useState<waitingMemberResponse[]>([]);
+  const [acceptedMentees, setAcceptedMentees] = useState<memberResponse[]>([]);
+  const [managingMemberId, setManagingMemberId] = useState<number | null>(null);
   const isMento = classInfo?.my_role === "MENTOR";
 
   // Menti submit-assignment modal state
@@ -271,17 +276,24 @@ export default function MyClassDetailPage() {
 
     if (isMentor) {
       // Mento view: invite code + mentee list, no submission resolution needed
-      const [inviteRes, memberRes] = await Promise.allSettled([
+      const [inviteRes, waitingRes, membersRes] = await Promise.allSettled([
         inviteGET.getInviteCode(classId),
-        memberGET.getWaitingList(classId),
+        memberGET.getWaitingList(classId, { size: 100 }),
+        memberGET.getMembers(classId, { size: 100 }),
       ]);
 
       if (inviteRes.status === "fulfilled") {
         setInviteCode(inviteRes.value.code ?? "");
       }
 
-      if (memberRes.status === "fulfilled") {
-        setMentees(memberRes.value.items);
+      if (waitingRes.status === "fulfilled") {
+        setWaitingMentees(waitingRes.value.items);
+      }
+
+      if (membersRes.status === "fulfilled") {
+        setAcceptedMentees(
+          membersRes.value.items.filter(member => member.role === "MENTEE" && member.status === "ACCEPTED"),
+        );
       }
 
       // Assignments for mento: no status resolution
@@ -348,7 +360,8 @@ export default function MyClassDetailPage() {
             setClassInfo(null);
             setAssignments([]);
             setNotices([]);
-            setMentees([]);
+            setWaitingMentees([]);
+            setAcceptedMentees([]);
             setLoadState("success");
           }
           return;
@@ -482,20 +495,26 @@ export default function MyClassDetailPage() {
   const handleAcceptMentee = async (userId: number) => {
     if (!resolvedClassId) return;
     try {
+      setManagingMemberId(userId);
       await memberPATCH.acceptMember(resolvedClassId, userId);
       await fetchDetailData(resolvedClassId);
     } catch (err) {
       console.error(err);
+    } finally {
+      setManagingMemberId(null);
     }
   };
 
   const handleRejectMentee = async (userId: number) => {
     if (!resolvedClassId) return;
     try {
+      setManagingMemberId(userId);
       await memberDELETE.removeMember(resolvedClassId, userId);
       await fetchDetailData(resolvedClassId);
     } catch (err) {
       console.error(err);
+    } finally {
+      setManagingMemberId(null);
     }
   };
 
@@ -593,20 +612,28 @@ export default function MyClassDetailPage() {
               <WaitlistSection>
                 <SectionTitle>클래스 대기 리스트</SectionTitle>
                 <WaitlistCard>
-                  {mentees.length === 0 ? (
+                  {waitingMentees.length === 0 ? (
                     <EmptyText>대기 중인 사람이 없습니다.</EmptyText>
                   ) : (
-                    mentees.map(m => (
+                    waitingMentees.map(m => (
                       <WaitlistItem key={m.user.user_id}>
                         <WaitlistInfo>
                           <MiniAvatar src="/eum.png" alt="멘티 프로필" />
                           <MenteeName>{m.user.nickname}</MenteeName>
                         </WaitlistInfo>
                         <WaitlistActions>
-                          <WaitlistButton variant="accept" onClick={() => handleAcceptMentee(m.user.user_id)}>
-                            참가 허용
+                          <WaitlistButton
+                            variant="accept"
+                            disabled={managingMemberId === m.user.user_id}
+                            onClick={() => handleAcceptMentee(m.user.user_id)}
+                          >
+                            {managingMemberId === m.user.user_id ? "처리 중..." : "참가 허용"}
                           </WaitlistButton>
-                          <WaitlistButton variant="reject" onClick={() => handleRejectMentee(m.user.user_id)}>
+                          <WaitlistButton
+                            variant="reject"
+                            disabled={managingMemberId === m.user.user_id}
+                            onClick={() => handleRejectMentee(m.user.user_id)}
+                          >
                             참가 거부
                           </WaitlistButton>
                         </WaitlistActions>
@@ -701,7 +728,7 @@ export default function MyClassDetailPage() {
             {isMento && (
               <Section>
                 <SectionTitle>멘티 관리</SectionTitle>
-                {mentees.length === 0 ? (
+                {acceptedMentees.length === 0 ? (
                   <EmptyBlock>
                     <EmptyEmoji>👀</EmptyEmoji>
                     <EmptyText>등록된 멘티가 없어요</EmptyText>
@@ -709,10 +736,19 @@ export default function MyClassDetailPage() {
                 ) : (
                   <MenteeCard>
                     <MenteeListView>
-                      {mentees.map(m => (
+                      {acceptedMentees.map(m => (
                         <MenteeItem key={m.user.user_id}>
-                          <MiniAvatar src="/eum.png" alt="멘티 프로필" loading="lazy" />
-                          <MenteeName>{m.user.nickname}</MenteeName>
+                          <MenteeInfo>
+                            <MiniAvatar src="/eum.png" alt="멘티 프로필" loading="lazy" />
+                            <MenteeName>{m.user.nickname}</MenteeName>
+                          </MenteeInfo>
+                          <RemoveMenteeButton
+                            type="button"
+                            disabled={managingMemberId === m.user.user_id}
+                            onClick={() => handleRejectMentee(m.user.user_id)}
+                          >
+                            {managingMemberId === m.user.user_id ? "처리 중..." : "내보내기"}
+                          </RemoveMenteeButton>
                         </MenteeItem>
                       ))}
                     </MenteeListView>
