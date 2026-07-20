@@ -23,9 +23,44 @@ export interface PageResponse<T> {
   page: PageMeta;
 }
 
+/** OpenAPI Error.code 값. */
+export type ErrorCode =
+  | "VALIDATION_ERROR"
+  | "INVALID_REQUEST"
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "INTERNAL_ERROR"
+  | "USERNAME_TAKEN"
+  | "EMAIL_TAKEN"
+  | "EMAIL_NOT_VERIFIED"
+  | "PRIVACY_NOT_AGREED"
+  | "INVALID_VERIFICATION_CODE"
+  | "INVALID_CREDENTIALS"
+  | "INVALID_REFRESH_TOKEN"
+  | "INVALID_ACCESS_TOKEN"
+  | "INVALID_RESET_TOKEN"
+  | "TOO_MANY_REQUESTS"
+  | "USER_NOT_FOUND"
+  | "CLASS_NOT_FOUND"
+  | "NOT_CLASS_MENTOR"
+  | "ALREADY_MEMBER"
+  | "INVITE_CODE_REQUIRED"
+  | "INVALID_INVITE_CODE"
+  | "NO_INVITE_CODE"
+  | "MEMBER_NOT_FOUND"
+  | "NOT_WAITING_MEMBER"
+  | "NOT_CLASS_MEMBER"
+  | "APPLICATION_QUESTION_NOT_FOUND"
+  | "ASSIGNMENT_NOT_FOUND"
+  | "SUBMISSION_NOT_FOUND"
+  | "ALREADY_SUBMITTED"
+  | "NOT_CLASS_MENTEE"
+  | "NOT_SUBMISSION_OWNER"
+  | "NOTICE_NOT_FOUND";
+
 /** 공통 에러 응답(4xx·5xx). */
 export interface ErrorResponse {
-  code: string;
+  code: ErrorCode;
   message: string;
   status: number;
   timestamp: string;
